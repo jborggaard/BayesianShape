@@ -1,4 +1,4 @@
-function twodStokesRotating(x,eConn,innerNodes,outerNodes,ω)
+function twodStokesRotatingCW(x,eConn,innerNodes,outerNodes,ω)
 #
 #  Solves the Stokes equation in 2D with Dirichlet boundary conditions
 #     - ∇⋅(∇z+∇z') + ∇p = f,  Ω is the domain between a Bspline disk and an
@@ -227,12 +227,12 @@ function twodStokesRotating(x,eConn,innerNodes,outerNodes,ω)
   dirichletU = Array{Float64,1}(undef,nDirichlet);
   dirichletV = Array{Float64,1}(undef,nDirichlet);
   for i=1:nInnerNodes
-    dirichletU[i] = -ω*x[innerNodes[i],2];
-    dirichletV[i] = ω*x[innerNodes[i],1];
+    dirichletU[i] = 0.0;#-ω*x[innerNodes[i],2];
+    dirichletV[i] = 0.0;#ω*x[innerNodes[i],1];
   end
   for i=(nInnerNodes+1):(nInnerNodes+nOuterNodes)
-    dirichletU[i] = 0;
-    dirichletV[i] = 0;
+    dirichletU[i] = ω*x[outerNodes[i-nInnerNodes],2];
+    dirichletV[i] = -ω*x[outerNodes[i-nInnerNodes],1];
   end
 
   nUnknowns = length(interiorNodes);
@@ -268,9 +268,9 @@ function twodStokesRotating(x,eConn,innerNodes,outerNodes,ω)
     velocity[i,2] = uvp[nUnknownCounter];
   end
 
-  for i=1:nInnerNodes
-    velocity[innerNodes[i],1] = dirichletU[i];
-    velocity[innerNodes[i],2] = dirichletV[i];
+  for i=(nInnerNodes+1):(nInnerNodes+nOuterNodes)
+    velocity[outerNodes[i-nInnerNodes],1] = dirichletU[i-nInnerNodes];
+    velocity[outerNodes[i-nInnerNodes],2] = dirichletV[i-nInnerNodes];
   end
 
   pressure = zeros(Float64,nNodes,1);

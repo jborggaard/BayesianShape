@@ -26,32 +26,32 @@ include("twodQuadratureRule.jl")
 include("twodShape.jl")
 include("twodBilinear.jl")
 include("twodLinForm.jl")
-include("twodStokesRotating.jl")
+include("twodStokesRotatingCW.jl")
 include("twodAdvectionDiffusion.jl")
 
 
-ω = 10.0;    # rotational velocity
+ω = 30.0;    # rotational velocity
 
 ### define the 40 parameters that describe the inner boundary
 N = 40;
 
 #### First draw 40 parameters from a normal distribution
 # for sane reproducibility in debugging
-#Random.seed!(1);
-#param = randn(Float64,N);
-#param = ones(Float64,N);
-#param = zeros(N);
+Random.seed!(1);
+param = randn(Float64,40);
+#param = ones(Float64,40);
+#param = zeros(40);
 #param[1] = 0; param[2] = 1;
 
 #### Then map them to a distribution between 0.5 and 1.5 using the arctan function, small alpha values (e.g. 0.1) cluster the results of the B-spline parameters around 1
 
-#α = 1.0;
-#r = 1.0 .+ atan.(α*param)/π;
-#r = ones(N,1);
+α = 1.0;
+r = 1.0 .+ atan.(α*param)/π;
+#r = ones(40,1);
 ### Generate the finite element mesh using Gmsh (implemented in makeMesh)
 
 a0 = 1.0;
-a = [-1/2, -1/8, -1/8, 1/18, 1/18]; b = [1/4, -1/8, 0.0, 1/4, -1/8];
+a0 = 1; a = [-1/2 -1/8 -1/8 1/18 1/18 0.0 0.0 1/8]; b = [1/4 -1/8 0 1/4 -1/8 0.0 0.0 1/8];
 r = fitBSpline2Fourier(a0,a,b,N)
 
 x,eConn, innerNodes,innerX, outerNodes,outerX = makeMesh(r)
@@ -64,8 +64,8 @@ sort!(outerNodes);
 nNodes = size(x,2)
 nElements = size(eConn,2)
 
-xT = zeros(Float64,nNodes,2)   # xT = transpose(x[1:2,:])
-eC = zeros(Int64,nElements,6)  # eC = transpose(eConn), converted to Int64
+xT = zeros(Float64,nNodes,2)
+eC = zeros(Int64,nElements,6)
 for i=1:nNodes
   xT[i,1] = x[1,i]
   xT[i,2] = x[2,i]
@@ -79,7 +79,7 @@ end
 #Plots.plot([x[1,innerNodes],x[1,outerNodes]],[x[2,innerNodes],x[2,outerNodes]],seriestype = :scatter)
 
 
-velocity, pressure = twodStokesRotating(xT,eC,innerNodes,outerNodes,ω)
+velocity, pressure = twodStokesRotatingCW(xT,eC,innerNodes,outerNodes,ω)
 
 temperature = twodAdvectionDiffusion(xT,eC,innerNodes,outerNodes,velocity)
 
