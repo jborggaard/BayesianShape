@@ -1,6 +1,6 @@
 function makeMesh(r)
 
-#  r = ones(40)
+  n = size(r,1)
 
   gmsh.initialize()
   gmsh.option.setNumber("General.Terminal", 1)
@@ -8,8 +8,7 @@ function makeMesh(r)
   gmsh.model.add("mixing")
 
   lc = 3e-2
-  n = 40
-  global theta = range(0.0,stop=2.0*pi,length=41)
+  global theta = range(0.0,stop=2.0*pi,length=n+1)
 
   for i=1:n
     gmsh.model.geo.addPoint(r[i]*cos(theta[i]),
@@ -21,8 +20,8 @@ function makeMesh(r)
     gmsh.model.geo.addPoint(2*cos(theta[i]),2*sin(theta[i]),0.0, 2*lc,n+i)
   end
 
-  gmsh.model.geo.addBSpline([1;collect(40:-1:1)],1)
-  gmsh.model.geo.addSpline([collect(41:80);41],2)
+  gmsh.model.geo.addBSpline([1;collect(n:-1:1)],1)
+  gmsh.model.geo.addSpline([collect((n+1):(2*n));n+1],2)
 
   gmsh.model.geo.addCurveLoop([1],1)
   gmsh.model.geo.addCurveLoop([2],2)
