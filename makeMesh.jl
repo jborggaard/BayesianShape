@@ -24,6 +24,7 @@ function makeMesh(r)
   global theta1 = range(0.0,stop=2.0*pi,length=nCircle+1)
   for i=1:nCircle
     gmsh.model.geo.addPoint(1.25+0.1*cos(theta1[i]),1.25+0.1*sin(theta1[i]),0.0, lc,2n+i)
+#    gmsh.model.geo.addPoint(1.75+0.1*cos(theta1[i]),0.0+0.1*sin(theta1[i]),0.0, lc,2n+i)
   end
 
   #  Assemble boundary points into curves following the right-hand-rule

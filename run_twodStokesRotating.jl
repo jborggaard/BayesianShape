@@ -30,6 +30,7 @@ include("twodLinForm.jl")
 include("twodStokesRotating.jl")
 include("twodAdvectionDiffusion.jl")
 include("twodProjectDerivatives.jl")
+include("computeC.jl")
 include("computeVorticity.jl")
 
 ###  Define parameters for the simulation
@@ -41,8 +42,7 @@ a0,a,b = sampleInnerGeometry()
 N = 40;      # number of BSplines used to represent the inner boundary
 
 #### First draw 40 parameters from a normal distribution
-# for sane reproducibility in debugging
-#Random.seed!(1);
+#Random.seed!(1);                        # for sane reproducibility in debugging
 #param = randn(Float64,N);
 #param = ones(Float64,N);
 #param = zeros(N);
@@ -52,11 +52,10 @@ N = 40;      # number of BSplines used to represent the inner boundary
 
 #α = 1.0;
 #r = 1.0 .+ atan.(α*param)/π;
-#r = ones(N,1);
 ### Generate the finite element mesh using Gmsh (implemented in makeMesh)
 
 r = fitBSpline2Fourier(a0,a,b,N)
-#r = ones(N,1);
+#r = ones(N,1); # uncomment for some degubbing
 x,eConn,eConn2, innerNodes,innerX, outerNodes,outerX = makeMesh(r)
 
 sort!(innerNodes);
@@ -119,7 +118,7 @@ vorticity = computeVorticity(xT,eC,velocity)
 saveFEMasVTK("mixing",xT,eC,scalarLabels,vorticity,vectorLabels,velocity)
 poly(xT, eC[:,1:3], color = vorticity[:,1], strokecolor = (:black, 0.6), strokewidth = 0.2)
 
-velMag = sqrt.( velocity[:,1].*velocity[:,1] + velocity[:,2].*velocity[:,2] );
+velMag = sqrt.( velocity[:,1].*velocity[:,1] + velocity[:,2].*velocity[:,2] )
 #poly(xT, eC[:,1:3], color = velMag, strokecolor = (:black, 0.6), strokewidth = .3)
 
 #poly(xT, eC[:,1:3], color = temperature[:,1], strokecolor = (:black, 0.6), strokewidth = .2)
