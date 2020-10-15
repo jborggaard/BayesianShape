@@ -56,8 +56,8 @@ N = 40;      # number of BSplines used to represent the inner boundary
 ### Generate the finite element mesh using Gmsh (implemented in makeMesh)
 
 r = fitBSpline2Fourier(a0,a,b,N)
-r = ones(N,1);
-x,eConn, innerNodes,innerX, outerNodes,outerX = makeMesh(r)
+#r = ones(N,1);
+x,eConn,eConn2, innerNodes,innerX, outerNodes,outerX = makeMesh(r)
 
 sort!(innerNodes);
 sort!(outerNodes);
@@ -66,6 +66,7 @@ sort!(outerNodes);
 #   Let's look at the mesh...
 nNodes = size(x,2)
 nElements = size(eConn,2)
+nElementsSensor = size(eConn2,2)
 
 xT = zeros(Float64,nNodes,2)   # xT = transpose(x[1:2,:])
 eC = zeros(Int64,nElements,6)  # eC = transpose(eConn), converted to Int64
@@ -73,7 +74,7 @@ for i=1:nNodes
   xT[i,1] = x[1,i]
   xT[i,2] = x[2,i]
 end
-for i=1:nElements
+for i=1:nElements#-nElementsSensor # the sensor elements are orientated correctly (why?)
 #  for j=1:6
 #    eC[i,j] = convert(Int64,eConn[j,i])
 #  end
@@ -85,6 +86,21 @@ for i=1:nElements
    eC[i,6] = convert(Int64,eConn[4,i])
 end
 
+eC2  = zeros(Int64,nElementsSensor,6)
+for i=1:nElementsSensor
+  for j=1:6
+    eC2[i,j] = convert(Int64,eConn2[j,i])
+  end
+end  # elements are positively orientated
+C    = computeC(xT,eC2)
+
+Call = computeC(xT,eC)
+
+#for i=nElements-nElementsSensor+1 : nElements
+#  for j=1:6
+#    eC[i,j] = convert(Int64,eConn[j,i])
+#  end
+#end
 #Plots.plot([x[1,innerNodes],x[1,outerNodes]],[x[2,innerNodes],x[2,outerNodes]],seriestype = :scatter)
 
 
@@ -103,7 +119,22 @@ vorticity = computeVorticity(xT,eC,velocity)
 saveFEMasVTK("mixing",xT,eC,scalarLabels,vorticity,vectorLabels,velocity)
 poly(xT, eC[:,1:3], color = vorticity[:,1], strokecolor = (:black, 0.6), strokewidth = 0.2)
 
-#velMag = sqrt.( velocity[:,1].*velocity[:,1] + velocity[:,2].*velocity[:,2] );
+velMag = sqrt.( velocity[:,1].*velocity[:,1] + velocity[:,2].*velocity[:,2] );
 #poly(xT, eC[:,1:3], color = velMag, strokecolor = (:black, 0.6), strokewidth = .3)
 
 #poly(xT, eC[:,1:3], color = temperature[:,1], strokecolor = (:black, 0.6), strokewidth = .2)
+
+# compute the average temperature, x- and y-components of velocity, and vorticity.
+
+V2 = sum(C)
+Volume = sum(Call)
+
+res = (C*temperature)/V2
+@printf("the average temperature over the subregion is %g\n",res[1])
+res = (Call*temperature)/Volume
+@printf("                    and over the entire region is %g\n\n",res[1])
+
+res = (C*vorticity)/V2
+@printf("the average vorticity over the subregion is %g\n",res[1])
+res = (Call*vorticity)/Volume
+@printf("                  and over the entire region is %g\n\n\n",res[1])
