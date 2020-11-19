@@ -22,27 +22,27 @@ using WriteVTK
 include("makeMesh.jl")
 include("fitBSpline2Fourier.jl")
 include("saveFEMasVTK.jl")
-include("sampleInnerGeometry.jl")
 include("twodQuadratureRule.jl")
+include("sampleInnerGeometry.jl")
 include("twodShape.jl")
 include("twodBilinear.jl")
 include("twodLinForm.jl")
-include("twodStokesRotating.jl")
+include("twodStokesRotatingOuter.jl")
 include("twodAdvectionDiffusion.jl")
 include("twodProjectDerivatives.jl")
 include("computeC.jl")
 include("computeVorticity.jl")
 
-###  Define parameters for the simulation
-ω = 10.0;    # rotational velocity
+ω = 10.0;    # rotational velocity for outer wall
+
+### define the 40 parameters that describe the inner boundary
+N = 40;
 
 a0,a,b = sampleInnerGeometry()
 
-### define the 40 parameters that describe the inner boundary
-N = 40;      # number of BSplines used to represent the inner boundary
-
 #### First draw 40 parameters from a normal distribution
-#Random.seed!(1);                        # for sane reproducibility in debugging
+# for sane reproducibility in debugging
+#Random.seed!(1);
 #param = randn(Float64,N);
 #param = ones(Float64,N);
 #param = zeros(N);
@@ -74,15 +74,12 @@ for i=1:nNodes
   xT[i,2] = x[2,i]
 end
 for i=1:nElements#-nElementsSensor # the sensor elements are orientated correctly (why?)
-#  for j=1:6
-#    eC[i,j] = convert(Int64,eConn[j,i])
-#  end
-   eC[i,1] = convert(Int64,eConn[1,i])
-   eC[i,2] = convert(Int64,eConn[3,i])
-   eC[i,3] = convert(Int64,eConn[2,i])
-   eC[i,4] = convert(Int64,eConn[6,i])
-   eC[i,5] = convert(Int64,eConn[5,i])
-   eC[i,6] = convert(Int64,eConn[4,i])
+  eC[i,1] = convert(Int64,eConn[1,i])
+  eC[i,2] = convert(Int64,eConn[3,i])
+  eC[i,3] = convert(Int64,eConn[2,i])
+  eC[i,4] = convert(Int64,eConn[6,i])
+  eC[i,5] = convert(Int64,eConn[5,i])
+  eC[i,6] = convert(Int64,eConn[4,i])
 end
 
 eC2  = zeros(Int64,nElementsSensor,6)
@@ -103,33 +100,25 @@ Call = computeC(xT,eC)
 #Plots.plot([x[1,innerNodes],x[1,outerNodes]],[x[2,innerNodes],x[2,outerNodes]],seriestype = :scatter)
 
 
-velocity, pressure = twodStokesRotating(xT,eC,innerNodes,outerNodes,ω)
-
-# rotate the entire field the opposite direction (-ω)
-for j=1:nNodes
-  velocity[j,1] = velocity[j,1] + ω*xT[j,2]
-  velocity[j,2] = velocity[j,2] - ω*xT[j,1]
-end
+velocity, pressure = twodStokesRotatingOuter(xT,eC,innerNodes,outerNodes,ω)
 
 temperature = twodAdvectionDiffusion(xT,eC,innerNodes,outerNodes,velocity)
 
 #  Output the solution or visualize
 scalarLabels = ["temperature"]
 vectorLabels = ["velocity"]
-saveFEMasVTK("mixing",xT,eC,scalarLabels,temperature,vectorLabels,velocity)
+saveFEMasVTK("mixingOuter",xT,eC,scalarLabels,temperature,vectorLabels,velocity)
 
 #poly(xT, eC[:,1:3], color = velocity[:,2], strokecolor = (:black, 0.6), strokewidth = .2)
 
 vorticity = computeVorticity(xT,eC,velocity)
-#saveFEMasVTK("mixing",xT,eC,scalarLabels,vorticity,vectorLabels,velocity)
+#saveFEMasVTK("mixingOuter",xT,eC,scalarLabels,vorticity,vectorLabels,velocity)
 poly(xT, eC[:,1:3], color = vorticity[:,1], strokecolor = (:black, 0.6), strokewidth = 0.2)
 
 velMag = sqrt.( velocity[:,1].*velocity[:,1] + velocity[:,2].*velocity[:,2] )
 #poly(xT, eC[:,1:3], color = velMag, strokecolor = (:black, 0.6), strokewidth = .3)
-
 #poly(xT, eC[:,1:3], color = temperature[:,1], strokecolor = (:black, 0.6), strokewidth = .2)
-
-# compute the average temperature, x- and y-components of velocity, and vorticity.
+poly(xT, eC[:,1:3], color = temperature[:,1], strokecolor = (:black, 0.6), strokewidth = .2)
 
 V2 = sum(C)
 Volume = sum(Call)

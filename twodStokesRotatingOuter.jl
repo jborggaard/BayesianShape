@@ -1,8 +1,8 @@
-function twodStokesRotatingCW(x,eConn,innerNodes,outerNodes,ω)
+function twodStokesRotatingOuter(x,eConn,innerNodes,outerNodes,ω)
 #
 #  Solves the Stokes equation in 2D with Dirichlet boundary conditions
 #     - ∇⋅(∇z+∇z') + ∇p = f,  Ω is the domain between a Bspline disk and an
-#  outer circle.  We prescribe a rotation  to the inner disk.
+#  outer circle.  We prescribe a rotation to the outer surface.
 #---------------------------------------------------------------------------78--
 
 #  include("twodQuadratureRule.jl")
