@@ -39,7 +39,7 @@ include("computeVorticity.jl")
 a0,a,b = sampleInnerGeometry()
 
 ### define the 40 parameters that describe the inner boundary
-N = 40;      # number of BSplines used to represent the inner boundary
+N = 10;      # number of BSplines used to represent the inner boundary
 
 #### First draw 40 parameters from a normal distribution
 #Random.seed!(1);                        # for sane reproducibility in debugging
@@ -48,14 +48,17 @@ N = 40;      # number of BSplines used to represent the inner boundary
 #param = zeros(N);
 #param[1] = 0; param[2] = 1;
 
-#### Then map them to a distribution between 0.5 and 1.5 using the arctan function, small alpha values (e.g. 0.1) cluster the results of the B-spline parameters around 1
-
-#α = 1.0;
-#r = 1.0 .+ atan.(α*param)/π;
 ### Generate the finite element mesh using Gmsh (implemented in makeMesh)
 
-r = fitBSpline2Fourier(a0,a,b,N)
+r,err = fitBSpline2Fourier(a0,a,b,N)
 #r = ones(N,1); # uncomment for some degubbing
+@printf("B-spline approximation error (%d B-splines) is: %12.8f\n",N,err);
+
+### Then map them to a distribution between 0.5 and 1.5 using the arctan function, small alpha values (e.g. 0.1) cluster the results of the B-spline parameters around 1
+
+α = 1.0;
+r = 1.0 .+ atan.(α*r)/π;
+
 x,eConn,eConn2, innerNodes,innerX, outerNodes,outerX = makeMesh(r)
 
 sort!(innerNodes);
@@ -105,7 +108,7 @@ Call = computeC(xT,eC)
 
 velocity, pressure = twodStokesRotating(xT,eC,innerNodes,outerNodes,ω)
 
-temperature = twodAdvectionDiffusion(xT,eC,innerNodes,outerNodes,velocity)
+temperature,A = twodAdvectionDiffusion(xT,eC,innerNodes,outerNodes,velocity)
 
 #  Output the solution or visualize
 scalarLabels = ["temperature"]
