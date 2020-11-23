@@ -27,7 +27,7 @@ include("twodQuadratureRule.jl")
 include("twodShape.jl")
 include("twodBilinear.jl")
 include("twodLinForm.jl")
-include("twodStokesRotating.jl")
+include("twodStokesRotatingInner.jl")
 include("twodAdvectionDiffusion.jl")
 include("twodProjectDerivatives.jl")
 include("computeC.jl")
@@ -106,19 +106,25 @@ Call = computeC(xT,eC)
 #Plots.plot([x[1,innerNodes],x[1,outerNodes]],[x[2,innerNodes],x[2,outerNodes]],seriestype = :scatter)
 
 
-velocity, pressure = twodStokesRotating(xT,eC,innerNodes,outerNodes,ω)
+velocity, pressure = twodStokesRotatingInner(xT,eC,innerNodes,outerNodes,ω)
+
+# rotate the entire field the opposite direction (-ω)
+for j=1:nNodes
+  velocity[j,1] = velocity[j,1] + ω*xT[j,2]
+  velocity[j,2] = velocity[j,2] - ω*xT[j,1]
+end
 
 temperature,A = twodAdvectionDiffusion(xT,eC,innerNodes,outerNodes,velocity)
 
 #  Output the solution or visualize
 scalarLabels = ["temperature"]
 vectorLabels = ["velocity"]
-#saveFEMasVTK("mixing",xT,eC,scalarLabels,temperature,vectorLabels,velocity)
+saveFEMasVTK("mixing",xT,eC,scalarLabels,temperature,vectorLabels,velocity)
 
 #poly(xT, eC[:,1:3], color = velocity[:,2], strokecolor = (:black, 0.6), strokewidth = .2)
 
 vorticity = computeVorticity(xT,eC,velocity)
-saveFEMasVTK("mixing",xT,eC,scalarLabels,vorticity,vectorLabels,velocity)
+#saveFEMasVTK("mixing",xT,eC,scalarLabels,vorticity,vectorLabels,velocity)
 poly(xT, eC[:,1:3], color = vorticity[:,1], strokecolor = (:black, 0.6), strokewidth = 0.2)
 
 velMag = sqrt.( velocity[:,1].*velocity[:,1] + velocity[:,2].*velocity[:,2] )
