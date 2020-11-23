@@ -146,5 +146,5 @@ function twodAdvectionDiffusion(x,eConn,innerNodes,outerNodes,velocity)
     θ[outerNodes[i]] = dirichletθ[i];
   end
 
-  return θ
+  return θ,A
 end

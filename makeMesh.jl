@@ -1,4 +1,4 @@
-function makeMesh(r)
+function makeMesh(r,outDir=".")
 
   n = size(r,1)
 
@@ -82,7 +82,7 @@ function makeMesh(r)
   eConn = [eConn1 eConn2]
 #  eC = convert(Array{Int64,2},eConn)   # for debugging
 
-  gmsh.write("mixing.msh")
+  gmsh.write(outDir*"mixing.msh")
   gmsh.finalize()
 
  return x,eConn,eConn2, nInner,xInner, nOuter,xOuter

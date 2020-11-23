@@ -18,7 +18,15 @@ function fitBSpline2Fourier(a0,a,b,N)
     r = r + a[n]*rhs_a + b[n]*rhs_b;
   end
 
-  return M\r
+  #return coefficients only
+  #return M\r
+
+  #return coefficients and the error in the approximation
+  #err^2 = ||f||^2 -2 r^T x + x^T M x
+  #best approximating coefficients solve Mx=r
+  x = M\r; 
+  err = sqrt( max(0.0,2*pi*a0^2 + pi*(norm(a)^2+norm(b)^2) - 2*dot(r,x) + dot(x,M*x)) ); #max() because numerical errors can make err^2 < 0
+  return x,err;
 end
 
 function computeRHSa(n,N)
