@@ -62,7 +62,8 @@ obs = zeros(nSamples,5);
 
 
 #prior
-prior = MvNormal(zeros(unkDim),sqrt(sqrt(2)).^-(0:unkDim-1));
+#prior = MvNormal(zeros(unkDim),sqrt(sqrt(2)).^-(0:unkDim-1));
+prior = MvNormal(zeros(unkDim),2.0.^(-(0:unkDim-1)./4));
 
 aArr = zeros(nSamples,unkDim);
 bArr = zeros(nSamples,unkDim);

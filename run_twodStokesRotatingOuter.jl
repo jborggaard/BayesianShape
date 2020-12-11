@@ -9,7 +9,8 @@
 
 using Gmsh:gmsh
 using LinearAlgebra
-using Makie
+#using Makie
+using CairoMakie
 using AbstractPlotting
 using SparseArrays
 using SpecialMatrices
@@ -54,7 +55,8 @@ a0,a,b = sampleInnerGeometry()
 #r = 1.0 .+ atan.(α*param)/π;
 ### Generate the finite element mesh using Gmsh (implemented in makeMesh)
 
-r = fitBSpline2Fourier(a0,a,b,N)
+r,err = fitBSpline2Fourier(a0,a,b,N)
+@printf("B-spline approximation error (%d B-splines) is: %12.8f\n",N,err);
 #r = ones(N,1); # uncomment for some degubbing
 x,eConn,eConn2, innerNodes,innerX, outerNodes,outerX = makeMesh(r)
 
@@ -102,23 +104,25 @@ Call = computeC(xT,eC)
 
 velocity, pressure = twodStokesRotatingOuter(xT,eC,innerNodes,outerNodes,ω)
 
-temperature = twodAdvectionDiffusion(xT,eC,innerNodes,outerNodes,velocity)
+temperature,A = twodAdvectionDiffusion(xT,eC,innerNodes,outerNodes,velocity)
 
 #  Output the solution or visualize
 scalarLabels = ["temperature"]
 vectorLabels = ["velocity"]
-saveFEMasVTK("mixingOuter",xT,eC,scalarLabels,temperature,vectorLabels,velocity)
+#saveFEMasVTK("mixingOuter",xT,eC,scalarLabels,temperature,vectorLabels,velocity)
 
 #poly(xT, eC[:,1:3], color = velocity[:,2], strokecolor = (:black, 0.6), strokewidth = .2)
 
 vorticity = computeVorticity(xT,eC,velocity)
 #saveFEMasVTK("mixingOuter",xT,eC,scalarLabels,vorticity,vectorLabels,velocity)
-poly(xT, eC[:,1:3], color = vorticity[:,1], strokecolor = (:black, 0.6), strokewidth = 0.2)
+p1 = poly(xT, eC[:,1:3], color = vorticity[:,1], strokecolor = (:black, 0.6), strokewidth = 0.2)
+save("outer_vort.png",p1);
 
 velMag = sqrt.( velocity[:,1].*velocity[:,1] + velocity[:,2].*velocity[:,2] )
 #poly(xT, eC[:,1:3], color = velMag, strokecolor = (:black, 0.6), strokewidth = .3)
 #poly(xT, eC[:,1:3], color = temperature[:,1], strokecolor = (:black, 0.6), strokewidth = .2)
-poly(xT, eC[:,1:3], color = temperature[:,1], strokecolor = (:black, 0.6), strokewidth = .2)
+p2 = poly(xT, eC[:,1:3], color = temperature[:,1], strokecolor = (:black, 0.6), strokewidth = .2)
+save("outer_temp.png",p2);
 
 V2 = sum(C)
 Volume = sum(Call)
