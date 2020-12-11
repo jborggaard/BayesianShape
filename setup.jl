@@ -75,6 +75,10 @@ def_nburn = 0;
 # 
 # data=adPointData(ad,kdisc,dataTX,y;computeL2Kern=false);
 
+#parameters
+kappa = 1.0;
+omega = 10.0;
+
 #data#
 datafile = (@isdefined datafile) ? datafile : def_datafile;
 svMean = 0.030;
@@ -126,11 +130,11 @@ llh = Normal(svMean,svStd);
 # end
 
 # Forward map and observations #
-let nBsplines=nBsplines
+let nBsplines=nBsplines,omega=omega,kappa=kappa
   function adSolve(ab)
     a = ab[1:2:end]; 
     b = ab[2:2:end];
-    return twodStokesAD(a,b,1.0,nBsplines);
+    return twodStokesAD(a,b,1.0,nBsplines;ω=omega,κ=kappa);
   end
   InfDimMCMC.mcmcForwardMap(s) = adSolve(s.param);
 end

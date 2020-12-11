@@ -38,7 +38,7 @@
 #include("computeVorticity.jl")
 #include("solutionArray.jl")
 
-function twodStokesAD(a,b,a0,N; ω = 10.0, verbose=true)
+function twodStokesAD(a,b,a0,N; ω = 10.0, κ = 1.0, verbose=true)
   ### Generate the finite element mesh using Gmsh (implemented in makeMesh)
   
   r,err = fitBSpline2Fourier(a0,a,b,N)
@@ -88,7 +88,7 @@ function twodStokesAD(a,b,a0,N; ω = 10.0, verbose=true)
   velocity, pressure = twodStokesRotatingOuter(xT,eC,innerNodes,outerNodes,ω)
   
   #solve steady Advection-Diffusion equation
-  temperature, massMat = twodAdvectionDiffusion(xT,eC,innerNodes,outerNodes,velocity)
+  temperature, massMat = twodAdvectionDiffusion(xT,eC,innerNodes,outerNodes,velocity,κ)
   
   #squish everything we might need into a structure
   sa = solutionArray();

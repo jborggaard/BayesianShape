@@ -1,4 +1,4 @@
-function twodAdvectionDiffusion(x,eConn,innerNodes,outerNodes,velocity)
+function twodAdvectionDiffusion(x,eConn,innerNodes,outerNodes,velocity, κ = 1.0)
 #
 #  Solves the advection-diffusion equation in 2D
 #     - ∇⋅(κ∇θ) + v⋅∇θ = q,
@@ -10,9 +10,6 @@ function twodAdvectionDiffusion(x,eConn,innerNodes,outerNodes,velocity)
 #  include("twodShape.jl")
 #  include("twodBilinear.jl")
 #  include("twodLinForm.jl")
-
-  #  Define problem parameters
-  κ = 1.0;
 
   rule  = 7;   # points in quadrature formula
 
