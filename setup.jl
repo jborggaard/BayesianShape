@@ -16,12 +16,12 @@ using HDF5
 include("makeMesh.jl")
 include("fitBSpline2Fourier.jl")
 include("saveFEMasVTK.jl")
-include("sampleInnerGeometry.jl")
+#include("sampleInnerGeometry.jl")
 include("twodQuadratureRule.jl")
 include("twodShape.jl")
 include("twodBilinear.jl")
 include("twodLinForm.jl")
-include("twodStokesRotatingInner.jl")
+include("twodStokesRotatingOuter.jl")
 include("twodAdvectionDiffusion.jl")
 include("twodProjectDerivatives.jl")
 include("computeC.jl")
@@ -77,7 +77,7 @@ def_nburn = 0;
 
 #data#
 datafile = (@isdefined datafile) ? datafile : def_datafile;
-svMean = 0.020;
+svMean = 0.030;
 svStd  = 0.0005;
 @printf("Using svMean=%12.6f and svStd=%12.6f\n",svMean,svStd);
 
