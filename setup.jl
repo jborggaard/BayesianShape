@@ -42,6 +42,11 @@ def_mcmc  = "pcn|2^-2";
 def_nsamp = 10;
 def_nburn = 0;
 
+def_omega  = 10.0;
+def_kappa  = 1.00;
+def_svmean = 0.030;
+def_svstd  = 0.0005;
+
 # ## ADVECTION-DIFFUSION PROBLEM DEFINITION: KAPPA, INITIAL CONDITION, OBSERVATIONS/DATA ##
 # ad = adProb();
 # 
@@ -76,13 +81,25 @@ def_nburn = 0;
 # data=adPointData(ad,kdisc,dataTX,y;computeL2Kern=false);
 
 #parameters
-kappa = 1.0;
-omega = 10.0;
+#omega  = 10.0;
+#kappa  = 1.00;
+#svMean = 0.030;
+#svStd  = 0.0005;
+#kappa  = 0.10;
+#svMean = 0.07; #0.02;
+#svStd  = 0.01;
+#kappa  = 0.01;
+#svMean = 0.70; #0.10;
+#svStd  = 0.10;
+omega  = (@isdefined omega)  ? omega  : def_omega;
+kappa  = (@isdefined kappa)  ? kappa  : def_kappa;
+svMean = (@isdefined svmean) ? svmean : def_svmean;
+svStd  = (@isdefined svstd ) ? svstd  : def_svstd;
+
+@printf("Using omega=%12.6f and kappa=%12.6f\n",omega,kappa);
 
 #data#
 datafile = (@isdefined datafile) ? datafile : def_datafile;
-svMean = 0.030;
-svStd  = 0.0005;
 @printf("Using svMean=%12.6f and svStd=%12.6f\n",svMean,svStd);
 
 #dimension of unknown (number of sines and cosines)

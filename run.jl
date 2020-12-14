@@ -25,6 +25,22 @@ apSettings = ArgParseSettings();
     help = "number of burnin samples to run"
     arg_type = Int
     required = false
+  "--kappa"
+    help = "diffusion coefficient"
+    arg_type = Float64
+    required = false
+  "--omega"
+    help = "(clockwise) angular velocity of outer boundary"
+    arg_type = Float64
+    required = false
+  "--svmean"
+    help = "target scalar variance"
+    arg_type = Float64
+    required = false
+  "--svstd"
+    help = "target scalar variance std"
+    arg_type = Float64
+    required = false
 end
 args = parse_args(apSettings,as_symbols=true);
 
@@ -134,3 +150,25 @@ for i=0:stp:mcmcP.nsamp-1
   @printf(" %16.6f %16.6f %16.6f\n", lpdfs[i+stp,1], lpdfs[i+stp,2], lpdfs[i+stp,3]);
 end
 
+
+## Plots ##
+include("plotSave.jl");
+include("getMap.jl");
+include("computeFourier.jl");
+include("computeRadii.jl");
+include("fourierBasis.jl");
+include("plotMapIBs.jl");
+include("plotRadiiQuantiles.jl");
+include("plotSamplesIBs.jl");
+include("plotSamplesLpdfs.jl");
+include("plotSamplesSV.jl");
+plotMapIBs(outFile);
+plotRadiiQuantiles(outFile);
+plotSamplesIBs(outFile);
+plotSamplesLpdfs(outFile);
+plotSamplesSV(outFile);
+
+include("plotMap.jl");
+include("plotSample.jl");
+plotMap(outFile;lpdfIdx=3);
+plotMap(outFile;lpdfIdx=2);
