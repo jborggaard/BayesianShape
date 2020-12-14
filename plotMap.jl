@@ -26,9 +26,13 @@ function plotMap(inFile;lpdfIdx=3,outFile="default")
   
   #find map/mle point
   sample = getMap(inFile,lpdfIdx);
+
+  #read some problem parameters
+  kappa = h5read(inFile,"kappa");
+  omega = h5read(inFile,"omega");
   
   #plot
-  ps = plotSample(sample,outFile);
+  ps = plotSample(sample,outFile;κ=kappa,ω=omega);
 
   return ps;
 end

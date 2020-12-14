@@ -30,7 +30,7 @@ include("twodQuadratureRule.jl")
 include("twodShape.jl")
 include("twodBilinear.jl")
 include("twodLinForm.jl")
-include("twodStokesRotating.jl")
+include("twodStokesRotatingOuter.jl")
 include("twodAdvectionDiffusion.jl")
 include("twodProjectDerivatives.jl")
 include("computeC.jl")
@@ -50,7 +50,7 @@ outFile = "out_F$(unkDim)_B$(N).h5";
 
 ###  Define parameters for the simulation
 ω = 10.0;    # rotational velocity
-
+κ = 0.10;     # diffusion constant
 
 #observations
 #  1. avg temp (subregion)
@@ -143,10 +143,10 @@ for i=1:nSamples
   #Plots.plot([x[1,innerNodes],x[1,outerNodes]],[x[2,innerNodes],x[2,outerNodes]],seriestype = :scatter)
   
   
-  velocity, pressure = twodStokesRotating(xT,eC,innerNodes,outerNodes,ω)
+  velocity, pressure = twodStokesRotatingOuter(xT,eC,innerNodes,outerNodes,ω)
   
   #added the mass matrix to the items here
-  temperature,A = twodAdvectionDiffusion(xT,eC,innerNodes,outerNodes,velocity)
+  temperature,A = twodAdvectionDiffusion(xT,eC,innerNodes,outerNodes,velocity, κ);
   
   #  Output the solution or visualize
   scalarLabels = ["temperature"]
