@@ -11,6 +11,7 @@ using Gmsh:gmsh
 using LinearAlgebra
 using Makie
 using AbstractPlotting
+#using CairoMakie
 using SparseArrays
 using SpecialMatrices
 #using Plots
@@ -33,13 +34,12 @@ include("twodProjectDerivatives.jl")
 include("computeC.jl")
 include("computeVorticity.jl")
 
-###  Define parameters for the simulation
-ω = 10.0;    # rotational velocity
-
-a0,a,b = sampleInnerGeometry()
+ω = 10.0    # rotational velocity
 
 ### define the 40 parameters that describe the inner boundary
-N = 10;      # number of BSplines used to represent the inner boundary
+N = 40      # number of BSplines used to represent the inner boundary
+
+a0,a,b = sampleInnerGeometry()
 
 #### First draw 40 parameters from a normal distribution
 #Random.seed!(1);                        # for sane reproducibility in debugging
@@ -51,15 +51,15 @@ N = 10;      # number of BSplines used to represent the inner boundary
 ### Generate the finite element mesh using Gmsh (implemented in makeMesh)
 
 r,err = fitBSpline2Fourier(a0,a,b,N)
-#r = ones(N,1); # uncomment for some degubbing
 @printf("B-spline approximation error (%d B-splines) is: %12.8f\n",N,err);
+#r = ones(N,1); # uncomment for some degubbing
+x,eConn,eConn2, innerNodes,innerX, outerNodes,outerX = makeMesh(r)
 
 ### Then map them to a distribution between 0.5 and 1.5 using the arctan function, small alpha values (e.g. 0.1) cluster the results of the B-spline parameters around 1
 
-α = 1.0;
-r = 1.0 .+ atan.(α*r)/π;
+#α = 1.0;
+#r = 1.0 .+ atan.(α*r)/π;
 
-x,eConn,eConn2, innerNodes,innerX, outerNodes,outerX = makeMesh(r)
 
 sort!(innerNodes);
 sort!(outerNodes);
@@ -106,7 +106,7 @@ Call = computeC(xT,eC)
 #Plots.plot([x[1,innerNodes],x[1,outerNodes]],[x[2,innerNodes],x[2,outerNodes]],seriestype = :scatter)
 
 
-velocity, pressure = twodStokesRotatingInner(xT,eC,innerNodes,outerNodes,ω)
+velocity = twodStokesRotatingInner(xT,eC,innerNodes,outerNodes,ω)
 
 # rotate the entire field the opposite direction (-ω)
 for j=1:nNodes
@@ -119,18 +119,20 @@ temperature,A = twodAdvectionDiffusion(xT,eC,innerNodes,outerNodes,velocity)
 #  Output the solution or visualize
 scalarLabels = ["temperature"]
 vectorLabels = ["velocity"]
-saveFEMasVTK("mixing",xT,eC,scalarLabels,temperature,vectorLabels,velocity)
+#saveFEMasVTK("mixingInner",xT,eC,scalarLabels,temperature,vectorLabels,velocity)
 
 #poly(xT, eC[:,1:3], color = velocity[:,2], strokecolor = (:black, 0.6), strokewidth = .2)
 
 vorticity = computeVorticity(xT,eC,velocity)
 #saveFEMasVTK("mixing",xT,eC,scalarLabels,vorticity,vectorLabels,velocity)
-poly(xT, eC[:,1:3], color = vorticity[:,1], strokecolor = (:black, 0.6), strokewidth = 0.2)
+p1 = AbstractPlotting.poly(xT, eC[:,1:3], color = vorticity[:,1], strokecolor = (:black, 0.6), strokewidth = 0.2)
+save("inner_vort.png",p1)
 
 velMag = sqrt.( velocity[:,1].*velocity[:,1] + velocity[:,2].*velocity[:,2] )
 #poly(xT, eC[:,1:3], color = velMag, strokecolor = (:black, 0.6), strokewidth = .3)
 
-#poly(xT, eC[:,1:3], color = temperature[:,1], strokecolor = (:black, 0.6), strokewidth = .2)
+p2 = AbstractPlotting.poly(xT, eC[:,1:3], color = temperature[:,1], strokecolor = (:black, 0.6), strokewidth = .2)
+save("inner_temp.png",p2)
 
 # compute the average temperature, x- and y-components of velocity, and vorticity.
 

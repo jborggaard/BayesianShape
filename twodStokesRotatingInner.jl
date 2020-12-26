@@ -232,8 +232,8 @@ function twodStokesRotatingInner(x,eConn,innerNodes,outerNodes,ω)
     dirichletV[i] = ω*x[innerNodes[i],1];
   end
   for i=(nInnerNodes+1):(nInnerNodes+nOuterNodes)
-    dirichletU[i] = -ω*x[outerNodes[i-nInnerNodes],2]
-    dirichletV[i] =  ω*x[outerNodes[i-nInnerNodes],1]
+    dirichletU[i] = 0 #-ω*x[outerNodes[i-nInnerNodes],2]
+    dirichletV[i] = 0 # ω*x[outerNodes[i-nInnerNodes],1]
   end
 
   nUnknowns = 2*length(interiorNodes) + nP
