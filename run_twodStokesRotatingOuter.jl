@@ -34,10 +34,10 @@ include("twodProjectDerivatives.jl")
 include("computeC.jl")
 include("computeVorticity.jl")
 
-ω = -10.0;    # rotational velocity for outer wall
+ω = -10.0    # rotational velocity for outer wall
 
 ### define the 40 parameters that describe the inner boundary
-N = 40;
+N = 40      # number of BSplines used to represent the inner boundary
 
 a0,a,b = sampleInnerGeometry()
 
@@ -116,13 +116,15 @@ vectorLabels = ["velocity"]
 vorticity = computeVorticity(xT,eC,velocity)
 #saveFEMasVTK("mixingOuter",xT,eC,scalarLabels,vorticity,vectorLabels,velocity)
 p1 = AbstractPlotting.poly(xT, eC[:,1:3], color = vorticity[:,1], strokecolor = (:black, 0.6), strokewidth = 0.2)
-save("outer_vort.png",p1);
+save("outer_vort.png",p1)
 
 velMag = sqrt.( velocity[:,1].*velocity[:,1] + velocity[:,2].*velocity[:,2] )
 #poly(xT, eC[:,1:3], color = velMag, strokecolor = (:black, 0.6), strokewidth = .3)
 #poly(xT, eC[:,1:3], color = temperature[:,1], strokecolor = (:black, 0.6), strokewidth = .2)
 p2 = AbstractPlotting.poly(xT, eC[:,1:3], color = temperature[:,1], strokecolor = (:black, 0.6), strokewidth = .2)
-save("outer_temp.png",p2);
+save("outer_temp.png",p2)
+
+# compute the average temperature, x- and y-components of velocity, and vorticity.
 
 V2 = sum(C)
 Volume = sum(Call)
