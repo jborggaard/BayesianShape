@@ -9,8 +9,8 @@
 
 using Gmsh:gmsh
 using LinearAlgebra
-#using Makie
-using CairoMakie
+using Makie
+#using CairoMakie
 using AbstractPlotting
 using SparseArrays
 using SpecialMatrices
@@ -34,7 +34,7 @@ include("twodProjectDerivatives.jl")
 include("computeC.jl")
 include("computeVorticity.jl")
 
-ω = 10.0;    # rotational velocity for outer wall
+ω = -10.0;    # rotational velocity for outer wall
 
 ### define the 40 parameters that describe the inner boundary
 N = 40;
@@ -102,7 +102,7 @@ Call = computeC(xT,eC)
 #Plots.plot([x[1,innerNodes],x[1,outerNodes]],[x[2,innerNodes],x[2,outerNodes]],seriestype = :scatter)
 
 
-velocity, pressure = twodStokesRotatingOuter(xT,eC,innerNodes,outerNodes,ω)
+velocity = twodStokesRotatingOuter(xT,eC,innerNodes,outerNodes,ω)
 
 temperature,A = twodAdvectionDiffusion(xT,eC,innerNodes,outerNodes,velocity)
 
@@ -115,13 +115,13 @@ vectorLabels = ["velocity"]
 
 vorticity = computeVorticity(xT,eC,velocity)
 #saveFEMasVTK("mixingOuter",xT,eC,scalarLabels,vorticity,vectorLabels,velocity)
-p1 = poly(xT, eC[:,1:3], color = vorticity[:,1], strokecolor = (:black, 0.6), strokewidth = 0.2)
+p1 = AbstractPlotting.poly(xT, eC[:,1:3], color = vorticity[:,1], strokecolor = (:black, 0.6), strokewidth = 0.2)
 save("outer_vort.png",p1);
 
 velMag = sqrt.( velocity[:,1].*velocity[:,1] + velocity[:,2].*velocity[:,2] )
 #poly(xT, eC[:,1:3], color = velMag, strokecolor = (:black, 0.6), strokewidth = .3)
 #poly(xT, eC[:,1:3], color = temperature[:,1], strokecolor = (:black, 0.6), strokewidth = .2)
-p2 = poly(xT, eC[:,1:3], color = temperature[:,1], strokecolor = (:black, 0.6), strokewidth = .2)
+p2 = AbstractPlotting.poly(xT, eC[:,1:3], color = temperature[:,1], strokecolor = (:black, 0.6), strokewidth = .2)
 save("outer_temp.png",p2);
 
 V2 = sum(C)
