@@ -28,7 +28,7 @@ include("computeC.jl")
 include("computeVorticity.jl")
 include("computeFourier.jl")
 
-function plotSample(ab,outFile; N = length(ab), a0 = 1.0, ω = 10.0, κ = 1.0, verbose=true, quivNpts = 1000, quivScale = 0.05)
+function plotSample(ab,outFile; N = length(ab), a0 = 1.0, ω = -10.0, κ = 1.0, verbose=true, quivNpts = 1000, quivScale = 0.05)
 
   verbose && println("omega = $(ω), kappa = $(κ)");
 
@@ -84,7 +84,7 @@ function plotSample(ab,outFile; N = length(ab), a0 = 1.0, ω = 10.0, κ = 1.0, v
   Call = computeC(xT,eC)
   
   #compute and plot vorticity
-  velocity, pressure = twodStokesRotatingOuter(xT,eC,innerNodes,outerNodes,ω);
+  velocity = twodStokesRotatingOuter(xT,eC,innerNodes,outerNodes,ω);
   
   vorticity = computeVorticity(xT,eC,velocity)
   p1 = poly(xT, eC[:,1:3], color = vorticity[:,1], strokecolor = (:black, 0.6), strokewidth = 0.2, aspect_ratio=:equal)

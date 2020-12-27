@@ -49,7 +49,7 @@ outFile = "out_F$(unkDim)_B$(N).h5";
 
 
 ###  Define parameters for the simulation
-ω = 10.0;    # rotational velocity
+ω = -10.0;    # rotational velocity
 κ = 0.10;     # diffusion constant
 
 #observations
@@ -143,7 +143,7 @@ for i=1:nSamples
   #Plots.plot([x[1,innerNodes],x[1,outerNodes]],[x[2,innerNodes],x[2,outerNodes]],seriestype = :scatter)
   
   
-  velocity, pressure = twodStokesRotatingOuter(xT,eC,innerNodes,outerNodes,ω)
+  velocity = twodStokesRotatingOuter(xT,eC,innerNodes,outerNodes,ω)
   
   #added the mass matrix to the items here
   temperature,A = twodAdvectionDiffusion(xT,eC,innerNodes,outerNodes,velocity, κ);

@@ -85,7 +85,7 @@ function twodStokesAD(a,b,a0,N; ω = 10.0, κ = 1.0, verbose=true)
   end  # elements are positively orientated
   
   #compute Stokes flow
-  velocity, pressure = twodStokesRotatingOuter(xT,eC,innerNodes,outerNodes,ω)
+  velocity = twodStokesRotatingOuter(xT,eC,innerNodes,outerNodes,ω)
   
   #solve steady Advection-Diffusion equation
   temperature, massMat = twodAdvectionDiffusion(xT,eC,innerNodes,outerNodes,velocity,κ)
@@ -96,7 +96,7 @@ function twodStokesAD(a,b,a0,N; ω = 10.0, κ = 1.0, verbose=true)
   sa.eC  = eC;
   sa.eC2 = eC2;
   sa.velocity = velocity;
-  sa.pressure = pressure;
+#  sa.pressure = pressure;
   sa.temperature = temperature;
   sa.massMat     = massMat;
 
