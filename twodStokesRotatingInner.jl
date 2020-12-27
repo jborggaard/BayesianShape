@@ -281,9 +281,9 @@ function twodStokesRotatingInner(x,eConn,innerNodes,outerNodes,ω)
     velocity[i,2] = uvp[nUnknownCounter]
   end
 
-  for i=(nInnerNodes+1):(nInnerNodes+nOuterNodes)
-    velocity[outerNodes[i-nInnerNodes],1] = dirichletU[i-nInnerNodes]
-    velocity[outerNodes[i-nInnerNodes],2] = dirichletV[i-nInnerNodes]
+  for i=1:nInnerNodes
+    velocity[innerNodes[i],1] = dirichletU[i]
+    velocity[innerNodes[i],2] = dirichletV[i]
   end
 
   #= to be computed in the future if needed

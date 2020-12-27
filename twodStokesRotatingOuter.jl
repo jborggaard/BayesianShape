@@ -282,8 +282,8 @@ function twodStokesRotatingOuter(x,eConn,innerNodes,outerNodes,ω)
   end
 
   for i=(nInnerNodes+1):(nInnerNodes+nOuterNodes)
-    velocity[outerNodes[i-nInnerNodes],1] = dirichletU[i-nInnerNodes]
-    velocity[outerNodes[i-nInnerNodes],2] = dirichletV[i-nInnerNodes]
+    velocity[outerNodes[i-nInnerNodes],1] = dirichletU[i]
+    velocity[outerNodes[i-nInnerNodes],2] = dirichletV[i]
   end
 
   #= to be computed in the future if needed
