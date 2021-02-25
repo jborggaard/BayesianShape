@@ -4,6 +4,9 @@ using LinearAlgebra
 
 function plotSamplesIBs(samples::AbstractArray, svs::AbstractArray; idx=[1,10,50,100,1000,2000,3000,4000,5000], kwargs...)
   
+  #truncate indices if we don't have enough samples
+  idx = idx[idx .<= size(samples,1)];
+  
   #gr();
   sz = sqrt(length(idx))*300;
   p = plot(proj=:polar,size=(sz,sz),layout=(length(idx)),leg=false,kwargs...);
