@@ -65,12 +65,16 @@ if (@isdefined restartfile)
 end
 
 
-outDir="/projects/SIAllocation/$(scen)";
+outDir="/projects/SIAllocation/stokes/$(scen)";
+
+if ( ! isdir(outDir) ) 
+  println("Output directory $(outDir) does not exist. Creating...");
+  mkdir(outDir);
+end
 
 println("Starting setup...");
 include("setup.jl");
 println("Finished setup.");
-
 
 
 ## Setup output file ##
@@ -152,23 +156,23 @@ end
 
 
 ## Plots ##
-include("plotSave.jl");
-include("getMap.jl");
-include("computeFourier.jl");
-include("computeRadii.jl");
-include("fourierBasis.jl");
-include("plotMapIBs.jl");
-include("plotRadiiQuantiles.jl");
-include("plotSamplesIBs.jl");
-include("plotSamplesLpdfs.jl");
-include("plotSamplesSV.jl");
+include("../../src/plotSave.jl");
+include("../../src/getMap.jl");
+include("../../src/computeFourier.jl");
+include("../../src/computeRadii.jl");
+include("../../src/fourierBasis.jl");
+include("../../src/plotMapIBs.jl");
+include("../../src/plotRadiiQuantiles.jl");
+include("../../src/plotSamplesIBs.jl");
+include("../../src/plotSamplesLpdfs.jl");
+include("../../src/plotSamplesSV.jl");
 plotMapIBs(outFile);
 plotRadiiQuantiles(outFile);
 plotSamplesIBs(outFile);
 plotSamplesLpdfs(outFile);
 plotSamplesSV(outFile);
 
-include("plotMap.jl");
-include("plotSample.jl");
+include("../../src/plotMap.jl");
+include("../../src/plotSample.jl");
 plotMap(outFile;lpdfIdx=3);
 plotMap(outFile;lpdfIdx=2);

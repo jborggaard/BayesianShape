@@ -13,21 +13,20 @@ using WriteVTK
 using Distributions
 using HDF5
 
-include("makeMesh.jl")
-include("fitBSpline2Fourier.jl")
-include("saveFEMasVTK.jl")
-#include("sampleInnerGeometry.jl")
-include("twodQuadratureRule.jl")
-include("twodShape.jl")
-include("twodBilinear.jl")
-include("twodLinForm.jl")
-include("twodStokesRotatingOuter.jl")
-include("twodAdvectionDiffusion.jl")
-include("twodProjectDerivatives.jl")
-include("computeC.jl")
-include("computeVorticity.jl")
-include("solutionArray.jl");
-include("twodStokesAD.jl");
+include("../../src/makeMesh.jl")
+include("../../src/fitBSpline2Fourier.jl")
+include("../../src/saveFEMasVTK.jl")
+include("../../src/twodQuadratureRule.jl")
+include("../../src/twodShape.jl")
+include("../../src/twodBilinear.jl")
+include("../../src/twodLinForm.jl")
+include("../../src/twodStokesRotatingOuter.jl")
+include("../../src/twodAdvectionDiffusion.jl")
+include("../../src/twodProjectDerivatives.jl")
+include("../../src/computeC.jl")
+include("../../src/computeVorticity.jl")
+include("../../src/solutionArray.jl");
+include("../../src/twodStokesAD.jl");
 
 #using SpectralDiscrete2D
 #using AdvectionDiffusion
@@ -107,6 +106,12 @@ unkDim    = 160;
 #number of B splines to approximate interior boundary
 nBsplines = 160;
 
+#circle centers (subregions)
+nCircles= 8;
+aInterp = collect(0:(nCircles-1)).*pi/4;
+rInterp = 1.75;
+circleCenters = rInterp .* [ cos.(aInterp) sin.(aInterp) ];
+
 ## Setup MCMC Problem ##
 
 mcmcP = mcmcProb();
@@ -147,11 +152,11 @@ llh = Normal(svMean,svStd);
 # end
 
 # Forward map and observations #
-let nBsplines=nBsplines,omega=omega,kappa=kappa
+let nBsplines=nBsplines,omega=omega,kappa=kappa,circleCenters=circleCenters
   function adSolve(ab)
     a = ab[1:2:end]; 
     b = ab[2:2:end];
-    return twodStokesAD(a,b,1.0,nBsplines;ω=omega,κ=kappa);
+    return twodStokesAD(a,b,1.0,nBsplines;ω=omega,κ=kappa,circleCenters=circleCenters);
   end
   InfDimMCMC.mcmcForwardMap(s) = adSolve(s.param);
 end
@@ -159,19 +164,25 @@ end
 # Observation map #
 let
   function obs(sa)
-    #mean temp (subregion)
-    C        = computeC(sa.xT,sa.eC2);
-    V2       = sum(C);
-    tMeanSub = ((C   *sa.temperature)/V2)[1];
+
+    #mean temp (subregions)
+    tMeanSub = zeros(length(sa.eConn2));
+    for i=1:length(sa.eConn2)
+      C2 = computeC(sa.x,sa.eConn2[i]);
+      V2 = sum(C2);
+      tMeanSub[i] = ((C2*sa.temperature)/V2)[1];
+    end
     #mean temp (domain)
-    Call     = computeC(sa.xT,sa.eC);
+    Call     = computeC(sa.x,sa.eConn);
     Volume   = sum(Call);
     tMean    = ((Call*sa.temperature)/Volume)[1];
+
     #scalar variance (domain)
     tdel = sa.temperature .- tMean;
-    sv = dot(tdel,sa.massMat*tdel)/Volume;
+    massMat = twodMassMatrix(sa.x,sa.eConn);
+    sv = dot(tdel,massMat*tdel)/Volume;
 
-    return [ sv; tMeanSub; tMean ];
+    return [ sv; tMean; tMeanSub ];
   end
   InfDimMCMC.mcmcObsMap(s) = obs(s.sol);
 end
