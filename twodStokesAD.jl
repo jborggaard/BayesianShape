@@ -38,7 +38,7 @@
 #include("computeVorticity.jl")
 #include("solutionArray.jl")
 
-function twodStokesAD(a,b,a0,N; ω = 10.0, κ = 1.0, verbose=true)
+function twodStokesAD(a,b,a0,N; ω = 10.0, κ = 1.0, verbose=true, circleCenters=[])
   ### Generate the finite element mesh using Gmsh (implemented in makeMesh)
   
   r,err = fitBSpline2Fourier(a0,a,b,N)
@@ -49,56 +49,57 @@ function twodStokesAD(a,b,a0,N; ω = 10.0, κ = 1.0, verbose=true)
   α = 1.0;
   r = 1.0 .+ atan.(α*r)/π;
   
-  x,eConn,eConn2, innerNodes,innerX, outerNodes,outerX = makeMesh(r);
+  x,eConn,eConn2, innerNodes,innerX, outerNodes,outerX = makeMesh(r;circleCenters=circleCenters);
   
-  sort!(innerNodes);
-  sort!(outerNodes);
-  
-  #   Let's look at the mesh...
-  nNodes = size(x,2)
-  nElements = size(eConn,2)
-  nElementsSensor = size(eConn2,2)
-  
-  xT = zeros(Float64,nNodes,2)   # xT = transpose(x[1:2,:])
-  eC = zeros(Int64,nElements,6)  # eC = transpose(eConn), converted to Int64
-  for i=1:nNodes
-    xT[i,1] = x[1,i]
-    xT[i,2] = x[2,i]
-  end
-  for i=1:nElements#-nElementsSensor # the sensor elements are orientated correctly (why?)
+  #sort!(innerNodes);
+  #sort!(outerNodes);
+  #
+  ##   Let's look at the mesh...
+  #nNodes = size(x,2)
+  #nElements = size(eConn,2)
+  #nElementsSensor = size(eConn2,2)
+  #
+  #xT = zeros(Float64,nNodes,2)   # xT = transpose(x[1:2,:])
+  #eC = zeros(Int64,nElements,6)  # eC = transpose(eConn), converted to Int64
+  #for i=1:nNodes
+  #  xT[i,1] = x[1,i]
+  #  xT[i,2] = x[2,i]
+  #end
+  #for i=1:nElements#-nElementsSensor # the sensor elements are orientated correctly (why?)
+  ##  for j=1:6
+  ##    eC[i,j] = convert(Int64,eConn[j,i])
+  ##  end
+  #   eC[i,1] = convert(Int64,eConn[1,i])
+  #   eC[i,2] = convert(Int64,eConn[3,i])
+  #   eC[i,3] = convert(Int64,eConn[2,i])
+  #   eC[i,4] = convert(Int64,eConn[6,i])
+  #   eC[i,5] = convert(Int64,eConn[5,i])
+  #   eC[i,6] = convert(Int64,eConn[4,i])
+  #end
+  #
+  #eC2  = zeros(Int64,nElementsSensor,6)
+  #for i=1:nElementsSensor
   #  for j=1:6
-  #    eC[i,j] = convert(Int64,eConn[j,i])
+  #    eC2[i,j] = convert(Int64,eConn2[j,i])
   #  end
-     eC[i,1] = convert(Int64,eConn[1,i])
-     eC[i,2] = convert(Int64,eConn[3,i])
-     eC[i,3] = convert(Int64,eConn[2,i])
-     eC[i,4] = convert(Int64,eConn[6,i])
-     eC[i,5] = convert(Int64,eConn[5,i])
-     eC[i,6] = convert(Int64,eConn[4,i])
-  end
-  
-  eC2  = zeros(Int64,nElementsSensor,6)
-  for i=1:nElementsSensor
-    for j=1:6
-      eC2[i,j] = convert(Int64,eConn2[j,i])
-    end
-  end  # elements are positively orientated
+  #end  # elements are positively orientated
   
   #compute Stokes flow
-  velocity = twodStokesRotatingOuter(xT,eC,innerNodes,outerNodes,ω)
+  velocity = twodStokesRotatingOuter(x,eConn,innerNodes,outerNodes,ω)
   
   #solve steady Advection-Diffusion equation
-  temperature, massMat = twodAdvectionDiffusion(xT,eC,innerNodes,outerNodes,velocity,κ)
+  #temperature, massMat = twodAdvectionDiffusion(x,eConn,innerNodes,outerNodes,velocity,κ)
+  temperature = twodAdvectionDiffusion(x,eConn,innerNodes,outerNodes,velocity,κ)
   
   #squish everything we might need into a structure
   sa = solutionArray();
-  sa.xT  = xT;
-  sa.eC  = eC;
-  sa.eC2 = eC2;
+  sa.x      = x;
+  sa.eConn  = eConn;
+  sa.eConn2 = eConn2;
   sa.velocity = velocity;
 #  sa.pressure = pressure;
   sa.temperature = temperature;
-  sa.massMat     = massMat;
+  #sa.massMat     = massMat;
 
   return sa;
 end

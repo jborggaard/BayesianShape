@@ -9,25 +9,36 @@ function makeMesh(r; outDir=".", circleCenters=[], nCirclePts = 15, circleRadius
 
   lc = 3e-2
   theta = range(0.0,stop=2.0*pi,length=n+1)
+  # #counterclockwise -> clockwise
+  # theta = range(2.0*pi,stop=0.0,length=n+1)
 
   cnt=0;
 
   #add points for inner boundary
-  for i=1:n
+  #for i=1:n
+  #  gmsh.model.geo.addPoint(r[i]*cos(theta[i]),
+  #                          r[i]*sin(theta[i]),
+  #                          0.0, lc, i)
+  #counterclockwise -> clockwise
+  for i=n:-1:1
     gmsh.model.geo.addPoint(r[i]*cos(theta[i]),
                             r[i]*sin(theta[i]),
-                            0.0, lc, i)
+                            0.0, lc, n-i+1)
     cnt+=1;
   end
 
   #add points for outer boundary
-  for i=1:n
-    gmsh.model.geo.addPoint(2*cos(theta[i]),2*sin(theta[i]),0.0, 2*lc,n+i)
+  #for i=1:n
+  #  gmsh.model.geo.addPoint(2*cos(theta[i]),2*sin(theta[i]),0.0, 2*lc,n+i)
+  #counterclockwise -> clockwise
+  for i=n:-1:1
+    gmsh.model.geo.addPoint(2*cos(theta[i]),2*sin(theta[i]),0.0, 2*lc,2*n-i+1)
     cnt+=1;
   end
 
   #add points for sensors (circles)
-  cAngles = range(0.0,stop=2.0*pi,length=nCirclePts+1)
+  #cAngles = range(0.0,stop=2.0*pi,length=nCirclePts+1)
+  cAngles = range(2.0*pi,stop=0.0,length=nCirclePts+1) #reverse: counterclockwise -> clockwise
   circleOffset = circleRadius .* [ cos.(cAngles) sin.(cAngles) ];
   nCircles = size(circleCenters,1);
   #println("nCircles = $(nCircles)");
@@ -89,7 +100,7 @@ function makeMesh(r; outDir=".", circleCenters=[], nCirclePts = 15, circleRadius
   nodeTags2,xx2 = gmsh.model.mesh.getNodesForPhysicalGroup(2,2)
   xx1 = reshape(xx1,3,:)
   xx2 = reshape(xx2,3,:)
-  nn = convert(Int64,maximum(nodeTags2))
+  nn = convert(Int64,maximum([nodeTags1;nodeTags2]))
   x = zeros(3,nn)
   for i=1:length(nodeTags1)
     x[:,nodeTags1[i]] = xx1[:,i]
@@ -164,6 +175,19 @@ function makeMesh(r; outDir=".", circleCenters=[], nCirclePts = 15, circleRadius
 
   gmsh.write(outDir*"mixing.msh")
   gmsh.finalize()
+  
+  #Sort
+  sort!(nInner);
+  sort!(nOuter);
 
- return x,eConn,eConn2, nInner,xInner, nOuter,xOuter
+  #Transpose (short and wide -> tall and thin)
+  #Also:
+  #      x: Leave behind third dimension of zeros
+  #  eConn: Convert to Int64
+  xT = Matrix(transpose(x[1:2,:])); 
+  eConnT  = Matrix(transpose(Int64.(eConn)));
+  eConn2T = [ Matrix(transpose(Int64.(eC2))) for eC2 in eConn2 ];
+
+  #return x,eConn,eConn2, nInner,xInner, nOuter,xOuter
+  return xT,eConnT,eConn2T, nInner,xInner, nOuter,xOuter
 end
