@@ -90,7 +90,8 @@ function plotSample(ab,outFile; N = length(ab), a0 = 1.0, ω = -10.0, κ = 1.0, 
   # temperature,A = twodAdvectionDiffusion(x,eConn,innerNodes,outerNodes,velocity,κ);
   
   
-  sa = twodStokesAD(a,b,1.0,nBsplines;ω=omega,κ=kappa,circleCenters=circleCenters);
+  #sa = twodStokesAD(a,b,1.0,nBsplines;ω=omega,κ=kappa,circleCenters=circleCenters);
+  sa = twodStokesAD(a,b,1.0,nBsplines;ω=omega,κ=kappa);
   
   vorticity = computeVorticity(sa.x,sa.eConn,sa.velocity)
   p1 = poly(sa.x, sa.eConn[:,1:3], color = vorticity[:,1], strokecolor = (:black, 0.6), strokewidth = 0.2, aspect_ratio=:equal)
