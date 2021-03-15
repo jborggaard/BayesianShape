@@ -28,7 +28,7 @@ include("computeC.jl")
 include("computeVorticity.jl")
 include("computeFourier.jl")
 
-function plotSample(ab,outFile; N = length(ab), a0 = 1.0, ω = -10.0, κ = 1.0, verbose=true, quivNpts = 1000, quivScale = 0.05)
+function plotSample(ab,outFile; N = length(ab), a0 = 1.0, ω = -10.0, κ = 1.0, circleCenters=[], verbose=true, quivNpts = 1000, quivScale = 0.05)
 
   verbose && println("omega = $(ω), kappa = $(κ)");
 
