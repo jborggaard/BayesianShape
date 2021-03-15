@@ -19,6 +19,7 @@ include("../../src/saveFEMasVTK.jl")
 include("../../src/sampleInnerGeometry.jl")
 include("../../src/twodQuadratureRule.jl")
 include("../../src/twodShape.jl")
+include("../../src/twodMassMatrix.jl")
 include("../../src/twodBilinear.jl")
 include("../../src/twodLinForm.jl")
 include("../../src/twodStokesRotatingOuter.jl")
@@ -199,7 +200,7 @@ end
 
 # Potential map #
 let llh=llh
-  InfDimMCMC.mcmcPotMap(s) = -logpdf(llh,s.obs);
+  InfDimMCMC.mcmcPotMap(s) = -logpdf(llh,s.obs[2:end]);
 end
 
 # # Gradient of potential map #
