@@ -14,8 +14,10 @@ function twodAdvectionDiffusion(x,eConn,innerNodes,outerNodes,velocity, κ = 1.0
   rule  = 7;   # points in quadrature formula
 
   function q(x::Array{Float64,2})
-    dist2 = (x[:,1].-1.5).^2+(x[:,2].-0.75).^2;
-    return exp.(-dist2);
+    #dist2 = (x[:,1].-1.5).^2+(x[:,2].-0.75).^2;
+    #return exp.(-dist2);
+    dist2 = (x[:,1].-1.5).^2+(x[:,2].-1.0).^2;
+    return 4.0*exp.(-dist2/100.0);
     #d = size(x,1);
     #return zeros(Float64,d,1)
   end

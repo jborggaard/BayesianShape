@@ -6,7 +6,7 @@ include("plotSample.jl");
 # lpdfIdx   3 (default) for map, 2 for mle, 1 for max prior
 # outFile   root of output file name
 #
-function plotMap(inFile;lpdfIdx=3,outFile="default")
+function plotMap(inFile;lpdfIdx=3,outFile="default",circleCenters=[])
 #function plotMap(inFile;lpdfIdx=3,outFile=replace(inFile,".h5"=>"_map"))
   #f = h5open(inFile);
   #lpdfs   = read(f,"lpdfs");
@@ -32,7 +32,7 @@ function plotMap(inFile;lpdfIdx=3,outFile="default")
   omega = h5read(inFile,"omega");
   
   #plot
-  ps = plotSample(sample,outFile;κ=kappa,ω=omega);
+  ps = plotSample(sample,outFile;κ=kappa,ω=omega,circleCenters=circleCenters);
 
   return ps;
 end

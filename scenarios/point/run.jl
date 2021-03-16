@@ -65,7 +65,8 @@ if (@isdefined restartfile)
 end
 
 
-outDir="/projects/SIAllocation/stokes/$(scen)";
+#outDir="/projects/SIAllocation/stokes/$(scen)";
+outDir="/Volumes/eight/stokes/$(scen)";
 
 if ( ! isdir(outDir) ) 
   println("Output directory $(outDir) does not exist. Creating...");
@@ -174,5 +175,5 @@ plotSamplesSV(outFile);
 
 include("../../src/plotMap.jl");
 include("../../src/plotSample.jl");
-plotMap(outFile;lpdfIdx=3);
-plotMap(outFile;lpdfIdx=2);
+plotMap(outFile;lpdfIdx=3,circleCenters=xInterp);
+plotMap(outFile;lpdfIdx=2,circleCenters=xInterp);
