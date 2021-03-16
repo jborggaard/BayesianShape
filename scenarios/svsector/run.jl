@@ -170,7 +170,7 @@ plotMapIBs(outFile);
 plotRadiiQuantiles(outFile);
 plotSamplesIBs(outFile);
 plotSamplesLpdfs(outFile);
-plotSamplesSV(outFile);
+#plotSamplesSV(outFile);
 
 include("../../src/plotMap.jl");
 include("../../src/plotSample.jl");

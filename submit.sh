@@ -9,8 +9,7 @@
 #SBATCH -p normal_q
 #SBATCH --export=NONE
 #SBATCH -A siallocation
-##SBATCH -A arctest
-#SBATCH --mail-user=jkrometi@vt.edu
+##SBATCH --mail-user=jkrometi@vt.edu
 #SBATCH --mail-type=END
 
 source $HOME/util/stokes.sh
@@ -22,8 +21,8 @@ export PKG_ROOT=$SLURM_SUBMIT_DIR
 export OPENBLAS_NUM_THREADS=$SLURM_NTASKS
 
 #settings
-#scrfl="src/run.jl"
-scen="$( echo $opts | grep -Eo 'scen *[[:alnum:]]* ' | sed 's/scen *//' | sed 's/ //g' )"
+#scen="$( echo $opts | grep -Eo 'scen *[[:alnum:]]* ' | sed 's/scen *//' | sed 's/ //g' )" #only worked with --scen scenario
+scen="$( echo \"$opts \" | grep -Eo 'scen=* *[[:alnum:]]* ' | sed 's/scen *=*//' | sed 's/ //g' )" #works with --scen=scenario or --scen scenario
 scrfl="scenarios/${scen}/run.jl"
 
 echo "opts=$opts"
