@@ -1,4 +1,4 @@
-function twodAdvectionDiffusion(x,eConn,innerNodes,outerNodes,velocity, κ = 1.0)
+function twodAdvectionDiffusion(x,eConn,innerNodes,outerNodes,velocity, κ = 1.0, sourceXY=[1.5;1.0])
 #
 #  Solves the advection-diffusion equation in 2D
 #     - ∇⋅(κ∇θ) + v⋅∇θ = q,
@@ -16,7 +16,8 @@ function twodAdvectionDiffusion(x,eConn,innerNodes,outerNodes,velocity, κ = 1.0
   function q(x::Array{Float64,2})
     #dist2 = (x[:,1].-1.5).^2+(x[:,2].-0.75).^2;
     #return exp.(-dist2);
-    dist2 = (x[:,1].-1.5).^2+(x[:,2].-1.0).^2;
+    #dist2 = (x[:,1].-1.5).^2+(x[:,2].-1.0).^2;
+    dist2 = (x[:,1].-sourceXY[1]).^2+(x[:,2].-sourceXY[2]).^2;
     return 4.0*exp.(-dist2/100.0);
     #d = size(x,1);
     #return zeros(Float64,d,1)
