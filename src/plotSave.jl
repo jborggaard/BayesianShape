@@ -1,7 +1,6 @@
 #Save plot to outFile.ext for ext in exts
 #(often exts=["png","pdf"])
-function plotSave(p,outFile::String,exts::Array{String,1})
-  exts=["pdf"]
+function plotSave(p,outFile::String,exts::Array{String,1}=["png","pdf"])
   for ext in exts
     oFl = outFile*"."*ext;
     savefig(p,oFl);

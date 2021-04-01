@@ -30,9 +30,10 @@ function plotMap(inFile;lpdfIdx=3,outFile="default",circleCenters=[])
   #read some problem parameters
   kappa = h5read(inFile,"kappa");
   omega = h5read(inFile,"omega");
+  sourceXY = h5read(inFile,"sourceXY");
   
   #plot
-  ps = plotSample(sample,outFile;κ=kappa,ω=omega,circleCenters=circleCenters);
+  ps = plotSample(sample,outFile;κ=kappa,ω=omega,sourceXY=sourceXY,circleCenters=circleCenters);
 
   return ps;
 end
