@@ -65,8 +65,8 @@ if (@isdefined restartfile)
 end
 
 
-#outDir="/projects/SIAllocation/stokes/$(scen)";
-outDir="/Volumes/eight/stokes/$(scen)";
+outDir="/projects/SIAllocation/stokes/$(scen)";
+#outDir="/Volumes/eight/stokes/$(scen)";
 
 if ( ! isdir(outDir) ) 
   println("Output directory $(outDir) does not exist. Creating...");

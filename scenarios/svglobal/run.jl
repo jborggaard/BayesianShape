@@ -54,11 +54,37 @@ for (arg,val) in args
   end
 end
 if (@isdefined restartfile)
+
   datafileTmp = h5read(restartfile,"datafile");
   if (@isdefined datafile) && (datafileTmp != datafile)
     error("datafile is specified ($(datafile)) but does not match datafile from restartfile ($(datafileTmp))!");
   end
   datafile = datafileTmp;
+
+  svmeanTmp = h5read(restartfile,"svMean");
+  if (@isdefined svmean) && (svmeanTmp != svmean)
+    error("svmean is specified ($(svmean)) but does not match svmean from restartfile ($(svmeanTmp))!");
+  end
+  svmean = svmeanTmp;
+
+  svstdTmp = h5read(restartfile,"svStd");
+  if (@isdefined svstd) && (svstdTmp != svstd)
+    error("svstd is specified ($(svstd)) but does not match svstd from restartfile ($(svstdTmp))!");
+  end
+  svstd = svstdTmp;
+
+  omegaTmp = h5read(restartfile,"omega");
+  if (@isdefined omega) && (omegaTmp != omega)
+    error("omega is specified ($(omega)) but does not match omega from restartfile ($(omegaTmp))!");
+  end
+  omega = omegaTmp;
+
+  kappaTmp = h5read(restartfile,"kappa");
+  if (@isdefined kappa) && (kappaTmp != kappa)
+    error("kappa is specified ($(kappa)) but does not match kappa from restartfile ($(kappaTmp))!");
+  end
+  kappa = kappaTmp;
+
   if (!@isdefined mcmc)
     mcmc = h5read(restartfile,"mcmc");
   end

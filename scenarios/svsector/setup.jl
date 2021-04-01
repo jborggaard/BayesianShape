@@ -47,8 +47,8 @@ nSectors = 4;
 
 def_omega  = 10.0;
 def_kappa  = 1.00;
-def_svmean = 0.030*ones(nSectors);
-def_svstd  = 0.0005;
+def_svmean = [0.4; 0.0; 0.0; 0.0];
+def_svstd  = 0.05;
     
 # ## ADVECTION-DIFFUSION PROBLEM DEFINITION: KAPPA, INITIAL CONDITION, OBSERVATIONS/DATA ##
 # ad = adProb();
