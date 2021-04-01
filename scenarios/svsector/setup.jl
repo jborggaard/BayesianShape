@@ -99,6 +99,8 @@ kappa  = (@isdefined kappa)  ? kappa  : def_kappa;
 svMean = (@isdefined svmean) ? svmean : def_svmean;
 svStd  = (@isdefined svstd ) ? svstd  : def_svstd;
 
+sourceXY=[1.5;1.0]; #source location
+
 @printf("Using omega=%12.6f and kappa=%12.6f\n",omega,kappa);
 
 #data#
@@ -154,7 +156,7 @@ let nBsplines=nBsplines,omega=omega,kappa=kappa
   function adSolve(ab)
     a = ab[1:2:end]; 
     b = ab[2:2:end];
-    return twodStokesAD(a,b,1.0,nBsplines;ω=omega,κ=kappa);
+    return twodStokesAD(a,b,1.0,nBsplines;ω=omega,κ=kappa,sourceXY=sourceXY);
   end
   InfDimMCMC.mcmcForwardMap(s) = adSolve(s.param);
 end

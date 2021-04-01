@@ -91,6 +91,7 @@ println("Writing output to $(outFile)...");
 h5write(outFile,"datafile",datafile);
 h5write(outFile,"kappa",kappa);
 h5write(outFile,"omega",omega);
+h5write(outFile,"sourceXY",sourceXY);
 h5write(outFile,"svMean",svMean);
 h5write(outFile,"svStd",svStd);
 (@isdefined nburn) && h5write(outFile,"nburn",nburn);
