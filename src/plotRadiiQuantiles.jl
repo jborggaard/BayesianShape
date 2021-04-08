@@ -18,7 +18,7 @@ function plotRadiiQuantiles(samples::AbstractArray; th=pi*(0:360)/180, nburn=0, 
 
   #plot
   sz = 500;
-  p = plot(proj=:polar,size=(sz,sz),kwargs...);
+  p = plot(proj=:polar,size=(sz,sz);kwargs...);
   for j=1:length(ps)
       label = @sprintf("%d%%",100*ps[j]);
       plot!(p, th, q[:,j], lab=label);

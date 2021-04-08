@@ -4,7 +4,7 @@ using HDF5
 function plotSamplesLpdfs(lpdfs::AbstractArray;nthin=10,kwargs...)
   idx = 1:nthin:size(lpdfs,1);
   labels=["Log prior","Log LLH","Log (u)posterior"];
-  p = plot(layout=(3,1),size=(600,600),leg=false,kwargs...);
+  p = plot(layout=(3,1),size=(600,600),leg=false;kwargs...);
   for i=1:length(p)
     plot!(p[i],idx,lpdfs[idx,i],xlab="Sample #",ylab=labels[i]);
   end

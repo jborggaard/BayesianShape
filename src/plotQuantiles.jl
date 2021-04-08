@@ -13,7 +13,7 @@ function plotQuantiles(pltData::AbstractArray; nburn=0, ps=[0.1,0.25,0.5,0.75,0.
   end
 
   #plot
-  p = plot(kwargs...);
+  p = plot(;kwargs...);
   for j=1:length(ps)
       label = @sprintf("%d%%",100*ps[j]);
       plot!(p, 1:size(pltData,2), q[:,j], lab=label);
