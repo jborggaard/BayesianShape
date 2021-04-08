@@ -1,9 +1,9 @@
-function makeMesh(r; outDir=".", circleCenters=[], nCirclePts = 15, circleRadius = 0.1)
+function makeMesh(r; outDir=".", circleCenters=[], nCirclePts = 15, circleRadius = 0.1, verbose=0)
 
   n = size(r,1)
 
   gmsh.initialize()
-  gmsh.option.setNumber("General.Terminal", 1)
+  gmsh.option.setNumber("General.Terminal", verbose)
 
   gmsh.model.add("mixing")
 
@@ -51,7 +51,7 @@ function makeMesh(r; outDir=".", circleCenters=[], nCirclePts = 15, circleRadius
 #      gmsh.model.geo.addPoint(1.75+0.1*cos(cAngles[i]),0.0+0.1*sin(cAngles[i]),0.0, lc,2n+i)
     end
   end
-  println("Added $(cnt) points");
+  #println("Added $(cnt) points");
 
   #  Assemble boundary points into curves following the right-hand-rule
   #  (traverse the boundary with your right hand toward the "outside")
