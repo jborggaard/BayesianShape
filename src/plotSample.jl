@@ -70,7 +70,7 @@ function plotSample(ab,outFile; nBsplines = length(ab), a0 = 1.0, ω = -10.0, κ
   Plots.plot!(p3,r.*cos.(th),r.*sin.(th),color=:blue,lab=:none);
   Plots.plot!(p3,2.0.*cos.(th),2.0.*sin.(th),color=:blue,lab=:none);
   #Plots.plot!(p3,[1.5],[0.75],markershape=:xcross,markercolor=:red,markersize=15,markerstrokewidth=3,line=false,lab=:none);
-  Plots.plot!(p3,sourceXY[1],sourceXY[2],markershape=:xcross,markercolor=:red,markersize=15,markerstrokewidth=3,line=false,lab=:none);
+  Plots.plot!(p3,[sourceXY[1]],[sourceXY[2]],markershape=:xcross,markercolor=:red,markersize=15,markerstrokewidth=3,line=false,lab=:none);
   Plots.plot!(p3,aspect_ratio=:equal,size=(figsize,figsize));
   plotName = outFile*"_quiver.png";
   Plots.savefig(p3,plotName);

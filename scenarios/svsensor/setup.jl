@@ -16,7 +16,6 @@ using HDF5
 include("../../src/makeMesh.jl")
 include("../../src/fitBSpline2Fourier.jl")
 include("../../src/saveFEMasVTK.jl")
-include("../../src/sampleInnerGeometry.jl")
 include("../../src/twodQuadratureRule.jl")
 include("../../src/twodShape.jl")
 include("../../src/twodMassMatrix.jl")
@@ -43,13 +42,14 @@ def_mcmc  = "pcn|2^-2";
 def_nsamp = 10;
 def_nburn = 0;
 
-nSectors = 4;
-
 def_omega  = 10.0;
-def_kappa  = 1.00;
-def_svmean = [0.4; 0.0; 0.4; 0.0];
-def_svstd  = 0.05;
-    
+#def_kappa  = 1.00;
+#def_svmean = 0.4.+0.3*sin.( pi*collect(0:7)/8 ); #peak in the middle
+#def_svstd  = 0.02;
+def_kappa  = 0.10;
+def_svmean = 5.5.-0.75*sin.( 4*pi*collect(0:7)/8 ); #peak in the middle
+def_svstd  = 0.1;
+
 # ## ADVECTION-DIFFUSION PROBLEM DEFINITION: KAPPA, INITIAL CONDITION, OBSERVATIONS/DATA ##
 # ad = adProb();
 # 
@@ -105,12 +105,21 @@ sourceXY=[1.5;1.0]; #source location
 
 #data#
 datafile = (@isdefined datafile) ? datafile : def_datafile;
-#@printf("Using svMean=%12.6f and svStd=%12.6f\n",svMean,svStd);
+@printf("Using svMean:\n");
+display(svMean);
+@printf("Using svStd:\n");
+display(svStd);
 
 #dimension of unknown (number of sines and cosines)
 unkDim    = 160;
 #number of B splines to approximate interior boundary
 nBsplines = 160;
+
+#circle centers (subregions)
+nCircles= length(svMean);
+aInterp = collect(0:(nCircles-1)).*pi/4;
+rInterp = 1.75;
+circleCenters = rInterp .* [ cos.(aInterp) sin.(aInterp) ];
 
 ## Setup MCMC Problem ##
 
@@ -152,57 +161,44 @@ llh = MvNormal(svMean,svStd);
 # end
 
 # Forward map and observations #
-let nBsplines=nBsplines,omega=omega,kappa=kappa
+let nBsplines=nBsplines,omega=omega,kappa=kappa,circleCenters=circleCenters
   function adSolve(ab)
     a = ab[1:2:end]; 
     b = ab[2:2:end];
-    return twodStokesAD(a,b,1.0,nBsplines;ω=omega,κ=kappa,sourceXY=sourceXY);
+    return twodStokesAD(a,b,1.0,nBsplines;ω=omega,κ=kappa,sourceXY=sourceXY,circleCenters=circleCenters);
   end
   InfDimMCMC.mcmcForwardMap(s) = adSolve(s.param);
 end
 
 # Observation map #
-let nSectors=nSectors
+let
   function obs(sa)
-    # #find element centroids
-    # centroids  = s.sol.xT[s.sol.eC[:,1],:];
-    # centroids += s.sol.xT[s.sol.eC[:,2],:];
-    # centroids += s.sol.xT[s.sol.eC[:,3],:];
-    # centroids ./= 3.0;
 
-    # #figure out element sectors
-    # centAngles = atan.(centroids[:,2],centroids[:,1]); 
-    # centAngles .+= 2*pi*( centAngles .< 0 ); #(-pi,pi) => (0,2pi)
-    # centSector = floor.(Int,nSectors*centAngles./(2*pi));
-
-    #find node sectors
-    xAngles   = atan.(sa.x[:,2],sa.x[:,1]); 
-    xAngles .+= 2*pi*( xAngles .< 0 ); #(-pi,pi) => (0,2pi)
-    xSector   = floor.(Int,nSectors*xAngles./(2*pi)) .+ 1; #ceil produces zero for (2,0)
-    
-    #mean temp and deviation
-    Call     = computeC(sa.x,sa.eConn);
-    Volume   = sum(Call);
-    tMean    = ((Call*sa.temperature)/Volume)[1];
-    tdel = sa.temperature .- tMean;
-    
-    #compute scalar variance by sector
-    massMat = twodMassMatrix(sa.x,sa.eConn);
-    sv   = zeros(nSectors+1);
-    sv[1] = dot(tdel,massMat*tdel)/Volume;
-    for i=1:nSectors
-      idx   = (xSector .== i);
-      sv[i+1] = dot(tdel[idx],massMat[idx,idx]*tdel[idx])/Volume;
+    #mean temp (subregions)
+    tMeanSub = zeros(length(sa.eConn2));
+    for i=1:length(sa.eConn2)
+      C2 = computeC(sa.x,sa.eConn2[i]);
+      V2 = sum(C2);
+      tMeanSub[i] = ((C2*sa.temperature)/V2)[1];
     end
-    
-    return sv;
+    # #mean temp (domain)
+    # Call     = computeC(sa.x,sa.eConn);
+    # Volume   = sum(Call);
+    # tMean    = ((Call*sa.temperature)/Volume)[1];
+
+    # #scalar variance (domain)
+    # tdel = sa.temperature .- tMean;
+    # massMat = twodMassMatrix(sa.x,sa.eConn);
+    # sv = dot(tdel,massMat*tdel)/Volume;
+
+    return tMeanSub;
   end
   InfDimMCMC.mcmcObsMap(s) = obs(s.sol);
 end
 
 # Potential map #
 let llh=llh
-  InfDimMCMC.mcmcPotMap(s) = -logpdf(llh,s.obs[2:end]);
+  InfDimMCMC.mcmcPotMap(s) = -logpdf(llh,s.obs);
 end
 
 # # Gradient of potential map #
