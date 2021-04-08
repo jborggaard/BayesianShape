@@ -183,31 +183,4 @@ end
 
 
 ## Plots ##
-include("../../src/plotSave.jl");
-include("../../src/getMap.jl");
-include("../../src/computeFourier.jl");
-include("../../src/computeRadii.jl");
-include("../../src/fourierBasis.jl");
-include("../../src/plotMapIBs.jl");
-include("../../src/plotRadiiQuantiles.jl");
-include("../../src/plotRadiiCorr.jl");
-include("../../src/plotRadiiHist.jl");
-include("../../src/plotRadiiHistMatrix.jl");
-include("../../src/plotQuantiles.jl");
-include("../../src/plotSamplesIBs.jl");
-include("../../src/plotSamplesLpdfs.jl");
-include("../../src/plotSamplesSV.jl");
-plotMapIBs(outFile);
-plotRadiiQuantiles(outFile);
-plotRadiiCorr(outFile);
-plotRadiiHist(outFile);
-plotRadiiHistMatrix(outFile);
-plotQuantiles(outFile);
-plotSamplesIBs(outFile);
-plotSamplesLpdfs(outFile);
-plotSamplesSV(outFile);
-
-include("../../src/plotMap.jl");
-include("../../src/plotSample.jl");
-plotMap(outFile;lpdfIdx=3);
-plotMap(outFile;lpdfIdx=2);
+include("plot.jl");
