@@ -1,0 +1,9 @@
+[deps]
+Arpack = "7d9fca2a-8960-54d3-9f78-7d1dccf2cb97"
+FEMfunctions = "289e5444-23cd-48ba-96e1-34c60879f4f4"
+FunctionZeros = "b21f74c0-b399-568f-9643-d20f4fa2c814"
+Gmsh = "705231aa-382f-11e9-3f0c-b7cb4346fdeb"
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+Polynomials = "f27b6e38-b328-58d1-80ce-0feddd5e7a45"
+Printf = "de0858da-6303-5e67-8744-51eddeeeb8d7"
+SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"

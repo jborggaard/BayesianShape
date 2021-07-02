@@ -1,7 +1,6 @@
 using Gmsh:gmsh
 using LinearAlgebra
 using Printf
-using SpecialMatrices
 using SparseArrays
 using Arpack
 using FunctionZeros   # for the validation example
@@ -10,8 +9,8 @@ using FEMfunctions
 
 include("makeDrumMesh.jl")
 include("fitBSpline2Fourier.jl")
-include("sampleInnerGeometry.jl")
 include("computeFEMmatrices.jl")
+include("inputOutput.jl")
 
 
 #  Here you generate a sample to call the inputOutput function

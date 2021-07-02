@@ -8,6 +8,15 @@ function fitBSpline2Fourier(a0,a,b,N)
   m[(2*N-3):(2*N-1)] = pi*[1.0/2520.0, 1.0/21.0, 397.0/840.0]/N;
   m[1:3] = pi*[397.0/840.0, 1.0/21.0, 1.0/2520.0]/N;
 
+  function Toeplitz(m)
+    N = (length(m)+1)÷2
+    A = zeros(Float64,N,N)
+    for i=1:N
+      A[i,:] = m[N+1-i:2*N-i]
+    end
+    return A
+  end
+
   M = Toeplitz(m);
 
   r = a0 * 2*pi/N *ones(N);
