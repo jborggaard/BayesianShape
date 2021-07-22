@@ -24,11 +24,15 @@ def_nburn = 0;
 
 def_nev    = 13;
 def_kappa  = 1.00;
-def_obsmean = zeros(def_nev);
-def_obsstd  = 1.0;
+def_rmin   = 0.2;
+def_rmax   = 5.0;
+def_obsmean = zeros(def_nev);#inputOutput(1.0,zeros(2),zeros(2);nev=def_nev,κ=def_kappa); #zeros(def_nev);
+def_obsstd  = sqrt.(sqrt.(def_obsmean));
     
 nEigVals = (@isdefined nev)  ? nev  : def_nev;
 kappa  = (@isdefined kappa)  ? kappa  : def_kappa;
+rMin  = (@isdefined rmin)  ? rmin  : def_rmin;
+rMax  = (@isdefined rmax)  ? rmax  : def_rmax;
 obsMean = (@isdefined obsmean) ? obsmean : def_obsmean;
 obsStd  = (@isdefined obsstd ) ? obsstd  : def_obsstd;
 
@@ -37,11 +41,13 @@ obsStd  = (@isdefined obsstd ) ? obsstd  : def_obsstd;
 #data#
 datafile = (@isdefined datafile) ? datafile : def_datafile;
 #@printf("Using obsMean=%12.6f and obsStd=%12.6f\n",obsMean,obsStd);
+println("obsMean is:");
+display(obsMean)
 
 #dimension of unknown (number of sines and cosines)
 unkDim    = 160;
 #number of B splines to represent boundary
-nBsplines = 40;
+nBsplines = 160;
 
 
 # Setup MCMC Problem ##
@@ -60,7 +66,9 @@ mcmcP.computeGradients = false;
 ## Setup sample space ##
 
 # Prior #
-sinCosStd = 2.0.^(-(0:unkDim-1)./4); 
+r = 1.5; #want samples in H_s for s < r
+p = 2*r + 1; #see Dashti-Stuart Thm 2.12 
+sinCosStd = (1:unkDim).^(-0.5*p); #2.0.^(-(0:unkDim-1)./4); 
 prStd = zeros(2*unkDim);
 prStd[1:2:end] = sinCosStd; #cos
 prStd[2:2:end] = sinCosStd; #sin
@@ -88,7 +96,7 @@ let nBsplines=nBsplines,nEigVals=nEigVals,kappa=kappa
   function drumSolve(ab)
     a = ab[1:2:end]; 
     b = ab[2:2:end];
-    return inputOutput(1.0,a,b;N=nBsplines,nev=nEigVals,κ=kappa);
+    return inputOutput(1.0,a,b;N=nBsplines,nev=nEigVals,κ=kappa,rMin=rMin,rMax=rMax);
   end
   InfDimMCMC.mcmcForwardMap(s) = drumSolve(s.param);
 end

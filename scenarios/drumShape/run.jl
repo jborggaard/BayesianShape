@@ -78,7 +78,7 @@ if (@isdefined restartfile)
 end
 
 
-outDir="/projects/SIAllocation/drum/$(scen)";
+outDir="/projects/SIAllocation/stokes/$(scen)";
 
 if ( ! isdir(outDir) ) 
   println("Output directory $(outDir) does not exist. Creating...");
@@ -103,6 +103,8 @@ println("Writing output to $(outFile)...");
 h5write(outFile,"datafile",datafile);
 h5write(outFile,"kappa",kappa);
 h5write(outFile,"nEigVals",nEigVals);
+h5write(outFile,"obsMean",obsMean);
+h5write(outFile,"obsStd",obsStd);
 (@isdefined nburn) && h5write(outFile,"nburn",nburn);
 (@isdefined nsamp) && h5write(outFile,"nsamp",nsamp);
 (@isdefined mcmc ) && h5write(outFile,"mcmc",mcmc);
