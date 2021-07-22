@@ -11,6 +11,7 @@ apSettings = ArgParseSettings();
   "--scen"
     help = "scenario to run"
     required = false
+    default = "drumShape"
   "--restartfile"
     help = "file to restart from"
     required = false
