@@ -31,16 +31,20 @@ apSettings = ArgParseSettings();
     required = false
   "--nev"
     help = "number of eigenvalues to observe"
+    arg_type = Int
+    required = false
+  "--regularity"
+    help = "regularity implied by the prior"
     arg_type = Float64
     required = false
-  #"--svmean"
-  #  help = "target scalar variance"
-  #  arg_type = Float64
-  #  required = false
-  #"--svstd"
-  #  help = "target scalar variance std"
-  #  arg_type = Float64
-  #  required = false
+  "--rmin"
+    help = "minimum radius"
+    arg_type = Float64
+    required = false
+  "--rmax"
+    help = "maximum radius"
+    arg_type = Float64
+    required = false
 end
 args = parse_args(apSettings,as_symbols=true);
 
@@ -101,7 +105,10 @@ while (isfile(outFile))
 end
 println("Writing output to $(outFile)...");
 h5write(outFile,"datafile",datafile);
+h5write(outFile,"regularity",regularity);
 h5write(outFile,"kappa",kappa);
+h5write(outFile,"rMin",rMin);
+h5write(outFile,"rMax",rMax);
 h5write(outFile,"nEigVals",nEigVals);
 h5write(outFile,"obsMean",obsMean);
 h5write(outFile,"obsStd",obsStd);

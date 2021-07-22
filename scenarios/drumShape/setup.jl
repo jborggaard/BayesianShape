@@ -12,7 +12,9 @@ using FEMfunctions
 include("../../src/drum/makeDrumMesh.jl")
 include("../../src/drum/fitBSpline2Fourier.jl")
 include("../../src/drum/computeFEMmatrices.jl")
+include("../../src/drum/computeFourier.jl")
 include("../../src/drum/inputOutput.jl")
+include("../../src/drum/circleEVs.jl")
 
 using InfDimMCMC
 
@@ -22,21 +24,25 @@ def_mcmc  = "pcn|2^-2";
 def_nsamp = 10;
 def_nburn = 0;
 
+def_regularity = 1.25; #want samples in H_s for s < regularity
 def_nev    = 13;
 def_kappa  = 1.00;
 def_rmin   = 0.2;
 def_rmax   = 5.0;
-def_obsmean = zeros(def_nev);#inputOutput(1.0,zeros(2),zeros(2);nev=def_nev,κ=def_kappa); #zeros(def_nev);
+def_obsmean = circleEVs(def_nev); #inputOutput(1.0,zeros(2),zeros(2);nev=def_nev,κ=def_kappa); #zeros(def_nev);
 def_obsstd  = sqrt.(sqrt.(def_obsmean));
     
-nEigVals = (@isdefined nev)  ? nev  : def_nev;
-kappa  = (@isdefined kappa)  ? kappa  : def_kappa;
-rMin  = (@isdefined rmin)  ? rmin  : def_rmin;
-rMax  = (@isdefined rmax)  ? rmax  : def_rmax;
-obsMean = (@isdefined obsmean) ? obsmean : def_obsmean;
-obsStd  = (@isdefined obsstd ) ? obsstd  : def_obsstd;
+regularity = (@isdefined regularity) ? regularity : def_regularity;
+nEigVals   = (@isdefined nev    )    ? nev        : def_nev;
+kappa      = (@isdefined kappa  )    ? kappa      : def_kappa;
+rMin       = (@isdefined rmin   )    ? rmin       : def_rmin;
+rMax       = (@isdefined rmax   )    ? rmax       : def_rmax;
+obsMean    = (@isdefined obsmean)    ? obsmean    : def_obsmean;
+obsStd     = (@isdefined obsstd )    ? obsstd     : def_obsstd;
 
+println("Regularity = $(regularity)");
 @printf("Using nev=%12.6f and kappa=%12.6f\n",nEigVals,kappa);
+println("Radius constraints: ($(rMin),$(rMax))");
 
 #data#
 datafile = (@isdefined datafile) ? datafile : def_datafile;
@@ -66,8 +72,7 @@ mcmcP.computeGradients = false;
 ## Setup sample space ##
 
 # Prior #
-r = 1.5; #want samples in H_s for s < r
-p = 2*r + 1; #see Dashti-Stuart Thm 2.12 
+p = 2*regularity + 1; #see Dashti-Stuart Thm 2.12 
 sinCosStd = (1:unkDim).^(-0.5*p); #2.0.^(-(0:unkDim-1)./4); 
 prStd = zeros(2*unkDim);
 prStd[1:2:end] = sinCosStd; #cos
