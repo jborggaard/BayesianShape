@@ -64,6 +64,12 @@ if (@isdefined restartfile)
   end
   datafile = datafileTmp;
 
+  regularityTmp = h5read(restartfile,"regularity");
+  if (@isdefined regularity) && (regularityTmp != regularity)
+    error("regularity is specified ($(regularity)) but does not match regularity from restartfile ($(regularityTmp))!");
+  end
+  regularity = regularityTmp;
+
   nevTmp = h5read(restartfile,"nev");
   if (@isdefined nev) && (nevTmp != nev)
     error("nev is specified ($(nev)) but does not match nev from restartfile ($(nevTmp))!");
@@ -75,6 +81,18 @@ if (@isdefined restartfile)
     error("kappa is specified ($(kappa)) but does not match kappa from restartfile ($(kappaTmp))!");
   end
   kappa = kappaTmp;
+
+  rminTmp = h5read(restartfile,"rMin");
+  if (@isdefined rmin) && (rminTmp != rmin)
+    error("rMin is specified ($(rmin)) but does not match rMin from restartfile ($(rminTmp))!");
+  end
+  rmin = rminTmp;
+
+  rmaxTmp = h5read(restartfile,"rMax");
+  if (@isdefined rmax) && (rmaxTmp != rmax)
+    error("rMax is specified ($(rmax)) but does not match rMax from restartfile ($(rmaxTmp))!");
+  end
+  rmax = rmaxTmp;
 
   if (!@isdefined mcmc)
     mcmc = h5read(restartfile,"mcmc");
