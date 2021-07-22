@@ -3,7 +3,7 @@ using LinearAlgebra
 using Printf
 using SparseArrays
 using Arpack
-#using FunctionZeros   # for the validation example
+using FunctionZeros   # for the validation example
 using Distributions
 using HDF5
 
