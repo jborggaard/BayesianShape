@@ -41,7 +41,7 @@ rMax       = (@isdefined rmax   )    ? rmax       : def_rmax;
 #obsMean    = (@isdefined obsmean)    ? obsmean    : def_obsmean;
 #obsStd     = (@isdefined obsstd )    ? obsstd     : def_obsstd;
 obsMean = circleEVs(nEigVals); #inputOutput(1.0,zeros(2),zeros(2);nev=def_nev,κ=def_kappa); #zeros(def_nev);
-obsStd  = obsMean.^0.25;
+obsStd  = 0.08*obsMean; #obsMean.^0.25;
 
 println("Regularity = $(regularity)");
 @printf("Using nev=%12.6f and kappa=%12.6f\n",nEigVals,kappa);
