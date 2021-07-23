@@ -29,16 +29,19 @@ def_nev    = 13;
 def_kappa  = 1.00;
 def_rmin   = 0.2;
 def_rmax   = 5.0;
-def_obsmean = circleEVs(def_nev); #inputOutput(1.0,zeros(2),zeros(2);nev=def_nev,κ=def_kappa); #zeros(def_nev);
-def_obsstd  = sqrt.(sqrt.(def_obsmean));
     
 regularity = (@isdefined regularity) ? regularity : def_regularity;
 nEigVals   = (@isdefined nev    )    ? nev        : def_nev;
 kappa      = (@isdefined kappa  )    ? kappa      : def_kappa;
 rMin       = (@isdefined rmin   )    ? rmin       : def_rmin;
 rMax       = (@isdefined rmax   )    ? rmax       : def_rmax;
-obsMean    = (@isdefined obsmean)    ? obsmean    : def_obsmean;
-obsStd     = (@isdefined obsstd )    ? obsstd     : def_obsstd;
+
+#def_obsmean = circleEVs(def_nev); #inputOutput(1.0,zeros(2),zeros(2);nev=def_nev,κ=def_kappa); #zeros(def_nev);
+#def_obsstd  = sqrt.(sqrt.(def_obsmean));
+#obsMean    = (@isdefined obsmean)    ? obsmean    : def_obsmean;
+#obsStd     = (@isdefined obsstd )    ? obsstd     : def_obsstd;
+obsMean = circleEVs(nEigVals); #inputOutput(1.0,zeros(2),zeros(2);nev=def_nev,κ=def_kappa); #zeros(def_nev);
+obsStd  = obsMean.^0.25;
 
 println("Regularity = $(regularity)");
 @printf("Using nev=%12.6f and kappa=%12.6f\n",nEigVals,kappa);
@@ -49,6 +52,7 @@ datafile = (@isdefined datafile) ? datafile : def_datafile;
 #@printf("Using obsMean=%12.6f and obsStd=%12.6f\n",obsMean,obsStd);
 println("obsMean is:");
 display(obsMean)
+println("");
 
 #dimension of unknown (number of sines and cosines)
 unkDim    = 160;
