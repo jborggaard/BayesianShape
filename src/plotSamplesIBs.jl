@@ -19,7 +19,8 @@ function plotSamplesIBs(samples::AbstractArray, svs::AbstractArray; idx=[1,10,50
       ab = samples[idx[i],:];
   
       #compute fourier representation
-      r = computeFourier(ab,th);
+      #r = computeFourier(ab,th);
+      r = computeRadii(ab,th);
   
       #plot
       plot!(p[i], th, r, c=:black);

@@ -46,8 +46,9 @@ function twodStokesAD(a,b,a0,N; ω = 10.0, κ = 1.0, verbose=true, circleCenters
   verbose && @printf("B-spline approximation error (%d B-splines) is: %12.8f\n",N,err);
   
   ### Then map them to a distribution between 0.5 and 1.5 using the arctan function, small alpha values (e.g. 0.1) cluster the results of the B-spline parameters around 1
-  α = 1.0;
-  r = 1.0 .+ atan.(α*r)/π;
+  #α = 1.0;
+  #r = 1.0 .+ atan.(α*r)/π;
+  r = radiusSquash(r);
   
   x,eConn,eConn2, innerNodes,innerX, outerNodes,outerX = makeMesh(r;circleCenters=circleCenters);
   

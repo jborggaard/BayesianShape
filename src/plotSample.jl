@@ -64,7 +64,8 @@ function plotSample(ab,outFile; nBsplines = length(ab), a0 = 1.0, ω = -10.0, κ
   qvf = quivScale .* vf;
   
   th = (0.0:360.0)*pi/180;   #angles in radians
-  r = computeFourier(ab,th); #inner boundary
+  #r = computeFourier(ab,th); #inner boundary
+  r = computeRadii(ab,th); #inner boundary
 
   p3 = Plots.quiver(qxy[:,1],qxy[:,2],quiver=(qvf[:,1],qvf[:,2]),marker=(:none),color=:black);
   Plots.plot!(p3,r.*cos.(th),r.*sin.(th),color=:blue,lab=:none);

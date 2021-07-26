@@ -11,7 +11,7 @@ ENV["GKSwstype"] = "100"
 
 include("../../src/plotSave.jl");
 include("../../src/getMap.jl");
-include("../../src/computeFourier.jl");
+include("../../src/computeRadii.jl");
 include("../../src/computeRadii.jl");
 include("../../src/fourierBasis.jl");
 include("../../src/plotMapIBs.jl");

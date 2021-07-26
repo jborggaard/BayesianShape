@@ -17,8 +17,8 @@ function plotMapIBs(mapSamples::AbstractArray; kwargs...)
       #ab = samples[maxIdx[i][1],:];
       ab = mapSamples[i,:];
   
-      #compute fourier representation
-      r = computeFourier(ab,th);
+      #compute radii
+      r = computeRadii(ab,th);
   
       #plot
       plot!(p[i], th, r, c=:black);
