@@ -194,4 +194,4 @@ end
 
 
 ## Plots ##
-#include("plot.jl");
+include("plot.jl");

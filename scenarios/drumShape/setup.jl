@@ -12,7 +12,8 @@ using FEMfunctions
 include("../../src/drum/makeDrumMesh.jl")
 include("../../src/drum/fitBSpline2Fourier.jl")
 include("../../src/drum/computeFEMmatrices.jl")
-include("../../src/drum/computeFourier.jl")
+#include("../../src/drum/computeRadii.jl")
+include("../../src/radiusSquash.jl")
 include("../../src/drum/inputOutput.jl")
 include("../../src/drum/circleEVs.jl")
 
@@ -105,7 +106,7 @@ let nBsplines=nBsplines,nEigVals=nEigVals,kappa=kappa
   function drumSolve(ab)
     a = ab[1:2:end]; 
     b = ab[2:2:end];
-    return inputOutput(1.0,a,b;N=nBsplines,nev=nEigVals,κ=kappa,rMin=rMin,rMax=rMax);
+    return inputOutput(a,b;N=nBsplines,nev=nEigVals,κ=kappa,rMin=rMin,rMax=rMax);
   end
   InfDimMCMC.mcmcForwardMap(s) = drumSolve(s.param);
 end
