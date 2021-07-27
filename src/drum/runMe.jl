@@ -35,7 +35,7 @@ nNodes = size(x,1)
 ef1 = zeros(Float64,nNodes,1)
 
 if validation
-  nev = 13
+  nev = 30
   λ, ϕ = eigs(A,M; which=:SM, nev)
 
   @printf("  Numerical Eigenvalue    Analytical Solution\n")
@@ -74,10 +74,61 @@ if validation
   @printf("11:  %g     %g\n", tmp,besselj_zero(4,1)^2)
 
   tmp = real(λ[12])
-  @printf("11:  %g     %g\n", tmp,besselj_zero(4,1)^2)
+  @printf("12:  %g     %g\n", tmp,besselj_zero(4,1)^2)
 
   tmp = real(λ[13])
-  @printf("11:  %g     %g\n", tmp,besselj_zero(2,2)^2)
+  @printf("13:  %g     %g\n", tmp,besselj_zero(2,2)^2)
+
+  tmp = real(λ[14])
+  @printf("14:  %g     %g\n", tmp,besselj_zero(2,2)^2)
+
+  tmp = real(λ[15])
+  @printf("15:  %g     %g\n", tmp,besselj_zero(0,3)^2)
+
+  tmp = real(λ[16])
+  @printf("16:  %g     %g\n", tmp,besselj_zero(5,1)^2)
+
+  tmp = real(λ[17])
+  @printf("17:  %g     %g\n", tmp,besselj_zero(5,1)^2)
+
+  tmp = real(λ[18])
+  @printf("18:  %g     %g\n", tmp,besselj_zero(3,2)^2)
+
+  tmp = real(λ[19])
+  @printf("19:  %g     %g\n", tmp,besselj_zero(3,2)^2)
+
+  tmp = real(λ[20])
+  @printf("20:  %g     %g\n", tmp,9.936109524217688^2)#besselj_zero(6,1)^2)
+
+  tmp = real(λ[21])
+  @printf("21:  %g     %g\n", tmp,9.936109524217688^2)#besselj_zero(6,1)^2)
+
+  tmp = real(λ[22])
+  @printf("22:  %g     %g\n", tmp,besselj_zero(1,3)^2)
+
+  tmp = real(λ[23])
+  @printf("23:  %g     %g\n", tmp,besselj_zero(1,3)^2)
+
+  tmp = real(λ[24])
+  @printf("24:  %g     %g\n", tmp,besselj_zero(4,2)^2)
+
+  tmp = real(λ[25])
+  @printf("25:  %g     %g\n", tmp,besselj_zero(4,2)^2)
+
+  tmp = real(λ[26])
+  @printf("26:  %g     %g\n", tmp,11.086370019245084^2)#besselj_zero(7,1)^2)
+
+  tmp = real(λ[27])
+  @printf("27:  %g     %g\n", tmp,11.086370019245084^2)#besselj_zero(7,1)^2)
+
+  tmp = real(λ[28])
+  @printf("28:  %g     %g\n", tmp,besselj_zero(2,3)^2)
+
+  tmp = real(λ[29])
+  @printf("29:  %g     %g\n", tmp,besselj_zero(2,3)^2)
+
+  tmp = real(λ[30])
+  @printf("30:  %g     %g\n", tmp,besselj_zero(0,4)^2)
 
 end
 

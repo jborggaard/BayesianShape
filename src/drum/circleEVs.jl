@@ -1,6 +1,6 @@
 function circleEVs(nev)
-  if nev>13
-    error("Only 13 eigenvalues are currently available for the circle problem. Talk to Jeff to get more. ;-)");
+  if nev>30
+    error("Only 30 eigenvalues are currently available for the circle problem. Talk to Jeff to get more. ;-)");
   end
 
   lam = zeros(13);
@@ -17,6 +17,23 @@ function circleEVs(nev)
   lam[11] = besselj_zero(4,1)^2;
   lam[12] = besselj_zero(4,1)^2;
   lam[13] = besselj_zero(2,2)^2;
+  lam[14] = besselj_zero(2,2)^2;
+  lam[15] = besselj_zero(0,3)^2;
+  lam[16] = besselj_zero(5,1)^2;
+  lam[17] = besselj_zero(5,1)^2;
+  lam[18] = besselj_zero(3,2)^2;
+  lam[19] = besselj_zero(3,2)^2;
+  lam[20] = 9.936109524217688^2; # bug in besselj_zero(6,1)^2; (and roots of high \nu bessel functions)
+  lam[21] = 9.936109524217688^2; # bug in besselj_zero(6,1)^2; (issue #10 in besselj_zero.jl)
+  lam[22] = besselj_zero(1,3)^2;
+  lam[23] = besselj_zero(1,3)^2;
+  lam[24] = besselj_zero(4,2)^2;
+  lam[25] = besselj_zero(4,2)^2;
+  lam[26] = 11.086370019245084^2; # bug in besselj_zero(7,1)^2;
+  lam[27] = 11.086370019245084^2; # bug in besselj_zero(7,1)^2;
+  lam[28] = besselj_zero(2,3)^2;
+  lam[29] = besselj_zero(2,3)^2;
+  lam[30] = besselj_zero(0,4)^2;
 
   ##this was a draft of semi-hacky code to compute a more general list
   ##but it failed because of the repeated roots
