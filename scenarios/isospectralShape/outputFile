@@ -1,0 +1,49 @@
+┌ Warning: The Pkg REPL mode is intended for interactive use only, and should not be used from scripts. It is recommended to use the functional API instead.
+└ @ Pkg.REPLMode ~/julia/usr/share/julia/stdlib/v1.8/Pkg/src/REPLMode/REPLMode.jl:377
+  Activating project at `/Volumes/borggaard/Research/Stochastic_Random/BayesianShape/scenarios/isospectralShape`
+Parsed args:
+  nev  =>  20
+  nsamp  =>  2000
+  rmax  =>  9.0
+  regularity  =>  1.0
+  rmin  =>  0.2
+  scen  =>  isoShape
+Starting setup...
+Regularity = 1.0
+Using nev=   20.000000 and kappa=    1.000000
+Radius constraints: (0.2,9.0)
+obsMean is:
+20-element Vector{Float64}:
+  6.540813909
+  6.601734625
+ 10.86849532
+ 11.06411183
+ 11.18288225
+ 11.58919436
+ 13.60955176
+ 13.60959103
+ 13.60964353
+ 13.96635365
+ 14.66879231
+ 14.9068866
+ 15.66712442
+ 16.06653466
+ 17.46166006
+ 18.42146297
+ 19.72903042
+ 20.96754459
+ 21.80938303
+ 23.49062664
+Setting sampler to pCN (step size=0.25)
+WARNING: Method definition #38(Any) in module InfDimMCMC at /Users/jborggaa/.julia/packages/InfDimMCMC/F3HM1/src/mcmcStubs.jl:8 overwritten in module Main at /Volumes/borggaard/Research/Stochastic_Random/BayesianShape/scenarios/isospectralShape/setup.jl:111.
+Finished setup.
+Writing output to /Users/jborggaa/scenarios/isoShape/isoShape_004.h5...
+
+-----------------------Starting Burn In-----------------------
+
+----------------------Starting Sampling-----------------------
+
+Sample #1:
+0.2969 <= a (0.4532). candidate accepted.
+
+Sample #2:

@@ -3,7 +3,7 @@ function circleEVs(nev)
     error("Only 30 eigenvalues are currently available for the circle problem. Talk to Jeff to get more. ;-)");
   end
 
-  lam = zeros(13);
+  lam = zeros(30);
   lam[1]  = besselj_zero(0,1)^2;
   lam[2]  = besselj_zero(1,1)^2;
   lam[3]  = besselj_zero(1,1)^2;
