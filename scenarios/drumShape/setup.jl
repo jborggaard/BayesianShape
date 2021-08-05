@@ -30,12 +30,14 @@ def_nev    = 13;
 def_kappa  = 1.00;
 def_rmin   = 0.2;
 def_rmax   = 5.0;
+def_lc     = 3e-2;
     
 regularity = (@isdefined regularity) ? regularity : def_regularity;
 nEigVals   = (@isdefined nev    )    ? nev        : def_nev;
 kappa      = (@isdefined kappa  )    ? kappa      : def_kappa;
 rMin       = (@isdefined rmin   )    ? rmin       : def_rmin;
 rMax       = (@isdefined rmax   )    ? rmax       : def_rmax;
+lc         = (@isdefined lc     )    ? lc         : def_lc;
 
 #def_obsmean = circleEVs(def_nev); #inputOutput(1.0,zeros(2),zeros(2);nev=def_nev,κ=def_kappa); #zeros(def_nev);
 #def_obsstd  = sqrt.(sqrt.(def_obsmean));
@@ -47,6 +49,7 @@ obsStd  = 0.08*obsMean; #obsMean.^0.25;
 println("Regularity = $(regularity)");
 @printf("Using nev=%12.6f and kappa=%12.6f\n",nEigVals,kappa);
 println("Radius constraints: ($(rMin),$(rMax))");
+println("Mesh resolution (lc) = $(lc)");
 
 #data#
 datafile = (@isdefined datafile) ? datafile : def_datafile;
@@ -102,11 +105,11 @@ llh = MvNormal(obsMean,obsStd);
 # end
 
 # Forward map and observations #
-let nBsplines=nBsplines,nEigVals=nEigVals,kappa=kappa
+let nBsplines=nBsplines,nEigVals=nEigVals,kappa=kappa,rMin=rMin,rMax=rMax,lc=lc
   function drumSolve(ab)
     a = ab[1:2:end]; 
     b = ab[2:2:end];
-    return inputOutput(a,b;N=nBsplines,nev=nEigVals,κ=kappa,rMin=rMin,rMax=rMax);
+    return inputOutput(a,b;N=nBsplines,nev=nEigVals,κ=kappa,rMin=rMin,rMax=rMax,lc=lc);
   end
   InfDimMCMC.mcmcForwardMap(s) = drumSolve(s.param);
 end

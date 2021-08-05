@@ -106,7 +106,7 @@ llh = MvNormal(obsMean,obsStd);
 # end
 
 # Forward map and observations #
-let nBsplines=nBsplines,nEigVals=nEigVals,kappa=kappa
+let nBsplines=nBsplines,nEigVals=nEigVals,kappa=kappa,rMin=rMin,rMax=rMax,lc=lc
   function drumSolve(ab)
     a = ab[1:2:end]; 
     b = ab[2:2:end];

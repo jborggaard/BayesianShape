@@ -46,6 +46,10 @@ apSettings = ArgParseSettings();
     help = "maximum radius"
     arg_type = Float64
     required = false
+  "--lc"
+    help = "mesh resolution"
+    arg_type = Float64
+    required = false
 end
 args = parse_args(apSettings,as_symbols=true);
 
@@ -95,6 +99,12 @@ if (@isdefined restartfile)
   end
   rmax = rmaxTmp;
 
+  lcTmp = h5read(restartfile,"lc");
+  if (@isdefined lc) && (lcTmp != lc)
+    error("lc is specified ($(lc)) but does not match lc from restartfile ($(lcTmp))!");
+  end
+  lc = lcTmp;
+
   if (!@isdefined mcmc)
     mcmc = h5read(restartfile,"mcmc");
   end
@@ -128,6 +138,7 @@ h5write(outFile,"regularity",regularity);
 h5write(outFile,"kappa",kappa);
 h5write(outFile,"rMin",rMin);
 h5write(outFile,"rMax",rMax);
+h5write(outFile,"lc",lc);
 h5write(outFile,"nEigVals",nEigVals);
 h5write(outFile,"obsMean",obsMean);
 h5write(outFile,"obsStd",obsStd);
