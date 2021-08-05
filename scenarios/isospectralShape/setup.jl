@@ -9,13 +9,13 @@ using HDF5
 
 using FEMfunctions
 
-include("../../src/isospectral/fitBSpline2Fourier.jl")
+include("../../src/drum/fitBSpline2Fourier.jl")
 include("../../src/drum/computeFEMmatrices.jl")
 include("../../src/drum/makeDrumMesh.jl")
 include("../../src/drum/fitBSpline2Fourier.jl")
 include("../../src/radiusSquash.jl")
-include("../../src/isospectral/inputOutput.jl")
-include("../../src/isospectral/isoEVs.jl")
+include("../../src/drum/inputOutput.jl")
+include("../../src/drum/isoEVs.jl")
 
 using InfDimMCMC
 
@@ -30,23 +30,27 @@ def_nev    = 20;
 def_kappa  = 1.00;
 def_rmin   = 0.2;
 def_rmax   = 9.0;
+def_lc     = 7e-3;
     
 regularity = (@isdefined regularity) ? regularity : def_regularity;
 nEigVals   = (@isdefined nev    )    ? nev        : def_nev;
 kappa      = (@isdefined kappa  )    ? kappa      : def_kappa;
 rMin       = (@isdefined rmin   )    ? rmin       : def_rmin;
 rMax       = (@isdefined rmax   )    ? rmax       : def_rmax;
+lc         = (@isdefined lc     )    ? lc         : def_lc;
 
 #def_obsmean = isoEVs(def_nev); #inputOutput(1.0,zeros(2),zeros(2);nev=def_nev,κ=def_kappa); #zeros(def_nev);
 #def_obsstd  = sqrt.(sqrt.(def_obsmean));
 #obsMean    = (@isdefined obsmean)    ? obsmean    : def_obsmean;
 #obsStd     = (@isdefined obsstd )    ? obsstd     : def_obsstd;
 obsMean = isoEVs(nEigVals); #inputOutput(1.0,zeros(2),zeros(2);nev=def_nev,κ=def_kappa); #zeros(def_nev);
+obsMean ./= obsMean[1]; #normalize to eliminate scaling
 obsStd  = 0.08*obsMean; #obsMean.^0.25;
 
 println("Regularity = $(regularity)");
 @printf("Using nev=%12.6f and kappa=%12.6f\n",nEigVals,kappa);
 println("Radius constraints: ($(rMin),$(rMax))");
+println("Mesh resolution (lc) = $(lc)");
 
 #data#
 datafile = (@isdefined datafile) ? datafile : def_datafile;
@@ -106,7 +110,7 @@ let nBsplines=nBsplines,nEigVals=nEigVals,kappa=kappa
   function drumSolve(ab)
     a = ab[1:2:end]; 
     b = ab[2:2:end];
-    return inputOutput(a,b;N=nBsplines,nev=nEigVals,κ=kappa,rMin=rMin,rMax=rMax);
+    return inputOutput(a,b;N=nBsplines,nev=nEigVals,κ=kappa,rMin=rMin,rMax=rMax,lc=lc);
   end
   InfDimMCMC.mcmcForwardMap(s) = drumSolve(s.param);
 end
