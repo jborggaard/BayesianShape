@@ -110,7 +110,8 @@ let nBsplines=nBsplines,nEigVals=nEigVals,kappa=kappa,rMin=rMin,rMax=rMax,lc=lc
   function drumSolve(ab)
     a = ab[1:2:end]; 
     b = ab[2:2:end];
-    return inputOutput(a,b;N=nBsplines,nev=nEigVals,κ=kappa,rMin=rMin,rMax=rMax,lc=lc);
+    evs = inputOutput(a,b;N=nBsplines,nev=nEigVals,κ=kappa,rMin=rMin,rMax=rMax,lc=lc);
+    return ( evs ./ evs[1] );
   end
   InfDimMCMC.mcmcForwardMap(s) = drumSolve(s.param);
 end
