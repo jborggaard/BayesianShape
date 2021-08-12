@@ -80,31 +80,27 @@ mcmcP.computeGradients = false;
 
 ## Setup sample space ##
 
+sampInd  = 2:(2*unkDim);
+nSampInd = length(sampInd);
+
 #sampComp = :sincos; #sample sines and cosines
 sampComp = :cos;    #sample only cosines
 
 # Prior #
 p = 2*regularity + 1; #see Dashti-Stuart Thm 2.12 
 sinCosStd = (1:unkDim).^(-0.5*p); #2.0.^(-(0:unkDim-1)./4); 
-if sampComp == :sincos
-  prStd = zeros(2*unkDim);
-  prStd[1:2:end] = sinCosStd; #cos
-  prStd[2:2:end] = sinCosStd; #sin
-elseif sampComp == :cos
-  prStd = sinCosStd; #cos
-else
-  error("Unrecognized sampComp=$(sampComp)");
-end
+prStd = zeros(2*unkDim);
+prStd[1:2:end] = sinCosStd; #cos
+prStd[2:2:end] = sinCosStd; #sin
+prStd = prStd[sampInd]; #truncate to sampling indices
 mcmcP.prior = MvNormal(zeros(length(prStd)),prStd);
 
 # Likelihood #
 llh = MvNormal(obsMean,obsStd);
 
 # Map from samples to vector components #
-if sampComp == :cos
-  sampInd = 1:2:(2*unkDim);
+if nSampInd != 2*unkDim
   sampNoInd = setdiff(1:2*unkDim,sampInd); #fixed coefficients
-  nSampInd  = length(sampInd);
   let unkDim=unkDim, nSampInd=nSampInd, sampInd=sampInd
     function padZeros(s)
       p = zeros(2*unkDim);
