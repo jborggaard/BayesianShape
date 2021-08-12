@@ -21,7 +21,7 @@ using InfDimMCMC
 
 #defaults (typically overwritten by arguments to run.jl)
 def_datafile  ="dummy";#ADR_ROOT*"/data/point_twohump_012.h5";
-def_mcmc  = "pcn|2^-2";
+def_mcmc  = "pcn|2^-3";
 def_nsamp = 10;
 def_nburn = 0;
 
@@ -80,30 +80,45 @@ mcmcP.computeGradients = false;
 
 ## Setup sample space ##
 
+#sampComp = :sincos; #sample sines and cosines
+sampComp = :cos;    #sample only cosines
+
 # Prior #
 p = 2*regularity + 1; #see Dashti-Stuart Thm 2.12 
 sinCosStd = (1:unkDim).^(-0.5*p); #2.0.^(-(0:unkDim-1)./4); 
-prStd = zeros(2*unkDim);
-prStd[1:2:end] = sinCosStd; #cos
-prStd[2:2:end] = sinCosStd; #sin
-mcmcP.prior = MvNormal(zeros(2*unkDim),prStd);
+if sampComp == :sincos
+  prStd = zeros(2*unkDim);
+  prStd[1:2:end] = sinCosStd; #cos
+  prStd[2:2:end] = sinCosStd; #sin
+elseif sampComp == :cos
+  prStd = sinCosStd; #cos
+else
+  error("Unrecognized sampComp=$(sampComp)");
+end
+mcmcP.prior = MvNormal(zeros(length(prStd)),prStd);
 
 # Likelihood #
 llh = MvNormal(obsMean,obsStd);
 
-# # Map from samples to vector components #
-# let nk=kdiscV.nk, sampInd=sampInd
-#   function padZeros(s)
-#     p = zeros(nk);
-#     p[sampInd] = s;
-#     return p;
-#   end
-#   InfDimMCMC.mcmcSampToParamMap(s) = padZeros(s.samp);
-# end
-# let nk=kdiscV.nk
-#   gspMat = [ zeros(2,nSampInd); I ];
-#   InfDimMCMC.mcmcGradSampToParamMap(s) = gspMat;
-# end
+# Map from samples to vector components #
+if sampComp == :cos
+  sampInd = 1:2:(2*unkDim);
+  sampNoInd = setdiff(1:2*unkDim,sampInd); #fixed coefficients
+  nSampInd  = length(sampInd);
+  let unkDim=unkDim, nSampInd=nSampInd, sampInd=sampInd
+    function padZeros(s)
+      p = zeros(2*unkDim);
+      p[sampInd] = s;
+      return p;
+    end
+    InfDimMCMC.mcmcSampToParamMap(s) = padZeros(s.samp);
+  end
+  let unkDim=unkDim, nSampInd=nSampInd, sampInd=sampInd
+    gspMat = zeros(2*unkDim,nSampInd);
+    gspMat[CartesianIndex.(sampInd,1:nSampInd)] .=  1.0;
+    InfDimMCMC.mcmcGradSampToParamMap(s) = gspMat;
+  end
+end
 
 # Forward map and observations #
 let nBsplines=nBsplines,nEigVals=nEigVals,kappa=kappa,rMin=rMin,rMax=rMax,lc=lc

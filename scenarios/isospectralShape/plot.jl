@@ -19,12 +19,37 @@ include("../../src/plotSamplesLpdfs.jl");
 include("../../src/plotQuantiles.jl");
 include("../../src/drum/plotMap.jl");
 include("../../src/drum/plotSampleShapes.jl");
-plotRadiiQuantiles(outFile, margin=10mm);
+
 plotQuantiles(outFile, margin=10mm);
-plotSampleShapes(outFile);
 plotSamplesLpdfs(outFile, margin=10mm);
-plotMap(outFile;lpdfIdx=3);
-plotMap(outFile;lpdfIdx=2);
+
+# #assumes sampling of whole space (samples = parameters)
+# plotRadiiQuantiles(outFile, margin=10mm);
+# plotSampleShapes(outFile);
+# plotMap(outFile;lpdfIdx=3);
+# plotMap(outFile;lpdfIdx=2);
+
+#samp to parameter map is not the identity
+s = mcmcSample();
+gsp = mcmcGradSampToParamMap(s); #assume constant
+rMin  = h5read(outFile,"rMin");
+rMax  = h5read(outFile,"rMax");
+lpdfs = h5read(outFile,"lpdfs");
+samples = h5read(outFile,"samples");
+params = samples * gsp';
+
+plotFile = replace(outFile,".h5"=>"_radii_quantiles");
+plotRadiiQuantiles(params,plotFile; rMin=rMin,rMax=rMax, margin=10mm);
+plotFile = replace(outFile,".h5"=>"_sample_shapes");
+plotSampleShapes(params,plotFile;rMin=rMin,rMax=rMax);
+
+plotFile = replace(outFile,".h5"=>"_mle");
+param_mle = getMap(params,lpdfs,3);
+plotSampleShapes(param_mle,plotFile;rMin=rMin,rMax=rMax);
+plotFile = replace(outFile,".h5"=>"_map");
+param_map = getMap(params,lpdfs,2);
+plotSampleShapes(param_map,plotFile;rMin=rMin,rMax=rMax);
+
 
 #include("../../src/plotMapIBs.jl");
 #include("../../src/plotRadiiCorr.jl");
