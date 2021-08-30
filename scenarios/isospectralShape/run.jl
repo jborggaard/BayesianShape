@@ -75,7 +75,7 @@ if (@isdefined restartfile)
   end
   regularity = regularityTmp;
 
-  nevTmp = h5read(restartfile,"nev");
+  nevTmp = h5read(restartfile,"nEigVals");
   if (@isdefined nev) && (nevTmp != nev)
     error("nev is specified ($(nev)) but does not match nev from restartfile ($(nevTmp))!");
   end

@@ -16,7 +16,7 @@ function plotSampleShapes(ab::Array{Float64,1}; rMin=0.5, rMax=1.5, kwargs...)
   return p;
 end
 
-function plotSampleShapes(samples::AbstractArray; idx=sort(rand(1:size(samples,1),9)), rMin=0.5, rMax=1.5, kwargs...)
+function plotSampleShapes(samples::AbstractArray; idx=round.(Int,range(1, size(samples,1), length=9)), rMin=0.5, rMax=1.5, kwargs...)
 
   sz = sqrt(length(idx))*300;
   p = plot(proj=:polar,size=(sz,sz),layout=(length(idx)),leg=false);
@@ -38,7 +38,7 @@ function plotSampleShapes(samples::AbstractArray; idx=sort(rand(1:size(samples,1
   return p;
 end
 
-function plotSampleShapes(samples::AbstractArray, outFile::String; exts=["png"], idx=sort(rand(1:size(samples,1),9)), kwargs...)
+function plotSampleShapes(samples::AbstractArray, outFile::String; exts=["png"], idx=round.(Int,range(1, size(samples,1), length=9)), kwargs...)
   p = plotSampleShapes(samples; kwargs...);
   plotSave(p,outFile,exts);
 end
