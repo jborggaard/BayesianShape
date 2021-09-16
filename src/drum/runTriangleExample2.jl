@@ -10,8 +10,8 @@ include("makeTriangleMesh.jl")
 include("computeFEMmatrices.jl")
 
 a = zeros(Float64,2)
-a[1] = 0.635#0.5
-a[2] = 0.275#1.0
+a[1] = .84906#0.63#0.5
+a[2] = .31995#0.275#1.0
 x,eConn,boundaryNodes = makeTriangleMesh(a)
 
 nBoundary = length(boundaryNodes)
@@ -21,7 +21,7 @@ A,M = computeFEMmatrices(x,eConn,boundaryNodes,dBoundary)
 nNodes = size(x,1)
 ef1 = zeros(Float64,nNodes,1)
 
-nev = 50
+nev = 10
 λ, ϕ = eigs(A,M; which=:SM, nev)
 
 for i=1:nev

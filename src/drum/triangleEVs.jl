@@ -6,8 +6,8 @@ function isoEVs(nev)
   #  See case A in Section 3.
   #
  
-  if nev>30
-    error("Only 30 eigenvalues are currently available for the triangle problem. Talk to Jeff to get more. ;-)");
+  if nev>50
+    error("Only 50 eigenvalues are currently available for the triangle problem. Talk to Jeff to get more. ;-)");
   end
 
   lam = zeros(30);
@@ -41,6 +41,26 @@ function isoEVs(nev)
   lam[28] = 3335.977015
   lam[29] = 3525.072572
   lam[30] = 3583.034133
+  lam[31] = 3680.141151
+  lam[32] = 3739.531294
+  lam[33] = 3968.362045
+  lam[34] = 4014.653006
+  lam[35] = 4080.193257
+  lam[36] = 4134.924514
+  lam[37] = 4354.085871
+  lam[38] = 4404.379962
+  lam[39] = 4529.760298
+  lam[40] = 4599.451684
+  lam[41] = 4732.60348
+  lam[42] = 4850.174512
+  lam[43] = 4950.449534
+  lam[44] = 5033.889615
+  lam[45] = 5131.098288
+  lam[46] = 5254.38567
+  lam[47] = 5319.00187
+  lam[48] = 5455.787778
+  lam[49] = 5542.936332
+  lam[50] = 5598.991273
 
   return lam[1:nev];
 end
