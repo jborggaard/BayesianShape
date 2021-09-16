@@ -46,6 +46,10 @@ apSettings = ArgParseSettings();
     help = "maximum radius"
     arg_type = Float64
     required = false
+  "--lc"
+    help = "mesh resolution"
+    arg_type = Float64
+    required = false
 end
 args = parse_args(apSettings,as_symbols=true);
 
@@ -95,6 +99,12 @@ if (@isdefined restartfile)
   end
   rmax = rmaxTmp;
 
+  lcTmp = h5read(restartfile,"lc");
+  if (@isdefined lc) && (lcTmp != lc)
+    error("lc is specified ($(lc)) but does not match lc from restartfile ($(lcTmp))!");
+  end
+  lc = lcTmp;
+
   if (!@isdefined mcmc)
     mcmc = h5read(restartfile,"mcmc");
   end
@@ -102,7 +112,7 @@ end
 
 
 #outDir="/projects/SIAllocation/stokes/$(scen)";
-outDir="/Users/jborggaa/scenarios/$(scen)";
+outDir="/home/jborggaa/scenarios/$(scen)";
 
 if ( ! isdir(outDir) ) 
   println("Output directory $(outDir) does not exist. Creating...");
@@ -115,23 +125,59 @@ println("Finished setup.");
 
 
 ## Setup output file ##
-mkfilename(cnt;outDir=outDir,scen=scen) = @sprintf("%s/%s_%03d.h5",outDir,scen,cnt);
-cnt=1;
-outFile=mkfilename(cnt);
-while (isfile(outFile))
-  global cnt, outFile;
-  outFile=mkfilename(cnt);
-  cnt+=1;
+#mkfilename(cnt;outDir=outDir,scen=scen) = @sprintf("%s/%s_%03d.h5",outDir,scen,cnt);
+#function testFile(file::String)
+#  success = false;
+#  if !isfile(file)
+#    success = true;
+#    try
+#      h5write(file,"datafile",datafile);
+#    catch
+#      success = false;
+#    end
+#  end
+#  return success;
+#end
+#cnt=1;
+#outFile=mkfilename(cnt);
+#while (!testFile(outFile))
+#  global cnt, outFile;
+#  outFile=mkfilename(cnt);
+#  cnt+=1;
+#end
+function uniqueFile(fileBase::String,dataName::String,data; maxIter=1000, ext=".h5", verbose=1)
+  file = "";
+  cnt=1;
+  success = false;
+  while !success && (cnt < maxIter)
+    file = @sprintf("%s_%03d%s",fileBase,cnt,ext);
+    (verbose>1) && println("Trying file $(file)...");
+    if !isfile(file)
+      success = true;
+      #avoid race conditions between simultaneous jobs: 
+      #fail if we can't create the file
+      try
+        h5write(file,dataName,data);
+      catch
+        (verbose>0) && println("File $(file) did not exist but failed to write to it. Trying again...");
+        success = false;
+      end
+    end
+    cnt+=1;
+  end
+  return file;
 end
+outFile = uniqueFile("$(outDir)/$(scen)","datafile",datafile);
 println("Writing output to $(outFile)...");
-h5write(outFile,"datafile",datafile);
 h5write(outFile,"regularity",regularity);
 h5write(outFile,"kappa",kappa);
 h5write(outFile,"rMin",rMin);
 h5write(outFile,"rMax",rMax);
+h5write(outFile,"lc",lc);
 h5write(outFile,"nEigVals",nEigVals);
 h5write(outFile,"obsMean",obsMean);
 h5write(outFile,"obsStd",obsStd);
+h5write(outFile,"sampInd",collect(sampInd));
 (@isdefined nburn) && h5write(outFile,"nburn",nburn);
 (@isdefined nsamp) && h5write(outFile,"nsamp",nsamp);
 (@isdefined mcmc ) && h5write(outFile,"mcmc",mcmc);

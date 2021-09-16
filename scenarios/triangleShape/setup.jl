@@ -39,13 +39,13 @@ rMin       = (@isdefined rmin   )    ? rmin       : def_rmin;
 rMax       = (@isdefined rmax   )    ? rmax       : def_rmax;
 lc         = (@isdefined lc     )    ? lc         : def_lc;
 
-#def_obsmean = isoEVs(def_nev); #inputOutput(1.0,zeros(2),zeros(2);nev=def_nev,κ=def_kappa); #zeros(def_nev);
+#def_obsmean = triangleEVs(def_nev); #inputOutput(1.0,zeros(2),zeros(2);nev=def_nev,κ=def_kappa); #zeros(def_nev);
 #def_obsstd  = sqrt.(sqrt.(def_obsmean));
 #obsMean    = (@isdefined obsmean)    ? obsmean    : def_obsmean;
 #obsStd     = (@isdefined obsstd )    ? obsstd     : def_obsstd;
-obsMean = isoEVs(nEigVals); #inputOutput(1.0,zeros(2),zeros(2);nev=def_nev,κ=def_kappa); #zeros(def_nev);
+obsMean = triangleEVs(nEigVals); #inputOutput(1.0,zeros(2),zeros(2);nev=def_nev,κ=def_kappa); #zeros(def_nev);
 obsMean ./= obsMean[1]; #normalize to eliminate scaling
-obsStd  = 0.08*obsMean; #obsMean.^0.25;
+obsStd  = 0.01*obsMean; #0.08*obsMean; #obsMean.^0.25;
 
 println("Identifying drum shape with triangle A data\n\n");
 println("Regularity = $(regularity)");
@@ -81,30 +81,41 @@ mcmcP.computeGradients = false;
 
 ## Setup sample space ##
 
+sampInd  = 2:(2*unkDim);
+nSampInd = length(sampInd);
+
+#sampComp = :sincos; #sample sines and cosines
+sampComp = :cos;    #sample only cosines
+
 # Prior #
 p = 2*regularity + 1; #see Dashti-Stuart Thm 2.12 
 sinCosStd = (1:unkDim).^(-0.5*p); #2.0.^(-(0:unkDim-1)./4); 
 prStd = zeros(2*unkDim);
 prStd[1:2:end] = sinCosStd; #cos
 prStd[2:2:end] = sinCosStd; #sin
-mcmcP.prior = MvNormal(zeros(2*unkDim),prStd);
+prStd = prStd[sampInd]; #truncate to sampling indices
+mcmcP.prior = MvNormal(zeros(length(prStd)),prStd);
 
 # Likelihood #
 llh = MvNormal(obsMean,obsStd);
 
-# # Map from samples to vector components #
-# let nk=kdiscV.nk, sampInd=sampInd
-#   function padZeros(s)
-#     p = zeros(nk);
-#     p[sampInd] = s;
-#     return p;
-#   end
-#   InfDimMCMC.mcmcSampToParamMap(s) = padZeros(s.samp);
-# end
-# let nk=kdiscV.nk
-#   gspMat = [ zeros(2,nSampInd); I ];
-#   InfDimMCMC.mcmcGradSampToParamMap(s) = gspMat;
-# end
+# Map from samples to vector components #
+if nSampInd != 2*unkDim
+  sampNoInd = setdiff(1:2*unkDim,sampInd); #fixed coefficients
+  let unkDim=unkDim, nSampInd=nSampInd, sampInd=sampInd
+    function padZeros(s)
+      p = zeros(2*unkDim);
+      p[sampInd] = s;
+      return p;
+    end
+    InfDimMCMC.mcmcSampToParamMap(s) = padZeros(s.samp);
+  end
+  let unkDim=unkDim, nSampInd=nSampInd, sampInd=sampInd
+    gspMat = zeros(2*unkDim,nSampInd);
+    gspMat[CartesianIndex.(sampInd,1:nSampInd)] .=  1.0;
+    InfDimMCMC.mcmcGradSampToParamMap(s) = gspMat;
+  end
+end
 
 # Forward map and observations #
 let nBsplines=nBsplines,nEigVals=nEigVals,kappa=kappa,rMin=rMin,rMax=rMax,lc=lc
