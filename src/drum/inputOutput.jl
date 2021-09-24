@@ -1,8 +1,8 @@
 # N:   number of BSplines used to represent the drum shape
 # nev: how many frequencies we hear
-function inputOutput(a,b; N=40, nev = 1, κ=1.0, rMin=0.2, rMax=5.0, lc=7e-3)
+function inputOutput(ab; N=40, nev = 1, κ=1.0, rMin=0.2, rMax=5.0, lc=7e-3)
 
-  r,err = fitBSpline2Fourier(0.5*(rMin+rMax),a,b,N)
+  r,err = fitBSpline2Fourier(ab,N)
   #@printf("B-spline approximation error (%d B-splines) is: %12.8f\n",N,err)
   #println("Extrema of r (pre-smoothing) are:");
   #display(extrema(r));
@@ -11,7 +11,7 @@ function inputOutput(a,b; N=40, nev = 1, κ=1.0, rMin=0.2, rMax=5.0, lc=7e-3)
   #α = 1.0;
   #r0 = 0.5*(rMax+rMin);
   #r = r0 .+ (rMax-rMin)*atan.(α*(r.-r0))/π;
-  r = radiusSquash(r; rMin=rMin, rMax=rMax);
+  r = radiusSquash(r, rMin, rMax);
   #println("Extrema of r (post-smoothing) are:");
   #display(extrema(r));
 

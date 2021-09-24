@@ -29,6 +29,15 @@ function fitBSpline2Fourier(a0,a,b,N)
   return x,err;
 end
 
+#in this version, a0,a,b are passed in as part of the same vector,
+#so we split them and pass them to the original version
+function fitBSpline2Fourier(ab,N)
+  a0 = ab[1];
+  a  = ab[2:2:end];
+  b  = ab[3:2:end];
+  return fitBSpline2Fourier(a0,a,b,N);
+end
+
 function computeRHSa(n,N)
 
   rhs = zeros(N);
