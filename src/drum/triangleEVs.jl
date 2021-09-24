@@ -1,4 +1,4 @@
-function isoEVs(nev)
+function triangleEVs(nev)
   #  Writes out the first 30 eigenvalues that were computed using 
   #  runTriangleExample.  These are eigenvalues associated with the
   #  triangular drum in "Any three eigenvalues do not determine a
@@ -10,7 +10,7 @@ function isoEVs(nev)
     error("Only 50 eigenvalues are currently available for the triangle problem. Talk to Jeff to get more. ;-)");
   end
 
-  lam = zeros(30);
+  lam = zeros(50);
   lam[ 1] =  233.4680566
   lam[ 2] =  391.4452799
   lam[ 3] =  546.1468169
