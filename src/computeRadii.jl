@@ -1,27 +1,31 @@
 #computeRadii() Computes radii from Fourier coefficients
 
 #this version assumes we are given a Fourier basis
-function computeRadii(samples::Array{Float64,2},fb::Array{Float64,2};rMin=0.5,rMax=1.5, α=π/(rMax-rMin))
-    #mean
-    a0 = 0.5*(rMax+rMin);
+function computeRadii(samples::Array{Float64,2},fb::Array{Float64,2})
     
     #compute unsquashed
-    r = a0 .+ samples*fb;
+    if isodd(size(samples,2))
+      r = samples[:,1] + samples[:,2:end]*fb;
+    else
+      r = a0 .+ samples*fb;
+    end
 
     #squash
-    r = radiusSquash(r; rMin=rMin, rMax=rMax, α=α);
+    r = radiusSquash(r);
 
     return r;
 end
-function computeRadii(ab::Array{Float64,1},fb::Array{Float64,2};rMin=0.5,rMax=1.5, α=π/(rMax-rMin))
-    #mean
-    a0 = 0.5*(rMax+rMin);
+function computeRadii(ab::Array{Float64,1},fb::Array{Float64,2})
     
     #compute unsquashed
-    r = a0 .+ fb'*ab;
+    if isodd(length(ab))
+      r = ab[1] .+ fb'*ab;
+    else
+      r = a0 .+ fb'*ab;
+    end
 
     #squash
-    r = radiusSquash(r; rMin=rMin, rMax=rMax, α=α);
+    r = radiusSquash(r);
 
     return r;
 end
@@ -35,11 +39,15 @@ end
 #  fb = fourierBasis(size(samples,2)÷2,th);
 #  return computeRadii(samples,fb;rMin=rMin,rMax=rMax, α=α);
 #end
-function computeRadii(samples::Array{Float64,2},th::Union{Array{Float64,1},AbstractRange};rMin=0.5,rMax=1.5, α=π/(rMax-rMin))
-  fb = fourierBasis(size(samples,2)÷2,th);
-  return computeRadii(samples,fb;rMin=rMin,rMax=rMax, α=α);
+function computeRadii(samples::Array{Float64,2},th::Union{Array{Float64,1},AbstractRange})
+  n = size(samples,2);
+  nf = isodd(n) ? (n-1)÷2 : n÷2;
+  fb = fourierBasis(nf,th);
+  return computeRadii(samples,fb;rMin=rMin,rMax=rMax);
 end
-function computeRadii(ab::Array{Float64,1},th::Union{Array{Float64,1},AbstractRange};rMin=0.5,rMax=1.5, α=π/(rMax-rMin))
-  fb = fourierBasis(length(ab)÷2,th);
-  return computeRadii(ab,fb;rMin=rMin,rMax=rMax, α=α);
+function computeRadii(ab::Array{Float64,1},th::Union{Array{Float64,1},AbstractRange})
+  n = length(ab);
+  nf = isodd(n) ? (n-1)÷2 : n÷2;
+  fb = fourierBasis(nf,th);
+  return computeRadii(ab,fb;rMin=rMin,rMax=rMax);
 end

@@ -71,7 +71,7 @@ nBsplines = 160;
 #define squash methodology
 squashE = 0.1;
 include("../../src/squash/squashPolyinterp.jl");
-radiusSquash(r,rMin,rMax) = squashPolyinterp(r,rMin,rMax;e=squashE);
+radiusSquash(r) = squashPolyinterp(r,rMin,rMax;e=squashE);
 println("Squashing with squashPolyinterp with e=$(squashE)");
 
 
@@ -128,9 +128,9 @@ if nSampInd != 2*unkDim+1
 end
 
 # Forward map and observations #
-let nBsplines=nBsplines,nEigVals=nEigVals,kappa=kappa,rMin=rMin,rMax=rMax,lc=lc
+let nBsplines=nBsplines,nEigVals=nEigVals,kappa=kappa,lc=lc
   function drumSolve(ab)
-    evs = inputOutput(ab;N=nBsplines,nev=nEigVals,κ=kappa,rMin=rMin,rMax=rMax,lc=lc);
+    evs = inputOutput(ab;N=nBsplines,nev=nEigVals,κ=kappa,lc=lc);
     return ( evs ./ evs[1] );
   end
   InfDimMCMC.mcmcForwardMap(s) = drumSolve(s.param);

@@ -5,11 +5,11 @@ using Statistics
 using Printf
 
 #plot
-function plotRadiiQuantiles(samples::AbstractArray; th=pi*(0:360)/180, nburn=0, ps=[0.1,0.25,0.5,0.75,0.9], rMin=0.5, rMax=1.5, kwargs...)
+function plotRadiiQuantiles(samples::AbstractArray; th=pi*(0:360)/180, nburn=0, ps=[0.1,0.25,0.5,0.75,0.9], kwargs...)
   #compute radius by angle
   #fb = fourierBasis(size(samples,2)÷2,th);
   #sampleAngles = computeRadii(samples[nburn+1:end,:],fb);
-  sampleAngles = computeRadii(samples[nburn+1:end,:],th;rMin=rMin,rMax=rMax);
+  sampleAngles = computeRadii(samples[nburn+1:end,:],th);
   
   #compute quantiles
   q = zeros(size(sampleAngles,2),length(ps));
@@ -35,14 +35,14 @@ function plotRadiiQuantiles(samples::AbstractArray,outFile::String; exts=["png"]
 end
 
 #read in, plot, and save
-function plotRadiiQuantiles(inFile::String; rMin=0.5, rMax=1.5, kwargs...)
+function plotRadiiQuantiles(inFile::String; kwargs...)
   f = h5open(inFile,"r");
   samples = read(f,"samples");
-  haskey(f,"rMin") && (rMin = read(f,"rMin"));
-  haskey(f,"rMax") && (rMax = read(f,"rMax"));
+  #haskey(f,"rMin") && (rMin = read(f,"rMin"));
+  #haskey(f,"rMax") && (rMax = read(f,"rMax"));
   close(f);
   outFile = replace(inFile,".h5"=>"_radii_quantiles");
-  plotRadiiQuantiles(samples,outFile; rMin=rMin, rMax=rMax, kwargs...);
+  plotRadiiQuantiles(samples,outFile; kwargs...);
 end
 
 
