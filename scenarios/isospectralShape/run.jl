@@ -189,6 +189,7 @@ h5write(outFile,"nEigVals",nEigVals);
 h5write(outFile,"obsMean",obsMean);
 h5write(outFile,"obsStd",obsStd);
 h5write(outFile,"sampInd",collect(sampInd));
+h5write(outFile,"squashMethod",squashMethod);
 (@isdefined nburn) && h5write(outFile,"nburn",nburn);
 (@isdefined nsamp) && h5write(outFile,"nsamp",nsamp);
 (@isdefined mcmc ) && h5write(outFile,"mcmc",mcmc);

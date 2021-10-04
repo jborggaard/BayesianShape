@@ -72,7 +72,8 @@ nBsplines = 160;
 squashE = 0.1;
 include("../../src/squash/squashPolyinterp.jl");
 radiusSquash(r) = squashPolyinterp(r,rMin,rMax;e=squashE);
-println("Squashing with squashPolyinterp with e=$(squashE)");
+squashMethod="squashPolyinterp, e=$(squashE)";
+println("Squashing with: $(squashMethod)");
 
 
 # Setup MCMC Problem ##
@@ -94,7 +95,7 @@ sampInd  = 3:(2*unkDim+1);
 nSampInd = length(sampInd);
 
 #sampComp = :sincos; #sample sines and cosines
-sampComp = :cos;    #sample only cosines
+#sampComp = :cos;    #sample only cosines
 
 # Prior #
 p = 2*regularity + 1; #see Dashti-Stuart Thm 2.12 
