@@ -11,7 +11,7 @@ ENV["GKSwstype"] = "100"
 
 include("../../src/plotSave.jl");
 include("../../src/getMap.jl");
-include("../../src/radiusSquash.jl");
+#include("../../src/radiusSquash.jl");
 include("../../src/fourierBasis.jl");
 include("../../src/computeRadii.jl");
 include("../../src/plotRadiiQuantiles.jl");
@@ -39,16 +39,16 @@ samples = h5read(outFile,"samples");
 params = samples * gsp';
 
 plotFile = replace(outFile,".h5"=>"_radii_quantiles");
-plotRadiiQuantiles(params,plotFile; rMin=rMin,rMax=rMax, margin=10mm);
+plotRadiiQuantiles(params,plotFile; margin=10mm);
 plotFile = replace(outFile,".h5"=>"_sample_shapes");
-plotSampleShapes(params,plotFile;rMin=rMin,rMax=rMax);
+plotSampleShapes(params,plotFile);
 
 plotFile = replace(outFile,".h5"=>"_mle");
 param_mle = getMap(params,lpdfs,3);
-plotSampleShapes(param_mle,plotFile;rMin=rMin,rMax=rMax);
+plotSampleShapes(param_mle,plotFile);
 plotFile = replace(outFile,".h5"=>"_map");
 param_map = getMap(params,lpdfs,2);
-plotSampleShapes(param_map,plotFile;rMin=rMin,rMax=rMax);
+plotSampleShapes(param_map,plotFile);
 
 
 #include("../../src/plotMapIBs.jl");

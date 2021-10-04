@@ -5,7 +5,7 @@ function computeRadii(samples::Array{Float64,2},fb::Array{Float64,2})
     
     #compute unsquashed
     if isodd(size(samples,2))
-      r = samples[:,1] + samples[:,2:end]*fb;
+      r = samples[:,1] .+ samples[:,2:end]*fb;
     else
       r = a0 .+ samples*fb;
     end
@@ -19,7 +19,7 @@ function computeRadii(ab::Array{Float64,1},fb::Array{Float64,2})
     
     #compute unsquashed
     if isodd(length(ab))
-      r = ab[1] .+ fb'*ab;
+      r = ab[1] .+ fb'*ab[2:end];
     else
       r = a0 .+ fb'*ab;
     end
@@ -43,11 +43,11 @@ function computeRadii(samples::Array{Float64,2},th::Union{Array{Float64,1},Abstr
   n = size(samples,2);
   nf = isodd(n) ? (n-1)÷2 : n÷2;
   fb = fourierBasis(nf,th);
-  return computeRadii(samples,fb;rMin=rMin,rMax=rMax);
+  return computeRadii(samples,fb);
 end
 function computeRadii(ab::Array{Float64,1},th::Union{Array{Float64,1},AbstractRange})
   n = length(ab);
   nf = isodd(n) ? (n-1)÷2 : n÷2;
   fb = fourierBasis(nf,th);
-  return computeRadii(ab,fb;rMin=rMin,rMax=rMax);
+  return computeRadii(ab,fb);
 end

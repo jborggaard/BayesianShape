@@ -46,6 +46,10 @@ apSettings = ArgParseSettings();
     help = "maximum radius"
     arg_type = Float64
     required = false
+  "--a0"
+    help = "mean radius"
+    arg_type = Float64
+    required = false
   "--lc"
     help = "mesh resolution"
     arg_type = Float64
@@ -98,6 +102,12 @@ if (@isdefined restartfile)
     error("rMax is specified ($(rmax)) but does not match rMax from restartfile ($(rmaxTmp))!");
   end
   rmax = rmaxTmp;
+
+  a0Tmp = h5read(restartfile,"a0");
+  if (@isdefined a0) && (a0Tmp != a0)
+    error("a0 is specified ($(a0)) but does not match a0 from restartfile ($(a0Tmp))!");
+  end
+  a0 = a0Tmp;
 
   lcTmp = h5read(restartfile,"lc");
   if (@isdefined lc) && (lcTmp != lc)
@@ -174,6 +184,7 @@ h5write(outFile,"kappa",kappa);
 h5write(outFile,"rMin",rMin);
 h5write(outFile,"rMax",rMax);
 h5write(outFile,"lc",lc);
+h5write(outFile,"a0",a0);
 h5write(outFile,"nEigVals",nEigVals);
 h5write(outFile,"obsMean",obsMean);
 h5write(outFile,"obsStd",obsStd);
