@@ -36,7 +36,7 @@ rMin  = h5read(outFile,"rMin");
 rMax  = h5read(outFile,"rMax");
 lpdfs = h5read(outFile,"lpdfs");
 samples = h5read(outFile,"samples");
-params = samples * gsp';
+params = samples * gsp'; params[:,1] .= a0;
 
 plotFile = replace(outFile,".h5"=>"_radii_quantiles");
 plotRadiiQuantiles(params,plotFile; margin=10mm);

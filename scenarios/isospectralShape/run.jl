@@ -26,6 +26,10 @@ apSettings = ArgParseSettings();
     help = "number of burnin samples to run"
     arg_type = Int
     required = false
+  "--ar"
+    help = "target acceptance ratio"
+    arg_type = Float64
+    required = false
   "--kappa"
     help = "XXXXXXX coefficient"
     arg_type = Float64
@@ -193,7 +197,18 @@ h5write(outFile,"squashMethod",squashMethod);
 (@isdefined nburn) && h5write(outFile,"nburn",nburn);
 (@isdefined nsamp) && h5write(outFile,"nsamp",nsamp);
 (@isdefined mcmc ) && h5write(outFile,"mcmc",mcmc);
-
+(@isdefined targetAR ) && h5write(outFile,"targetAR",targetAR);
+#save command line arguments
+for (key,val) in args
+  if val != nothing
+    h5write(outFile,"args/$(key)",val);
+  end
+end
+#save final mcmc parameters
+for (key,val) in mcmcP.mcmc
+  (typeof(val) == Symbol) && ( val=String(val) ); #convert symbols to strings
+  h5write(outFile,"final_mcmc/$(key)",val);
+end
 
 #Initial sample
 function restartSample(filename)
@@ -217,7 +232,7 @@ end
 
 
 ## Run ##
-mcmcTime = @elapsed mcmcRun(mcmcP, s0; verbose=3, outFile=outFile);
+mcmcTime = @elapsed mcmcRun(mcmcP, s0; verbose=3, outFile=outFile, targetAR=targetAR);
 
 
 
