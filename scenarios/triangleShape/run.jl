@@ -26,6 +26,10 @@ apSettings = ArgParseSettings();
     help = "number of burnin samples to run"
     arg_type = Int
     required = false
+  "--ar"
+    help = "target acceptance ratio"
+    arg_type = Float64
+    required = false
   "--kappa"
     help = "XXXXXXX coefficient"
     arg_type = Float64
@@ -54,6 +58,9 @@ apSettings = ArgParseSettings();
     help = "mesh resolution"
     arg_type = Float64
     required = false
+  "--init"
+    help = "how to initialize chain"
+    required = false
 end
 args = parse_args(apSettings,as_symbols=true);
 
@@ -79,7 +86,7 @@ if (@isdefined restartfile)
   end
   regularity = regularityTmp;
 
-  nevTmp = h5read(restartfile,"nev");
+  nevTmp = h5read(restartfile,"nEigVals");
   if (@isdefined nev) && (nevTmp != nev)
     error("nev is specified ($(nev)) but does not match nev from restartfile ($(nevTmp))!");
   end
@@ -120,9 +127,26 @@ if (@isdefined restartfile)
   end
 end
 
+#Handle initilization (part 1)
+if (@isdefined init)
+  if (@isdefined restartfile)
+    @warn("A restart file is given but init is also specified ($(init)). The latter will be ignored...");
+  end
 
-#outDir="/projects/SIAllocation/stokes/$(scen)";
-outDir="/home/jborggaa/scenarios/$(scen)";
+  if init=="true"
+    if (@isdefined a0)
+      @warn("init=true but a0 is also specified ($(a0)). The latter will be ignored...");
+    end
+
+    include("../../src/drum/triangleCoefficients.jl");
+    sTrue = triangleCoefficients();
+    a0 = sTrue[1];
+  end
+end
+
+
+outDir="/projects/SIAllocation/stokes/$(scen)";
+#outDir="/home/jborggaa/scenarios/$(scen)";
 
 if ( ! isdir(outDir) ) 
   println("Output directory $(outDir) does not exist. Creating...");
@@ -193,9 +217,16 @@ h5write(outFile,"squashMethod",squashMethod);
 (@isdefined nburn) && h5write(outFile,"nburn",nburn);
 (@isdefined nsamp) && h5write(outFile,"nsamp",nsamp);
 (@isdefined mcmc ) && h5write(outFile,"mcmc",mcmc);
+(@isdefined targetAR ) && h5write(outFile,"targetAR",targetAR);
+#save command line arguments
+for (key,val) in args
+  if val != nothing
+    h5write(outFile,"args/$(key)",val);
+  end
+end
 
 
-#Initial sample
+#Handle initilization (part 2)
 function restartSample(filename)
   #return h5read(filename,"samples")[end,:];
   f = h5open(filename);
@@ -208,17 +239,26 @@ if (@isdefined restartfile)
   s0 = restartSample(restartfile);
   h5write(outFile,"restartfile",restartfile);
   h5write(outFile,"init","restart");
+elseif init=="true"
+  s0 = sTrue[sampInd]; h5write(outFile,"init",init);
+elseif init=="zeros"
+  s0 = zeros(nSampInd); h5write(outFile,"init",init);
+elseif init=="rand"
+  s0 = rand(mcmcP.prior); h5write(outFile,"init",init);
 else
-  #s0 = sTrue[sampInd]; h5write(outFile,"init","true");
-  s0 = rand(mcmcP.prior); h5write(outFile,"init","rand");
-  #s0 = zeros(nSampInd); h5write(outFile,"init","zeros"); @printf("init = zeros");
+  error("Unknown initialization (init=$(init)).");
 end
 
 
 
 ## Run ##
-mcmcTime = @elapsed mcmcRun(mcmcP, s0; verbose=3, outFile=outFile);
+mcmcTime = @elapsed mcmcRun(mcmcP, s0; verbose=3, outFile=outFile, targetAR=targetAR);
 
+#save final mcmc parameters
+for (key,val) in mcmcP.mcmc
+  (typeof(val) == Symbol) && ( val=String(val) ); #convert symbols to strings
+  h5write(outFile,"final_mcmc/$(key)",val);
+end
 
 
 ## Post process ##

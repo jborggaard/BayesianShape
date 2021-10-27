@@ -22,14 +22,15 @@ using InfDimMCMC
 #defaults (typically overwritten by arguments to run.jl)
 def_datafile  ="dummy";#ADR_ROOT*"/data/point_twohump_012.h5";
 def_mcmc  = "pcn|2^-2";
-def_nsamp = 1000;
-def_nburn = 100;
+def_ar    = 0.25;
+def_nsamp = 10;
+def_nburn = 0;
 
 def_regularity = 1.25; #want samples in H_s for s < regularity
 def_nev    = 20;
 def_kappa  = 1.00;
 def_rmin   = 0.2;
-def_rmax   = 3.0;#9.0;
+def_rmax   = 5.0;#9.0;
 def_a0     = 1.5;
 def_lc     = 7e-3;
     
@@ -88,6 +89,8 @@ mcmcP.nsamp = (@isdefined nsamp) ? nsamp : def_nsamp;
 mcmc = (@isdefined mcmc) ? mcmc : def_mcmc;
 mcmcSetSampler(mcmcP,mcmc);
 mcmcP.computeGradients = false;
+targetAR = (@isdefined targetAR) ? targetAR : def_ar;
+println("targetAR = $(targetAR)");
 
 ## Setup sample space ##
 
