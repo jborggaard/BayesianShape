@@ -204,11 +204,6 @@ for (key,val) in args
     h5write(outFile,"args/$(key)",val);
   end
 end
-#save final mcmc parameters
-for (key,val) in mcmcP.mcmc
-  (typeof(val) == Symbol) && ( val=String(val) ); #convert symbols to strings
-  h5write(outFile,"final_mcmc/$(key)",val);
-end
 
 #Initial sample
 function restartSample(filename)
@@ -234,6 +229,11 @@ end
 ## Run ##
 mcmcTime = @elapsed mcmcRun(mcmcP, s0; verbose=3, outFile=outFile, targetAR=targetAR);
 
+#save final mcmc parameters
+for (key,val) in mcmcP.mcmc
+  (typeof(val) == Symbol) && ( val=String(val) ); #convert symbols to strings
+  h5write(outFile,"final_mcmc/$(key)",val);
+end
 
 
 ## Post process ##

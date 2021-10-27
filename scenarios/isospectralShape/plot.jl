@@ -32,8 +32,8 @@ plotSamplesLpdfs(outFile, margin=10mm);
 #samp to parameter map is not the identity
 s = mcmcSample();
 gsp = mcmcGradSampToParamMap(s); #assume constant
-rMin  = h5read(outFile,"rMin");
-rMax  = h5read(outFile,"rMax");
+#rMin  = h5read(outFile,"rMin");
+#rMax  = h5read(outFile,"rMax");
 lpdfs = h5read(outFile,"lpdfs");
 samples = h5read(outFile,"samples");
 params = samples * gsp'; params[:,1] .= a0;
