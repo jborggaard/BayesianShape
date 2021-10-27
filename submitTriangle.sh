@@ -14,7 +14,7 @@
 
 source $HOME/util/stokes.sh
 
-cd $SLURM_SUBMIT_DIR
+#cd $SLURM_SUBMIT_DIR
 
 export PKG_ROOT=$SLURM_SUBMIT_DIR
 
@@ -23,7 +23,7 @@ export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
 
 #settings
 #scen="$( echo \"$opts \" | grep -Eo 'scen=* *[[:alnum:]]* ' | sed 's/scen *=*//' | sed 's/ //g' )" #works with --scen=scenario or --scen scenario
-scen="isospectralShape"
+scen="triangleShape"
 scrfl="scenarios/${scen}/run.jl"
 
 
@@ -32,8 +32,8 @@ echo "opts=$opts"
 echo "$(date): Start MCMC"
 cnt=1
 for reg in 1.25 1.00 0.75 0.50; do
-  for nev in 20 20 20 20; do
-    julia $scrfl $opts --rmax=5.0 --lc=0.03 --nev=$nev --regularity=$reg > ${scen}_${SLURM_JOB_ID}_${cnt}.log 2>&1 &  
+  for i in $( seq 4 ); do
+    julia $scrfl $opts --rmax=5.0 --lc=0.03 --regularity=$reg > ${scen}_${SLURM_JOB_ID}_${cnt}.log 2>&1 &  
     [[ $cnt -eq 1 ]] && sleep 30 #give some time to compile
     sleep 30
     cnt=$(($cnt+1))

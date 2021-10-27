@@ -2,6 +2,7 @@
 #Slurm submission script for Stokes inference problem
 #Example syntax:
 #  sbatch --export=opts="--nsamp=5000 --scen=svglobal --kappa=0.01 --svmean=1.2 --svstd=0.005" -t4:00:00 submit.sh
+#  sbatch --export=opts="--nsamp=20000 --scen=svglobal --restartfile=/projects/SIAllocation/stokes/svglobal/svglobal_021.h5" -t24:00:00 submit.sh
 
 ##SBATCH -t 144:00:00
 #SBATCH -N 1 --ntasks-per-node=1 --cpus-per-task=4
@@ -14,7 +15,7 @@
 
 source $HOME/util/stokes.sh
 
-cd $SLURM_SUBMIT_DIR
+#cd $SLURM_SUBMIT_DIR
 
 export PKG_ROOT=$SLURM_SUBMIT_DIR
 
