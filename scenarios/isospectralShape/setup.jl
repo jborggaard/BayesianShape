@@ -9,10 +9,9 @@ using HDF5
 
 using FEMfunctions
 
-include("../../src/drum/fitBSpline2Fourier.jl")
+include("../../src/fitBSpline2Fourier.jl")
 include("../../src/drum/computeFEMmatrices.jl")
 include("../../src/drum/makeDrumMesh.jl")
-include("../../src/drum/fitBSpline2Fourier.jl")
 #include("../../src/radiusSquash.jl")
 include("../../src/drum/inputOutput.jl")
 include("../../src/drum/isoEVs.jl")

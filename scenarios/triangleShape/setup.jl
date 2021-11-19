@@ -9,10 +9,9 @@ using HDF5
 
 using FEMfunctions
 
-include("../../src/drum/fitBSpline2Fourier.jl")
+include("../../src/fitBSpline2Fourier.jl")
 include("../../src/drum/computeFEMmatrices.jl")
 include("../../src/drum/makeDrumMesh.jl")
-include("../../src/drum/fitBSpline2Fourier.jl")
 #include("../../src/radiusSquash.jl")
 include("../../src/drum/inputOutput.jl")
 include("../../src/drum/triangleEVs.jl")
@@ -89,7 +88,7 @@ mcmcP.nsamp = (@isdefined nsamp) ? nsamp : def_nsamp;
 mcmc = (@isdefined mcmc) ? mcmc : def_mcmc;
 mcmcSetSampler(mcmcP,mcmc);
 mcmcP.computeGradients = false;
-targetAR = (@isdefined targetAR) ? targetAR : def_ar;
+targetAR = (@isdefined ar) ? ar : def_ar;
 println("targetAR = $(targetAR)");
 
 ## Setup sample space ##
