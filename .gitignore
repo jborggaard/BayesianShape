@@ -1,6 +1,9 @@
 #Ignore Slurm output files
 slurm-*.out
 
+#Ignore log files
+*.log
+
 #Ignore PBS/Moab/Torque output/error files
 *.qsub.o*
 *.qsub.e*

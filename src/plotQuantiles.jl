@@ -32,10 +32,10 @@ function plotQuantiles(pltData::AbstractArray,outFile::String; exts=["png"], kwa
 end
 
 #read in, plot, and save
-function plotQuantiles(inFile::String; kwargs...)
+function plotQuantiles(inFile::String; targetData="obsMean",kwargs...)
   f = h5open(inFile,"r");
   pltData    = read(f,"obs");
-  targetData = read(f,"obsMean");
+  (targetData != []) && (targetData = read(f,targetData));
   close(f);
   outFile = replace(inFile,".h5"=>"_obs_quantiles");
   plotQuantiles(pltData,outFile; targetData=targetData, targetLabel="y", kwargs...);

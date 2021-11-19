@@ -3,7 +3,7 @@ using Gmsh:gmsh
 using LinearAlgebra
 #using Makie
 using CairoMakie
-using AbstractPlotting
+#using AbstractPlotting
 using SparseArrays
 using SpecialMatrices
 using Plots
@@ -17,10 +17,10 @@ include("makeMesh.jl")
 include("fitBSpline2Fourier.jl")
 include("saveFEMasVTK.jl")
 #include("sampleInnerGeometry.jl")
-include("twodQuadratureRule.jl")
-include("twodShape.jl")
-include("twodBilinear.jl")
-include("twodLinForm.jl")
+#include("twodQuadratureRule.jl")
+#include("twodShape.jl")
+#include("twodBilinear.jl")
+#include("twodLinForm.jl")
 include("twodStokesRotatingOuter.jl")
 include("twodAdvectionDiffusion.jl")
 include("twodProjectDerivatives.jl")

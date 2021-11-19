@@ -13,16 +13,21 @@
 ##SBATCH --mail-user=jkrometi@vt.edu
 #SBATCH --mail-type=END
 
-source $HOME/util/stokes.sh
+#source $HOME/util/stokes.sh
 
-#cd $SLURM_SUBMIT_DIR
+#load modules
+module reset
+export MODULEPATH="/projects/SIAllocation/modules/tinkercliffs-rome/all:$MODULEPATH"
+module load tinkercliffs-rome/julia/1.6.2-foss-2020b gmsh/4.4.1-foss-2020b
+
+#fix GR warnings
+export GKSwstype=100
 
 export PKG_ROOT=$SLURM_SUBMIT_DIR
 
 export OPENBLAS_NUM_THREADS=$SLURM_NTASKS
 
 #settings
-#scen="$( echo $opts | grep -Eo 'scen *[[:alnum:]]* ' | sed 's/scen *//' | sed 's/ //g' )" #only worked with --scen scenario
 scen="$( echo \"$opts \" | grep -Eo 'scen=* *[[:alnum:]]* ' | sed 's/scen *=*//' | sed 's/ //g' )" #works with --scen=scenario or --scen scenario
 scrfl="scenarios/${scen}/run.jl"
 

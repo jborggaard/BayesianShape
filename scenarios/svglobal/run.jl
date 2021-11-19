@@ -11,6 +11,7 @@ apSettings = ArgParseSettings();
   "--scen"
     help = "scenario to run"
     required = false
+    default = "svglobal"
   "--restartfile"
     help = "file to restart from"
     required = false
@@ -25,12 +26,32 @@ apSettings = ArgParseSettings();
     help = "number of burnin samples to run"
     arg_type = Int
     required = false
+  "--ar"
+    help = "target acceptance ratio"
+    arg_type = Float64
+    required = false
   "--kappa"
     help = "diffusion coefficient"
     arg_type = Float64
     required = false
   "--omega"
     help = "(clockwise) angular velocity of outer boundary"
+    arg_type = Float64
+    required = false
+  "--regularity"
+    help = "regularity implied by the prior"
+    arg_type = Float64
+    required = false
+  "--rmin"
+    help = "minimum radius"
+    arg_type = Float64
+    required = false
+  "--rmax"
+    help = "maximum radius"
+    arg_type = Float64
+    required = false
+  "--a0"
+    help = "mean radius"
     arg_type = Float64
     required = false
   "--svmean"
@@ -85,6 +106,24 @@ if (@isdefined restartfile)
   end
   kappa = kappaTmp;
 
+  rminTmp = h5read(restartfile,"rMin");
+  if (@isdefined rmin) && (rminTmp != rmin)
+    error("rMin is specified ($(rmin)) but does not match rMin from restartfile ($(rminTmp))!");
+  end
+  rmin = rminTmp;
+
+  rmaxTmp = h5read(restartfile,"rMax");
+  if (@isdefined rmax) && (rmaxTmp != rmax)
+    error("rMax is specified ($(rmax)) but does not match rMax from restartfile ($(rmaxTmp))!");
+  end
+  rmax = rmaxTmp;
+
+  a0Tmp = h5read(restartfile,"a0");
+  if (@isdefined a0) && (a0Tmp != a0)
+    error("a0 is specified ($(a0)) but does not match a0 from restartfile ($(a0Tmp))!");
+  end
+  a0 = a0Tmp;
+
   if (!@isdefined mcmc)
     mcmc = h5read(restartfile,"mcmc");
   end
@@ -117,11 +156,24 @@ h5write(outFile,"datafile",datafile);
 h5write(outFile,"kappa",kappa);
 h5write(outFile,"omega",omega);
 h5write(outFile,"sourceXY",sourceXY);
+h5write(outFile,"rMin",rMin);
+h5write(outFile,"rMax",rMax);
+h5write(outFile,"a0",a0);
 h5write(outFile,"svMean",svMean);
 h5write(outFile,"svStd",svStd);
+#h5write(outFile,"obsMean",svMean);
+#h5write(outFile,"obsStd",svStd);
+(@isdefined sampInd) && h5write(outFile,"sampInd",collect(sampInd));
+h5write(outFile,"squashMethod",squashMethod);
 (@isdefined nburn) && h5write(outFile,"nburn",nburn);
 (@isdefined nsamp) && h5write(outFile,"nsamp",nsamp);
 (@isdefined mcmc ) && h5write(outFile,"mcmc",mcmc);
+#save command line arguments
+for (key,val) in args
+  if val != nothing
+    h5write(outFile,"args/$(key)",val);
+  end
+end
 
 
 #Initial sample
@@ -147,7 +199,14 @@ end
 
 ## Run ##
 #mcmcTime = @elapsed samples,obs,lpdfs,ar = adRunMcmc(mcmcP, s0; computeGradients=computeGradients, verbose=2);
-mcmcTime = @elapsed mcmcRun(mcmcP, s0; verbose=3, outFile=outFile);
+#mcmcTime = @elapsed mcmcRun(mcmcP, s0; verbose=3, outFile=outFile);
+mcmcTime = @elapsed mcmcRun(mcmcP, s0; verbose=3, outFile=outFile, targetAR=targetAR);
+
+#save final mcmc parameters
+for (key,val) in mcmcP.mcmc
+  (typeof(val) == Symbol) && ( val=String(val) ); #convert symbols to strings
+  h5write(outFile,"final_mcmc/$(key)",val);
+end
 
 
 
