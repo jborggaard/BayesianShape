@@ -42,7 +42,7 @@ def_omega  = 10.0;
 def_rmin   = 0.5;
 def_rmax   = 1.5;
 def_a0     = 1.0;
-def_obsmean = 50.0 .- 10.0*cos.( 0.5*pi*collect(0:7) );
+def_obsmean = 40.0 .- 10.0*cos.( 0.5*pi*collect(0:7) );
 def_obsstd  = 1.0;
 
 #parameters

@@ -1,4 +1,4 @@
-include("getMap.jl");
+include("../../src/getMap.jl");
 include("plotSample.jl");
 
 #plotMap() find a map/mle point from an output file and plot it
@@ -30,10 +30,10 @@ function plotMap(inFile;lpdfIdx=3,outFile="default",circleCenters=[])
   #read some problem parameters
   #kappa = h5read(inFile,"kappa");
   omega = h5read(inFile,"omega");
-  sourceXY = h5read(inFile,"sourceXY");
+  #sourceXY = h5read(inFile,"sourceXY");
   
   #plot
-  ps = plotSample(sample,outFile;κ=kappa,ω=omega,sourceXY=sourceXY,circleCenters=circleCenters);
+  ps = plotSample(sample,outFile;ω=omega,circleCenters=circleCenters);
 
   return ps;
 end

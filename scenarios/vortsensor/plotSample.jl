@@ -13,22 +13,22 @@ using Random
 using WriteVTK
 using HDF5
 
-include("makeMesh.jl")
-include("fitBSpline2Fourier.jl")
-include("saveFEMasVTK.jl")
+include("../../src/makeMesh.jl")
+include("../../src/fitBSpline2Fourier.jl")
+include("../../src/saveFEMasVTK.jl")
 #include("sampleInnerGeometry.jl")
 #include("twodQuadratureRule.jl")
 #include("twodShape.jl")
 #include("twodBilinear.jl")
 #include("twodLinForm.jl")
-include("twodStokesRotatingOuter.jl")
-include("twodAdvectionDiffusion.jl")
-include("twodProjectDerivatives.jl")
-include("computeC.jl")
-include("computeVorticity.jl")
-include("computeFourier.jl")
+include("../../src/twodStokesRotatingOuter.jl")
+include("../../src/twodAdvectionDiffusion.jl")
+include("../../src/twodProjectDerivatives.jl")
+include("../../src/computeC.jl")
+include("../../src/computeVorticity.jl")
+include("../../src/computeFourier.jl")
 
-function plotSample(ab,outFile; nBsplines = length(ab), a0 = 1.0, ω = -10.0, sourceXY=[1.5;1.0], circleCenters=[], quivNpts = 1000, quivScale = 0.05, figsize=800, verbose=true)
+function plotSample(ab,outFile; nBsplines = length(ab), a0 = 1.0, ω = -10.0, circleCenters=[], quivNpts = 1000, quivScale = 0.05, figsize=800, verbose=true)
 
   verbose && println("omega = $(ω)");
 
@@ -71,11 +71,11 @@ function plotSample(ab,outFile; nBsplines = length(ab), a0 = 1.0, ω = -10.0, so
   Plots.plot!(p3,r.*cos.(th),r.*sin.(th),color=:blue,lab=:none);
   Plots.plot!(p3,2.0.*cos.(th),2.0.*sin.(th),color=:blue,lab=:none);
   #Plots.plot!(p3,[1.5],[0.75],markershape=:xcross,markercolor=:red,markersize=15,markerstrokewidth=3,line=false,lab=:none);
-  Plots.plot!(p3,[sourceXY[1]],[sourceXY[2]],markershape=:xcross,markercolor=:red,markersize=15,markerstrokewidth=3,line=false,lab=:none);
+  #Plots.plot!(p3,[sourceXY[1]],[sourceXY[2]],markershape=:xcross,markercolor=:red,markersize=15,markerstrokewidth=3,line=false,lab=:none);
   Plots.plot!(p3,aspect_ratio=:equal,size=(figsize,figsize));
   plotName = outFile*"_quiver.png";
   Plots.savefig(p3,plotName);
   println("Wrote: $plotName");
   
-  return p1,p2,p3;
+  return p1,p3;
 end
