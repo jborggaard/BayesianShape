@@ -37,6 +37,6 @@ plotRadiiHistMatrix(outFile, left_margin=10mm, size=(1600,1600));
 
 include("plotMap.jl");
 include("plotSample.jl");
-plotMap(outFile;lpdfIdx=3);
-plotMap(outFile;lpdfIdx=2);
+plotMap(outFile;lpdfIdx=3,circleCenters=circleCenters);
+plotMap(outFile;lpdfIdx=2,circleCenters=circleCenters);
 

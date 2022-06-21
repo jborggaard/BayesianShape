@@ -28,7 +28,7 @@ include("../../src/computeC.jl")
 include("../../src/computeVorticity.jl")
 include("../../src/computeFourier.jl")
 
-function plotSample(ab,outFile; nBsplines = length(ab), a0 = 1.0, ω = -10.0, circleCenters=[], quivNpts = 1000, quivScale = 0.05, figsize=800, verbose=true)
+function plotSample(ab,outFile; nBsplines = length(ab), a0 = 1.0, ω = -10.0, circleCenters=[], circleRadius = 0.1, quivNpts = 1000, quivScale = 0.05, figsize=800, verbose=true)
 
   verbose && println("omega = $(ω)");
 
@@ -44,6 +44,12 @@ function plotSample(ab,outFile; nBsplines = length(ab), a0 = 1.0, ω = -10.0, ci
   #poly!(ax1, sa.x, sa.eConn[:,1:3], color = vorticity[:,1], strokecolor = (:black, 0.6), strokewidth = 0.2);
   poly(p1[1,1], sa.x, sa.eConn[:,1:3], color = vorticity[:,1], strokecolor = (:black, 0.6), strokewidth = 0.2, axis=(aspect=AxisAspect(1),xlabel="x",ylabel="y"));
   Colorbar(p1[1,2], width=20, limits = extrema(vorticity[:,1]));
+  for i=1:size(circleCenters,1)
+    th = collect(0:360).*pi/180.0;
+    circle = circleRadius .* [ cos.(th)  sin.(th) ] .+ circleCenters[i,:]';
+    #lines!(p1,circle[:,1],circle[:,2],color=:red,lab=:none);
+    lines!(circle[:,1],circle[:,2],color=:black,linewidth=2);
+  end
   plotName = outFile*"_vort.png";
   save(plotName,p1);
   println("Wrote: $plotName");
@@ -72,6 +78,11 @@ function plotSample(ab,outFile; nBsplines = length(ab), a0 = 1.0, ω = -10.0, ci
   Plots.plot!(p3,2.0.*cos.(th),2.0.*sin.(th),color=:blue,lab=:none);
   #Plots.plot!(p3,[1.5],[0.75],markershape=:xcross,markercolor=:red,markersize=15,markerstrokewidth=3,line=false,lab=:none);
   #Plots.plot!(p3,[sourceXY[1]],[sourceXY[2]],markershape=:xcross,markercolor=:red,markersize=15,markerstrokewidth=3,line=false,lab=:none);
+  for i=1:size(circleCenters,1)
+    th = collect(0:360).*pi/180.0;
+    circle = circleRadius .* [ cos.(th)  sin.(th) ] .+ circleCenters[i,:]';
+    Plots.plot!(p3,circle[:,1],circle[:,2],lc=:red,lab=:none);
+  end
   Plots.plot!(p3,aspect_ratio=:equal,size=(figsize,figsize));
   plotName = outFile*"_quiver.png";
   Plots.savefig(p3,plotName);
