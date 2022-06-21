@@ -27,7 +27,7 @@ include("../../src/plotSamplesSV.jl");
 plotMapIBs(outFile);
 plotRadiiQuantiles(outFile, margin=10mm);
 plotRadiiCorr(outFile, left_margin=10mm, bottom_margin=10mm);
-plotQuantiles(outFile, targetData=[], margin=10mm);
+plotQuantiles(outFile, targetData="svMean", margin=10mm);
 plotSamplesIBs(outFile);
 plotSamplesLpdfs(outFile, margin=10mm);
 #plotSamplesSV(outFile, margin=10mm);

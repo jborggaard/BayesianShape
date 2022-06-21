@@ -2,7 +2,7 @@ using Plots
 using HDF5
 using LinearAlgebra
 
-function plotSamplesIBs(samples::AbstractArray, svs::AbstractArray; idx=[1,10,50,100,1000,2000,3000,4000,5000], kwargs...)
+function plotSamplesIBs(samples::AbstractArray, svs::AbstractArray; idx=round.(Int,range(1, size(samples,1), length=9)), kwargs...)
   
   #truncate indices if we don't have enough samples
   idx = idx[idx .<= size(samples,1)];

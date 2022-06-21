@@ -165,6 +165,7 @@ h5write(outFile,"squashMethod",squashMethod);
 (@isdefined nburn) && h5write(outFile,"nburn",nburn);
 (@isdefined nsamp) && h5write(outFile,"nsamp",nsamp);
 (@isdefined mcmc ) && h5write(outFile,"mcmc",mcmc);
+(@isdefined targetAR ) && h5write(outFile,"targetAR",targetAR);
 #save command line arguments
 for (key,val) in args
   if val != nothing

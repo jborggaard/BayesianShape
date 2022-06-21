@@ -54,7 +54,9 @@ def_kappa  = 0.10;
 def_rmin   = 0.5;
 def_rmax   = 1.5;
 def_a0     = 1.0;
-def_svmean = 5.5.-0.75*sin.( 4*pi*collect(0:7)/8 ); #peak in the middle
+#def_svmean = 5.5.-0.75*sin.( 4*pi*collect(0:7)/8 ); #2 peaks
+#def_svmean = 5.5.-0.75*sin.( 0.5*pi*collect(0:15) ); #4 peaks
+def_svmean = 5.5.-0.75*cos.( pi*collect(0:7) );
 def_svstd  = 0.1;
 
 #parameters
