@@ -1,4 +1,4 @@
-using HDF5, Printf, Plots
+using HDF5, Printf, Plots, Plots.Measures
 
 include("../src/fourierBasis.jl");
 include("../src/computeRadii.jl");
@@ -95,8 +95,8 @@ for i=1:length(files)
   #plot!(parea,1:length(marea),sarea,c=i,ls=:dash,lab=label*" (std)");
 end
 
-plot!(pphi ,leg=:outerright,size=(800,400),ylims=(-1.00, 1.00));
-plot!(parea,leg=:outerright,size=(800,400),ylims=( 3.65, 3.85));
+plot!(pphi ,leg=:outerright,size=(1000,400),margin=5.0mm,ylims=(-1.00, 1.00));
+plot!(parea,leg=:outerright,size=(1000,400),margin=5.0mm,ylims=( 3.65, 3.85));
 
 #savefig(pphi,"pubs/2022_multiproposal_angle.png");
 #println("Wrote: pubs/2022_multiproposal_angle.png");
