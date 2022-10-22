@@ -65,7 +65,8 @@ function plotSampleGrid(samples,outFile; idx=round.(Int,range(size(samples,1)/2,
     
     #p2 = poly(sa.x, sa.eConn[:,1:3], color = sa.temperature[:,1], strokecolor = (:black, 0.6), strokewidth = .2, aspect_ratio=:equal)
     #p2 = Figure(resolution=(figsize*1.2,figsize));
-    poly(p2[row,col], sa.x, sa.eConn[:,1:3], color = sa.temperature[:,1], strokecolor = (:black, 0.6), strokewidth = 0.2, axis=(aspect=AxisAspect(1),xlabel="x",ylabel="y"),title="Sample $(sIdx)");
+    #ax2 = Axis(p2[row,col], xlabel = "x", ylabel = "y", title = "Sample $(sIdx)");
+    poly(p2[row,col], sa.x, sa.eConn[:,1:3], color = sa.temperature[:,1], strokecolor = (:black, 0.6), strokewidth = 0.2, axis=(aspect=AxisAspect(1),xlabel="x",ylabel="y",title="Sample $(sIdx)"));
     if i == 1
       #cmin = minimum(sa.temperature[:,1]);
       #cmax = maximum(sa.temperature[:,1]);
