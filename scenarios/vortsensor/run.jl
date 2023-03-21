@@ -149,6 +149,7 @@ h5write(outFile,"rMax",rMax);
 h5write(outFile,"a0",a0);
 h5write(outFile,"obsMean",obsMean);
 h5write(outFile,"obsStd",obsStd);
+h5write(outFile,"regularity",regularity);
 (@isdefined sampInd) && h5write(outFile,"sampInd",collect(sampInd));
 h5write(outFile,"squashMethod",squashMethod);
 (@isdefined nburn) && h5write(outFile,"nburn",nburn);

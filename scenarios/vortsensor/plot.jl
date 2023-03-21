@@ -27,7 +27,9 @@ include("../../src/plotSamplesLpdfs.jl");
 plotMapIBs(outFile);
 plotRadiiQuantiles(outFile, margin=10mm);
 plotRadiiCorr(outFile, left_margin=10mm, bottom_margin=10mm);
-plotQuantiles(outFile, targetData="obsMean", margin=10mm);
+#plotQuantiles(outFile, targetData="obsMean", margin=10mm);
+#plotQuantiles(outFile, targetData="obsMean", targetLabel="Data", margin=10mm, markershape=:circle, xlabel="Sensor", ylabel="Observation",exts=["png","pdf"]);
+plotQuantiles(outFile, targetData="obsMean", targetLabel="Data", margin=10mm, markershape=:circle, xlabel="Sensor", ylabel="Observation",exts=["png","pdf"],leg=:outerright);
 plotSamplesIBs(outFile);
 plotSamplesLpdfs(outFile, margin=10mm);
 #plotSamplesSV(outFile, margin=10mm);
@@ -40,3 +42,6 @@ include("plotSample.jl");
 plotMap(outFile;lpdfIdx=3,circleCenters=circleCenters);
 plotMap(outFile;lpdfIdx=2,circleCenters=circleCenters);
 
+include("plotSampleGrid.jl");
+circleColors(val) = (val==30) ? :red : ( (val==40) ? :yellow : :green );
+plotSampleGrid(outFile;computeScalar=false,ω=omega,circleCenters=circleCenters,circleColors=circleColors.(obsMean),sourceXY=[]);
