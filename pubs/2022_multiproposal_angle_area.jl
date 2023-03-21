@@ -7,10 +7,13 @@ include("../src/plotSave.jl");
 scen = "svsector";
 
 #run setup to get radius squash (uses default :/ )
-#include("../scenarios/$(scen)/setup.jl");
+include("../scenarios/$(scen)/setup.jl");
 
 dir   = "/projects/SIAllocation/stokes/$(scen)";
-files = [ "$(scen)_0$(i).h5" for i=18:29 ];
+#two chains per case
+#files = [ "$(scen)_0$(i).h5" for i=18:29 ];
+#one chain per case
+files = [ "$(scen)_0$(i).h5" for i=18:2:29 ];
 
 #first, build a list of beta values, which we'll use to color the figure
 #betas = [];
@@ -34,7 +37,7 @@ for i=1:length(files)
   file = files[i];
   #file   = "../svglobal/svglobal_040.h5";
   f = h5open(dir*"/"*file);
-  mcmc = read(f,"mcmc");
+  local mcmc = read(f,"mcmc");
   beta = read(f,"final_mcmc/beta");
   samples = read(f,"samples");
   close(f);
@@ -73,7 +76,7 @@ for i=1:length(files)
   #set label and line style based on mcmc type
   mcmcSp = split(mcmc,"|");
   if mcmcSp[1] == "pcn"
-    label = "Vanilla pCN";
+    label = "pCN" #"Vanilla pCN";
     ls = :dash
   else
     label = "$(mcmcSp[3]) Proposals";
@@ -95,8 +98,12 @@ for i=1:length(files)
   #plot!(parea,1:length(marea),sarea,c=i,ls=:dash,lab=label*" (std)");
 end
 
-plot!(pphi ,leg=:outerright,size=(1000,400),margin=5.0mm,ylims=(-1.00, 1.00));
-plot!(parea,leg=:outerright,size=(1000,400),margin=5.0mm,ylims=( 3.65, 3.85));
+#plot!(pphi ,leg=:outerright,size=(1000,400),margin=5.0mm,ylims=(-1.00, 1.00));
+#plot!(parea,leg=:outerright,size=(1000,400),margin=5.0mm,ylims=( 3.65, 3.85));
+#plot!(pphi ,leg=:bottomright,margin=5.0mm,ylims=(-1.00, 1.00));
+#plot!(parea,leg=:bottomright,margin=5.0mm,ylims=( 3.65, 3.85));
+plot!(pphi ,leg=:bottomright,ylims=(-1.00, 1.00));
+plot!(parea,leg=:bottomright,ylims=( 3.65, 3.85));
 
 #savefig(pphi,"pubs/2022_multiproposal_angle.png");
 #println("Wrote: pubs/2022_multiproposal_angle.png");

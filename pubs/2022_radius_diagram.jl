@@ -5,10 +5,10 @@ include("../src/computeRadii.jl");
 include("../src/plotSave.jl");
 
 #labels
-rMinLab = "\$r\$";      #minimum inner boundary
-rMaxLab = "\$s\$";      #maximum inner boundary
+rMinLab = "\$r_{min}\$";      #minimum inner boundary
+rMaxLab = "\$r_{max}\$";      #maximum inner boundary
 rOutLab = "\$\\Gamma^o\$ (radius \$R\$)";      #outer boundary
-boundaryLab = "\$\\Gamma_b^i\$ (radius \$\\phi(b)\$)";  #inner boundary
+boundaryLab = "\$\\Gamma_b^i\$ (radius \$c(b_0+b)\$)";  #inner boundary
 
 #run setup to get radius squash (uses default :/ )
 include("../scenarios/svsector/setup.jl");
@@ -56,7 +56,7 @@ end
 
 #plot
 sz = 500;
-p = plot(proj=:polar,size=(sz,sz));
+p = plot(proj=:polar,size=(sz,sz), margin=5Plots.mm);
 plot!(p,th,[rMin],ls=:dash,lab=rMinLab);
 plot!(p,th,r,lab=boundaryLab);
 plot!(p,th,[rMax],ls=:dash,lab=rMaxLab);

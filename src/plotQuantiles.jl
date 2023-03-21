@@ -15,11 +15,11 @@ function plotQuantiles(pltData::AbstractArray; nburn=0, ps=[0.1,0.25,0.5,0.75,0.
   #plot
   p = plot(;kwargs...);
   if length(targetData) > 0
-      plot!(p, 1:size(pltData,2), targetData, lab=targetLabel, lc=:black, ls=:dash);
+      plot!(p, 1:size(pltData,2), targetData, lab=targetLabel, lc=:black, ls=:dash, markercolor=:black; kwargs...);
   end
   for j=1:length(ps)
       label = @sprintf("%d%%",100*ps[j]);
-      plot!(p, 1:size(pltData,2), q[:,j], lab=label);
+      plot!(p, 1:size(pltData,2), q[:,j], lab=label, lc=j, markercolor=j; kwargs...);
   end
 
   return p;

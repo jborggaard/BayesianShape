@@ -25,13 +25,14 @@ export GKSwstype=100
 
 export PKG_ROOT=$SLURM_SUBMIT_DIR
 
-export OPENBLAS_NUM_THREADS=$SLURM_NTASKS
+export OPENBLAS_NUM_THREADS=$SLURM_CPUS_PER_TASK
 
 #settings
 scen="$( echo \"$opts \" | grep -Eo 'scen=* *[[:alnum:]]* ' | sed 's/scen *=*//' | sed 's/ //g' )" #works with --scen=scenario or --scen scenario
 scrfl="scenarios/${scen}/run.jl"
 
 echo "opts=$opts"
+env | grep SLURM_JOBID
 
 echo "$(date): Start MCMC"
 #stdbuf -oL julia $scrfl $opts
