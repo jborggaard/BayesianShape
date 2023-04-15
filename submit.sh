@@ -28,7 +28,7 @@ export PKG_ROOT=$SLURM_SUBMIT_DIR
 export OPENBLAS_NUM_THREADS=$SLURM_CPUS_PER_TASK
 
 #settings
-scen="$( echo \"$opts \" | grep -Eo 'scen=* *[[:alnum:]]* ' | sed 's/scen *=*//' | sed 's/ //g' )" #works with --scen=scenario or --scen scenario
+scen="$( echo \"$opts \" | grep -Eo 'scen=* *[[:alnum:]_]* ' | sed 's/scen *=*//' | sed 's/ //g' )" #works with --scen=scenario or --scen scenario
 scrfl="scenarios/${scen}/run.jl"
 
 echo "opts=$opts"

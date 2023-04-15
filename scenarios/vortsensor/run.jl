@@ -78,6 +78,12 @@ if (@isdefined restartfile)
   end
   datafile = datafileTmp;
 
+  regularityTmp = h5read(restartfile,"regularity");
+  if (@isdefined regularity) && (regularityTmp != regularity)
+    error("regularity is specified ($(regularity)) but does not match regularity from restartfile ($(regularityTmp))!");
+  end
+  regularity = regularityTmp;
+
   obsmeanTmp = h5read(restartfile,"obsMean");
   if (@isdefined obsmean) && (obsmeanTmp != obsmean)
     error("obsmean is specified ($(obsmean)) but does not match obsmean from restartfile ($(obsmeanTmp))!");
@@ -143,13 +149,13 @@ while (isfile(outFile))
 end
 println("Writing output to $(outFile)...");
 h5write(outFile,"datafile",datafile);
+h5write(outFile,"regularity",regularity);
 h5write(outFile,"omega",omega);
 h5write(outFile,"rMin",rMin);
 h5write(outFile,"rMax",rMax);
 h5write(outFile,"a0",a0);
 h5write(outFile,"obsMean",obsMean);
 h5write(outFile,"obsStd",obsStd);
-h5write(outFile,"regularity",regularity);
 (@isdefined sampInd) && h5write(outFile,"sampInd",collect(sampInd));
 h5write(outFile,"squashMethod",squashMethod);
 (@isdefined nburn) && h5write(outFile,"nburn",nburn);

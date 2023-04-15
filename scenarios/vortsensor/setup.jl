@@ -37,7 +37,7 @@ def_ar    = 0.25;
 def_nsamp = 10;
 def_nburn = 0;
 
-def_regularity = 1.0; #want samples in H_s for s < regularity
+def_regularity = 1.25; #want samples in H_s for s < regularity
 def_omega  = 10.0;
 def_rmin   = 0.5;
 def_rmax   = 1.5;

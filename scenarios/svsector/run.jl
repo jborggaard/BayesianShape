@@ -81,6 +81,12 @@ if (@isdefined restartfile)
   end
   datafile = datafileTmp;
 
+  regularityTmp = h5read(restartfile,"regularity");
+  if (@isdefined regularity) && (regularityTmp != regularity)
+    error("regularity is specified ($(regularity)) but does not match regularity from restartfile ($(regularityTmp))!");
+  end
+  regularity = regularityTmp;
+
   svmeanTmp = h5read(restartfile,"svMean");
   if (@isdefined svmean) && (svmeanTmp != svmean)
     error("svmean is specified ($(svmean)) but does not match svmean from restartfile ($(svmeanTmp))!");
@@ -152,6 +158,7 @@ while (isfile(outFile))
 end
 println("Writing output to $(outFile)...");
 h5write(outFile,"datafile",datafile);
+h5write(outFile,"regularity",regularity);
 h5write(outFile,"kappa",kappa);
 h5write(outFile,"omega",omega);
 h5write(outFile,"sourceXY",sourceXY);
