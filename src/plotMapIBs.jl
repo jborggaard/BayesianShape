@@ -2,7 +2,7 @@ using Plots
 using HDF5
 using LinearAlgebra
 
-function plotMapIBs(mapSamples::AbstractArray; kwargs...)
+function plotMapIBs(mapSamples::AbstractArray; trueSamp = nothing, kwargs...)
   labels=["MPR","MLE","MAP"];
   
   #gr();
@@ -11,6 +11,9 @@ function plotMapIBs(mapSamples::AbstractArray; kwargs...)
   #angles
   th = pi*(0:360)/180;#range(0.0,stop=2.0*pi,length=size(samples,2));
 
+  if trueSamp != nothing
+    trueRadii = computeRadii(trueSamp,th);
+  end
 
   for i=1:3
       #get sample
@@ -24,6 +27,10 @@ function plotMapIBs(mapSamples::AbstractArray; kwargs...)
       plot!(p[i], th, r, c=:black);
       plot!(p[i], th, 2.0.*ones(length(th)), c=:black);
       plot!(p[i], title=labels[i]);
+
+      if trueSamp != nothing
+        plot!(p[i], th, trueRadii, lc=:black, ls=:dash, lab="Truth");
+      end
   end
   return p;
 end

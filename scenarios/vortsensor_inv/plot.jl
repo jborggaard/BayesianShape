@@ -24,8 +24,8 @@ include("../../src/plotQuantiles.jl");
 include("../../src/plotSamplesIBs.jl");
 include("../../src/plotSamplesLpdfs.jl");
 #include("../../src/plotSamplesSV.jl");
-plotMapIBs(outFile);
-plotRadiiQuantiles(outFile, margin=10mm);
+plotMapIBs(outFile,trueSamp=trueSamp);
+plotRadiiQuantiles(outFile, margin=10mm, trueSamp=trueSamp);
 plotRadiiCorr(outFile, left_margin=10mm, bottom_margin=10mm);
 #plotQuantiles(outFile, targetData="obsMean", margin=10mm);
 #plotQuantiles(outFile, targetData="obsMean", targetLabel="Data", margin=10mm, markershape=:circle, xlabel="Sensor", ylabel="Observation",exts=["png","pdf"]);
@@ -43,6 +43,16 @@ plotMap(outFile;lpdfIdx=3,circleCenters=circleCenters);
 plotMap(outFile;lpdfIdx=2,circleCenters=circleCenters);
 
 include("../../src/plotSampleGrid.jl");
+#obsMean = h5read(outFile,"obsMean");
 #circleColors(val) = (val==30) ? :red : ( (val==40) ? :yellow : :green );
-circleColors(val) = (val==30) ? :black : ( (val==40) ? :gray : :white );
+#circleColors(val) = (val==30) ? :black : ( (val==40) ? :gray : :white );
+function circleColors(val) 
+  val_max = maximum(obsMean);
+  val_min = minimum(obsMean);
+  val_rescale = (val-val_min)/(val_max-val_min);# + val_min;
+  return RGB{Float64}(val_rescale, val_rescale, val_rescale);
+end
 plotSampleGrid(outFile;computeScalar=false,ω=omega,circleCenters=circleCenters,circleColors=circleColors.(obsMean),sourceXY=[]);
+
+include("../../src/plotSamplesVsTruth.jl");
+plotSamplesVsTruth(outFile;circleCenters=circleCenters,exts=["png","pdf"],obsXlab="Sensor ID",obsYlab="Average Vorticity");

@@ -5,7 +5,7 @@ using Statistics
 using Printf
 
 #plot
-function plotRadiiQuantiles(samples::AbstractArray; th=pi*(0:360)/180, nburn=0, ps=[0.1,0.25,0.5,0.75,0.9], kwargs...)
+function plotRadiiQuantiles(samples::AbstractArray; th=pi*(0:360)/180, nburn=0, ps=[0.1,0.25,0.5,0.75,0.9], trueSamp = nothing, kwargs...)
   #compute radius by angle
   #fb = fourierBasis(size(samples,2)÷2,th);
   #sampleAngles = computeRadii(samples[nburn+1:end,:],fb);
@@ -14,15 +14,19 @@ function plotRadiiQuantiles(samples::AbstractArray; th=pi*(0:360)/180, nburn=0, 
   #compute quantiles
   q = zeros(size(sampleAngles,2),length(ps));
   for j=1:size(q,1)
-     q[j,:] = quantile(sampleAngles[:,j],ps);
+    q[j,:] = quantile(sampleAngles[:,j],ps);
   end
 
   #plot
   sz = 500;
   p = plot(proj=:polar,size=(sz,sz);kwargs...);
+  if trueSamp != nothing
+    trueRadii = computeRadii(trueSamp,th);
+    plot!(p, th, trueRadii, lc=:black, ls=:dash, lab="Truth");
+  end
   for j=1:length(ps)
-      label = @sprintf("%d%%",100*ps[j]);
-      plot!(p, th, q[:,j], lab=label);
+    label = @sprintf("%d%%",100*ps[j]);
+    plot!(p, th, q[:,j], lab=label);
   end
 
   return p;

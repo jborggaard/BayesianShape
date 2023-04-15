@@ -148,9 +148,13 @@ function plotSampleGrid(samples,outFile; idx=round.(Int,range(size(samples,1)/2,
   return p1,p2,p3;
 end
 
-function plotSampleGrid(inFile::String; kwargs...)
+function plotSampleGrid(inFile::String; labelwith="", kwargs...)
   f = h5open(inFile,"r");
   samples = read(f,"samples");
+  if labelwith == "likelihood"
+    labelvalues = read(f,"lpdfs")[:,2];
+    labelprefix = "Likelihood = ";
+  end
   close(f);
   outFile = replace(inFile,".h5"=>"_sample_grid");
   plotSampleGrid(samples,outFile; kwargs...);
