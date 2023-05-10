@@ -7,8 +7,8 @@ include("../src/plotSave.jl");
 #labels
 rMinLab = "\$r_{min}\$";      #minimum inner boundary
 rMaxLab = "\$r_{max}\$";      #maximum inner boundary
-rOutLab = "\$\\Gamma^o\$ (radius \$R\$)";      #outer boundary
-boundaryLab = "\$\\Gamma_b^i\$ (radius \$c(b_0+b)\$)";  #inner boundary
+rOutLab = "\$\\Gamma^{\\rm outer}\$ (radius \$R\$)";      #outer boundary
+boundaryLab = "\$\\Gamma_b^{\\rm inner}\$ (radius \$c(b_0+b)\$)";  #inner boundary
 
 rOutLabRad = "\$R\$";             #outer boundary
 boundaryLabRad = "\$c(b_0+b)\$";  #inner boundary
