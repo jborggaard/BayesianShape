@@ -45,10 +45,11 @@ include("../../BayesianShape/src/squash/squashPolyinterp.jl");
 radiusSquash(r) = squashPolyinterp(r,rMin,rMax;e=squashE);
 squashMethod="squashPolyinterp, e=$(squashE)";
 println("Squashing with: $(squashMethod)");
-#=
-#a=[0.1,0.3,0.1]
-#b=[0.3,0.1,0.3]
 
+a=[0.1,0.3,0.1]
+b=[0.0,0.0,0.0]
+
+#=
 a=[0.0,0.1,0.3]
 b=[0.0,0.0,0.0]
 
