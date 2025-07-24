@@ -10,7 +10,7 @@
 #  Outputs:
 #    sa       structure describing the mesh and the velocity, pressure, and temperature fields
 
-function twodStokesOnly(a,b,a0,N; ω = 10.0, verbose=true, circleCenters=[])
+function twodStokesOnly(a,b,a0,N; ω = 10.0, verbose=true, circleCenters=[], μ = 0.001)
   
   r,err = fitBSpline2Fourier(a0,a,b,N);
   #r = ones(N,1); # uncomment for some degubbing
@@ -23,8 +23,7 @@ function twodStokesOnly(a,b,a0,N; ω = 10.0, verbose=true, circleCenters=[])
   x,eConn,eConn2, innerNodes,innerX, outerNodes,outerX = makeMesh(r;circleCenters=circleCenters);
   
   #compute Stokes flow
-  velocity = twodStokesRotatingOuter(x,eConn,innerNodes,outerNodes,ω);
-  
+  velocity,pressure = twodStokesRotatingOuter(x,eConn,innerNodes,outerNodes,ω, μ);
   # #solve steady Advection-Diffusion equation
   # temperature = twodAdvectionDiffusion(x,eConn,innerNodes,outerNodes,velocity,κ,sourceXY)
   
@@ -34,6 +33,7 @@ function twodStokesOnly(a,b,a0,N; ω = 10.0, verbose=true, circleCenters=[])
   sa.eConn  = eConn;
   sa.eConn2 = eConn2;
   sa.velocity = velocity;
+  sa.pressure = pressure;
   #sa.temperature = temperature;
 
   return sa;

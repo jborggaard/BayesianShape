@@ -1,4 +1,4 @@
-function twodStokesRotatingOuter(x,eConn,innerNodes,outerNodes,ω)
+function twodStokesRotatingOuter(x,eConn,innerNodes,outerNodes,ω,μ = 0.001)
 #
 #  Solves the Stokes equation in 2D with Dirichlet boundary conditions
 #     - ∇⋅(∇z+∇z') + ∇p = f,  Ω is the domain between a Bspline disk and an
@@ -16,7 +16,7 @@ function twodStokesRotatingOuter(x,eConn,innerNodes,outerNodes,ω)
   #  Define problem parameters
 #  @everywhere μ = 0.001
 #  @everywhere ϵ = 0.001
-  μ = 0.001
+# μ = 0.001
   ϵ = 0.001
 
   rule  = 3   # points in quadrature formula
@@ -286,7 +286,7 @@ function twodStokesRotatingOuter(x,eConn,innerNodes,outerNodes,ω)
     velocity[outerNodes[i-nInnerNodes],2] = dirichletV[i]
   end
 
-  #= to be computed in the future if needed
+  # to be computed in the future if needed
   pressure = zeros(Float64,nNodes,1)
 
   vv = eConn[:,1:3]
@@ -297,8 +297,6 @@ function twodStokesRotatingOuter(x,eConn,innerNodes,outerNodes,ω)
   end
   pressure = TriMesh_PromoteL2Q(pressure,eConn)
 
-  return velocity, pressure
-  =#
-
-  return velocity
+  return velocity,pressure
+  #return velocity
 end
