@@ -1,5 +1,5 @@
-using Pkg;
-pkg"activate .";
+#using Pkg;
+#pkg"activate .";
 #PKG_ROOT=ENV["PKG_ROOT"];
 #pkg"activate $PKG_ROOT";
 using HDF5
@@ -12,6 +12,10 @@ apSettings = ArgParseSettings();
     help = "scenario to run"
     required = false
     default = "svsensor"
+  "--model"
+    help = "PDE model considered"
+    required = false
+    default = "NavierStokes"
   "--restartfile"
     help = "file to restart from"
     required = false
@@ -28,6 +32,10 @@ apSettings = ArgParseSettings();
     required = false
   "--ar"
     help = "target acceptance ratio"
+    arg_type = Float64
+    required = false
+  "--mu"
+    help = "viscosity coefficient"
     arg_type = Float64
     required = false
   "--kappa"
@@ -75,7 +83,6 @@ for (arg,val) in args
   end
 end
 if (@isdefined restartfile)
-
   datafileTmp = h5read(restartfile,"datafile");
   if (@isdefined datafile) && (datafileTmp != datafile)
     error("datafile is specified ($(datafile)) but does not match datafile from restartfile ($(datafileTmp))!");
@@ -112,6 +119,12 @@ if (@isdefined restartfile)
   end
   kappa = kappaTmp;
 
+  muTmp = h5read(restartfile,"mu");
+  if (@isdefined mu) && (muTmp != mu)
+    error("mu is specified ($(mu)) but does not match mu from restartfile ($(muTmp))!");
+  end
+  mu = muTmp;
+
   rminTmp = h5read(restartfile,"rMin");
   if (@isdefined rmin) && (rminTmp != rmin)
     error("rMin is specified ($(rmin)) but does not match rMin from restartfile ($(rminTmp))!");
@@ -133,10 +146,16 @@ if (@isdefined restartfile)
   if (!@isdefined mcmc)
     mcmc = h5read(restartfile,"mcmc");
   end
+
+  modelTmp = h5read(restartfile,"model");
+  if (@isdefined model) && (modelTmp != model)
+    error("model is specified ($(model)) but does not match model from restartfile ($(modelTmp))!");
+  end
+  model = modelTmp;
 end
 
 
-outDir="/projects/SIAllocation/stokes/$(scen)";
+outDir="/projects/SIAllocation/$(model)/$(scen)";
 
 if ( ! isdir(outDir) ) 
   println("Output directory $(outDir) does not exist. Creating...");
@@ -160,6 +179,7 @@ end
 println("Writing output to $(outFile)...");
 h5write(outFile,"datafile",datafile);
 h5write(outFile,"regularity",regularity);
+h5write(outFile,"mu",mu);
 h5write(outFile,"kappa",kappa);
 h5write(outFile,"omega",omega);
 h5write(outFile,"sourceXY",sourceXY);
@@ -168,12 +188,15 @@ h5write(outFile,"rMax",rMax);
 h5write(outFile,"a0",a0);
 h5write(outFile,"svMean",svMean);
 h5write(outFile,"svStd",svStd);
+h5write(outFile,"model",model);
+
 (@isdefined sampInd) && h5write(outFile,"sampInd",collect(sampInd));
 h5write(outFile,"squashMethod",squashMethod);
 (@isdefined nburn) && h5write(outFile,"nburn",nburn);
 (@isdefined nsamp) && h5write(outFile,"nsamp",nsamp);
 (@isdefined mcmc ) && h5write(outFile,"mcmc",mcmc);
 (@isdefined targetAR ) && h5write(outFile,"targetAR",targetAR);
+
 #save command line arguments
 for (key,val) in args
   if val != nothing

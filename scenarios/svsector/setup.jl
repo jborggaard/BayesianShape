@@ -25,12 +25,15 @@ include("../../src/sampleInnerGeometry.jl")
 #include("../../src/twodBilinear.jl")
 #include("../../src/twodLinForm.jl")
 include("../../src/twodStokesRotatingOuter.jl")
+include("../../src/twodNavierStokesRotatingOuter.jl")
+include("../../src/twodNavierStokesRotatingOuterNewton.jl")
 include("../../src/twodAdvectionDiffusion.jl")
 include("../../src/twodProjectDerivatives.jl")
 include("../../src/computeC.jl")
 include("../../src/computeVorticity.jl")
 include("../../src/solutionArray.jl");
 include("../../src/twodStokesAD.jl");
+include("../../src/twodNavierStokesAD.jl")
 
 #using SpectralDiscrete2D
 #using AdvectionDiffusion
@@ -43,19 +46,24 @@ using InfDimMCMC
 def_datafile  ="dummy";#ADR_ROOT*"/data/point_twohump_012.h5";
 def_mcmc  = "pcn|2^-2";
 def_ar    = 0.25;
-def_nsamp = 10;
-def_nburn = 0;
+def_nsamp = 2000;
+def_nburn = 200;
 
 nSectors = 4;
 
 def_regularity = 1.0; #want samples in H_s for s < regularity
 def_omega  = 10.0;
 def_kappa  = 1.00;
+def_mu     = 0.05;
 def_rmin   = 0.5;
 def_rmax   = 1.5;
 def_a0     = 1.0;
 def_svmean = [0.4; 0.0; 0.4; 0.0];
 def_svstd  = 0.05;
+def_model  = "NavierStokes";
+#  there are 2 parameters, max_iter and min_residual that are hardwired if
+#  the call to NavierStokes solvers are made.  These should be similarly 
+#  defined, even if they aren't used in the model="Stokes" case.
     
 # data=adPointData(ad,kdisc,dataTX,y;computeL2Kern=false);
 
@@ -73,11 +81,13 @@ def_svstd  = 0.05;
 regularity = (@isdefined regularity) ? regularity : def_regularity;
 omega  = (@isdefined omega)  ? omega  : def_omega;
 kappa  = (@isdefined kappa)  ? kappa  : def_kappa;
+mu     = (@isdefined mu   )  ? mu     : def_mu;
 rMin    = (@isdefined rmin   ) ? rmin   : def_rmin;
 rMax    = (@isdefined rmax   ) ? rmax   : def_rmax;
 a0      = (@isdefined a0     ) ? a0     : def_a0;
 svMean = (@isdefined svmean) ? svmean : def_svmean;
 svStd  = (@isdefined svstd ) ? svstd  : def_svstd;
+model  = (@isdefined model ) ? model : def_model;
 
 sourceXY=[1.5;1.0]; #source location
 
@@ -145,13 +155,26 @@ llh = MvNormal(svMean,svStd);
 # end
 
 # Forward map and observations #
-let nBsplines=nBsplines,omega=omega,kappa=kappa,a0=a0
-  function adSolve(ab)
-    a = ab[1:2:end]; 
-    b = ab[2:2:end];
-    return twodStokesAD(a,b,a0,nBsplines;ω=omega,κ=kappa,sourceXY=sourceXY);
+if model=="Stokes"
+  let nBsplines=nBsplines,omega=omega,kappa=kappa,a0=a0
+    function adSolve(ab)
+      a = ab[1:2:end]; 
+      b = ab[2:2:end];
+      return twodStokesAD(a,b,a0,nBsplines;ω=omega,κ=kappa,sourceXY=sourceXY);
+    end
+    InfDimMCMC.mcmcForwardMap(s) = adSolve(s.param);
   end
-  InfDimMCMC.mcmcForwardMap(s) = adSolve(s.param);
+elseif model=="NavierStokes"
+  let nBsplines=nBsplines,omega=omega,kappa=kappa,a0=a0
+    function adSolve(ab)
+      a = ab[1:2:end]; 
+      b = ab[2:2:end];
+      return twodNavierStokesAD(a,b,a0,nBsplines;ω=omega,κ=kappa,sourceXY=sourceXY,max_iter=20,min_residual=1e-6,μ=mu);
+    end
+    InfDimMCMC.mcmcForwardMap(s) = adSolve(s.param);
+  end
+else
+    @error("Model is not recognized")
 end
 
 # Observation map #

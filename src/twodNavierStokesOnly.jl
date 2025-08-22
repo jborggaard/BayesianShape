@@ -23,7 +23,7 @@ function twodNavierStokesOnly(a,b,a0,N; ω = 10.0, verbose=true, circleCenters=[
   #Generate the finite element mesh using Gmsh (implemented in makeMesh)
   x,eConn,eConn2, innerNodes,innerX, outerNodes,outerX = makeMesh(r;circleCenters=circleCenters);
   
-  #compute Stokes flow
+  #compute Navier-Stokes flow
   velocity,pressure = twodNavierStokesRotatingOuter(x,eConn,innerNodes,outerNodes,ω,max_iter,min_residual,μ);
   # #solve steady Advection-Diffusion equation
   # temperature = twodAdvectionDiffusion(x,eConn,innerNodes,outerNodes,velocity,κ,sourceXY)

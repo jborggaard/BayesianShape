@@ -11,7 +11,6 @@ using Gmsh:gmsh
 using LinearAlgebra
 using Makie
 #using CairoMakie
-using AbstractPlotting
 using SparseArrays
 using SpecialMatrices
 #using Plots
@@ -102,7 +101,7 @@ Call = computeC(xT,eC)
 #Plots.plot([x[1,innerNodes],x[1,outerNodes]],[x[2,innerNodes],x[2,outerNodes]],seriestype = :scatter)
 
 
-velocity = twodStokesRotatingOuter(xT,eC,innerNodes,outerNodes,ω)
+velocity = twodStokesRotatingOuter(xT,eC,innerNodes,outerNodes,ω,μ=0.01)
 
 temperature,A = twodAdvectionDiffusion(xT,eC,innerNodes,outerNodes,velocity)
 

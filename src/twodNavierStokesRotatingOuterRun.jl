@@ -1,7 +1,8 @@
 #  Solves the Navier-Stokes equation in 2D with Dirichlet boundary conditions
-#     - ∇⋅(∇z+∇z') + z.Δz + ∇p = f,  Ω is the domain between a Bspline disk and an
+#   -μ∇⋅(∇z+∇z') + z⋅∇z + ∇p = f,  Ω is the domain between a Bspline disk and an
 #  outer circle.  We prescribe counter-clockwise rotation to the outer circle.
 #---------------------------------------------------------------------------78--
+#  This function is used to test a single run of the Navier-Stokes solver
 
 using Gmsh:gmsh
 using LinearAlgebra
