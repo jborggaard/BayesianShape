@@ -9,20 +9,20 @@ using Plots.Measures
 #GKS: can't connect to GKS socket application
 ENV["GKSwstype"] = "100"
 
-include("../../src/plotSave.jl");
-include("../../src/getMap.jl");
-include("../../src/computeRadii.jl");
-include("../../src/computeRadii.jl");
-include("../../src/fourierBasis.jl");
-include("../../src/plotMapIBs.jl");
-include("../../src/plotRadiiQuantiles.jl");
-include("../../src/plotRadiiCorr.jl");
-include("../../src/plotRadiiHist.jl");
-include("../../src/histmatrix.jl");
-include("../../src/plotRadiiHistMatrix.jl");
-include("../../src/plotQuantiles.jl");
-include("../../src/plotSamplesIBs.jl");
-include("../../src/plotSamplesLpdfs.jl");
+#include("../../src/plotSave.jl");
+#include("../../src/getMap.jl");
+#include("../../src/computeRadii.jl");
+#include("../../src/computeRadii.jl");
+#include("../../src/fourierBasis.jl");
+#include("../../src/plotMapIBs.jl");
+#include("../../src/plotRadiiQuantiles.jl");
+#include("../../src/plotRadiiCorr.jl");
+#include("../../src/plotRadiiHist.jl");
+#include("../../src/histmatrix.jl");
+#include("../../src/plotRadiiHistMatrix.jl");
+#include("../../src/plotQuantiles.jl");
+#include("../../src/plotSamplesIBs.jl");
+#include("../../src/plotSamplesLpdfs.jl");
 #include("../../src/plotSamplesSV.jl");
 plotMapIBs(outFile);
 plotRadiiQuantiles(outFile, margin=10mm);
@@ -37,12 +37,12 @@ plotSamplesLpdfs(outFile, margin=10mm);
 plotRadiiHist(outFile);
 plotRadiiHistMatrix(outFile, left_margin=10mm, size=(1600,1600));
 
-include("plotMap.jl");
-include("plotSample.jl");
+#include("plotMap.jl");
+#include("plotSample.jl");
 plotMap(outFile;lpdfIdx=3,circleCenters=circleCenters);
 plotMap(outFile;lpdfIdx=2,circleCenters=circleCenters);
 
-include("../../src/plotSampleGrid.jl");
+#include("../../src/plotSampleGrid.jl");
 #circleColors(val) = (val==30) ? :red : ( (val==40) ? :yellow : :green );
 circleColors(val) = (val==30) ? :black : ( (val==40) ? :gray : :white );
 plotSampleGrid(outFile;computeScalar=false,ω=omega,circleCenters=circleCenters,circleColors=circleColors.(obsMean),sourceXY=[]);

@@ -1,11 +1,11 @@
-using Plots
-using HDF5
-using LinearAlgebra
-using Statistics
-using Printf
+#using Plots
+#using HDF5
+#using LinearAlgebra
+#using Statistics
+#using Printf
 
 #plot
-function plotRadiiHist(samples::AbstractArray; th=pi*(0:45:359)/180, nburn=0, plotType=:graphical, kwargs...)
+function plotRadiiHist(samples::AbstractArray; a0=0.0, th=pi*(0:45:359)/180, nburn=0, plotType=:graphical, kwargs...)
   
   nAngles=length(th);
 
@@ -18,7 +18,7 @@ function plotRadiiHist(samples::AbstractArray; th=pi*(0:45:359)/180, nburn=0, pl
 
   #compute radius by angle
   fb = fourierBasis(size(samples,2)÷2,th);
-  sampleAngles = computeRadii(samples[nburn+1:end,:],fb);
+  sampleAngles = computeRadii(samples[nburn+1:end,:],fb,a0);
   
   #plot histograms
   if plotType == :single
@@ -45,8 +45,8 @@ function plotRadiiHist(samples::AbstractArray; th=pi*(0:45:359)/180, nburn=0, pl
 end
 
 #plots and saves
-function plotRadiiHist(samples::AbstractArray,outFile::String; exts=["png"], kwargs...)
-  p = plotRadiiHist(samples; kwargs...);
+function plotRadiiHist(samples::AbstractArray,outFile::String; a0=0.0, exts=["png"], kwargs...)
+  p = plotRadiiHist(samples; a0=a0, kwargs...);
   plotSave(p,outFile,exts); 
 end
 
@@ -54,9 +54,10 @@ end
 function plotRadiiHist(inFile::String; kwargs...)
   f = h5open(inFile,"r");
   samples = read(f,"samples");
+  a0 = read(f,"a0");
   close(f);
   outFile = replace(inFile,".h5"=>"_radii_hist");
-  plotRadiiHist(samples,outFile; kwargs...);
+  plotRadiiHist(samples,outFile; a0=a0, kwargs...);
 end
 
 

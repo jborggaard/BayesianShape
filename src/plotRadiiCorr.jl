@@ -1,18 +1,18 @@
-using Plots
-using HDF5
-using LinearAlgebra
-using Statistics
-using Printf
+#using Plots
+#using HDF5
+#using LinearAlgebra
+#using Statistics
+#using Printf
 
 #plot
-function plotRadiiCorr(samples::AbstractArray; th=pi*(0:360)/180, nburn=0, kwargs...)
+function plotRadiiCorr(samples::AbstractArray; a0=0.0, th=pi*(0:360)/180, nburn=0, kwargs...)
   nAngles = length(th);
 
   thDeg = round.(Int,th*180/pi);
 
   #compute radius by angle
   fb = fourierBasis(size(samples,2)÷2,th);
-  sampleAngles = computeRadii(samples[nburn+1:end,:],fb);
+  sampleAngles = computeRadii(samples[nburn+1:end,:],fb,a0);
   
   #compute correlations
   idx = [1;91;181;271];
@@ -37,8 +37,8 @@ function plotRadiiCorr(samples::AbstractArray; th=pi*(0:360)/180, nburn=0, kwarg
 end
 
 #plots and saves
-function plotRadiiCorr(samples::AbstractArray,outFile::String; exts=["png"], kwargs...)
-  p = plotRadiiCorr(samples; kwargs...);
+function plotRadiiCorr(samples::AbstractArray,outFile::String; a0=0.0, exts=["png"], kwargs...)
+  p = plotRadiiCorr(samples,a0=0.0; kwargs...);
   plotSave(p,outFile,exts); 
 end
 
@@ -46,9 +46,10 @@ end
 function plotRadiiCorr(inFile::String; kwargs...)
   f = h5open(inFile,"r");
   samples = read(f,"samples");
+  a0 = read(f,"a0");
   close(f);
   outFile = replace(inFile,".h5"=>"_radii_corr");
-  plotRadiiCorr(samples,outFile; kwargs...);
+  plotRadiiCorr(samples,outFile; a0=a0, kwargs...);
 end
 
 

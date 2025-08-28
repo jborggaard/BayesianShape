@@ -14,29 +14,30 @@ using Distributions
 using HDF5
 
 using FEMfunctions
+using InfDimMCMC
+using BayesianShape
 
-include("../../src/makeMesh.jl")
-include("../../src/fitBSpline2Fourier.jl")
-include("../../src/saveFEMasVTK.jl")
-include("../../src/sampleInnerGeometry.jl")
-#include("../../src/twodQuadratureRule.jl")
-#include("../../src/twodShape.jl")
-#include("../../src/twodMassMatrix.jl")
-#include("../../src/twodBilinear.jl")
-#include("../../src/twodLinForm.jl")
-include("../../src/twodStokesRotatingOuter.jl")
-include("../../src/twodNavierStokesRotatingOuter.jl")
-include("../../src/twodAdvectionDiffusion.jl")
-include("../../src/twodProjectDerivatives.jl")
-include("../../src/computeC.jl")
-include("../../src/computeVorticity.jl")
-include("../../src/solutionArray.jl");
-include("../../src/twodStokesAD.jl");
-include("../../src/twodNavierStokesAD.jl");
+#include("../../src/makeMesh.jl")
+#include("../../src/fitBSpline2Fourier.jl")
+#include("../../src/saveFEMasVTK.jl")
+#include("../../src/sampleInnerGeometry.jl")
+##include("../../src/twodQuadratureRule.jl")
+##include("../../src/twodShape.jl")
+##include("../../src/twodMassMatrix.jl")
+##include("../../src/twodBilinear.jl")
+##include("../../src/twodLinForm.jl")
+#include("../../src/twodStokesRotatingOuter.jl")
+#include("../../src/twodNavierStokesRotatingOuter.jl")
+#include("../../src/twodAdvectionDiffusion.jl")
+#include("../../src/twodProjectDerivatives.jl")
+#include("../../src/computeC.jl")
+#include("../../src/computeVorticity.jl")
+#include("../../src/solutionArray.jl");
+#include("../../src/twodStokesAD.jl");
+#include("../../src/twodNavierStokesAD.jl");
 
 #using SpectralDiscrete2D
 #using AdvectionDiffusion
-using InfDimMCMC
 #using AdVecMCMC
 
 #ADR_ROOT=ENV["ADR_ROOT"];
@@ -45,8 +46,8 @@ using InfDimMCMC
 def_datafile  ="dummy";#ADR_ROOT*"/data/point_twohump_012.h5";
 def_mcmc  = "pcn|2^-2";
 def_ar    = 0.25;
-def_nsamp = 1000;
-def_nburn = 200;
+def_nsamp = 10;
+def_nburn = 0;
 
 def_regularity = 1.0; #want samples in H_s for s < regularity
 def_omega  = 10.0;
@@ -115,8 +116,8 @@ circleCenters = rInterp .* [ cos.(aInterp) sin.(aInterp) ];
 
 #define squash methodology
 squashE = 0.1;
-include("../../src/squash/squashPolyinterp.jl");
-radiusSquash(r) = squashPolyinterp(r,rMin,rMax;e=squashE);
+#include("../../src/squash/squashPolyinterp.jl");
+BayesianShape.radiusSquash(r) = squashPolyinterp(r,rMin,rMax;e=squashE);
 squashMethod="squashPolyinterp, e=$(squashE)";
 println("Squashing with: $(squashMethod)");
 
@@ -182,6 +183,7 @@ elseif model=="NavierStokes"
     end
     InfDimMCMC.mcmcForwardMap(s) = adSolve(s.param);
   end
+end
 
 # Observation map #
 let

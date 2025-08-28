@@ -1,15 +1,16 @@
-using Gmsh:gmsh
-using LinearAlgebra
-using Printf
-using SparseArrays
-using Arpack
-using FunctionZeros   # for the validation example
-
-using FEMfunctions
-
-include("makeDrumMesh.jl")
-include("fitBSpline2Fourier.jl")
-include("computeFEMmatrices.jl")
+#using Gmsh:gmsh
+#using LinearAlgebra
+#using Printf
+#using SparseArrays
+#using Arpack
+#using FunctionZeros   # for the validation example
+#
+#using FEMfunctions
+#
+#include("makeDrumMesh.jl")
+#include("fitBSpline2Fourier.jl")
+#include("computeFEMmatrices.jl")
+using BayesianShape
 
 N = 40  # number of BSplines used to represent the drum shape
 

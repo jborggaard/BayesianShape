@@ -1,5 +1,5 @@
-using Plots
-using HDF5
+#using Plots
+#using HDF5
 
 function plotSamplesLpdfs(lpdfs::AbstractArray;nthin=10,kwargs...)
   idx = 1:nthin:size(lpdfs,1);

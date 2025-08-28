@@ -14,26 +14,27 @@ using Distributions
 using HDF5
 
 using FEMfunctions
+using InfDimMCMC
+using BayesianShape
 
-include("../../src/makeMesh.jl")
-include("../../src/fitBSpline2Fourier.jl")
-include("../../src/saveFEMasVTK.jl")
-#include("../../src/twodQuadratureRule.jl")
-#include("../../src/twodShape.jl")
-#include("../../src/twodMassMatrix.jl")
-#include("../../src/twodBilinear.jl")
-#include("../../src/twodLinForm.jl")
-include("../../src/twodStokesRotatingOuter.jl")
-include("../../src/twodAdvectionDiffusion.jl")
-include("../../src/twodProjectDerivatives.jl")
-include("../../src/computeC.jl")
-include("../../src/computeVorticity.jl")
-include("../../src/solutionArray.jl");
-include("../../src/twodStokesAD.jl");
+#include("../../src/makeMesh.jl")
+#include("../../src/fitBSpline2Fourier.jl")
+#include("../../src/saveFEMasVTK.jl")
+##include("../../src/twodQuadratureRule.jl")
+##include("../../src/twodShape.jl")
+##include("../../src/twodMassMatrix.jl")
+##include("../../src/twodBilinear.jl")
+##include("../../src/twodLinForm.jl")
+#include("../../src/twodStokesRotatingOuter.jl")
+#include("../../src/twodAdvectionDiffusion.jl")
+#include("../../src/twodProjectDerivatives.jl")
+#include("../../src/computeC.jl")
+#include("../../src/computeVorticity.jl")
+#include("../../src/solutionArray.jl");
+#include("../../src/twodStokesAD.jl");
 
 #using SpectralDiscrete2D
 #using AdvectionDiffusion
-using InfDimMCMC
 #using AdVecMCMC
 
 #ADR_ROOT=ENV["ADR_ROOT"];
@@ -86,8 +87,8 @@ circleCenters = rInterp .* [ cos.(aInterp) sin.(aInterp) ];
 
 #define squash methodology
 squashE = 0.1;
-include("../../src/squash/squashPolyinterp.jl");
-radiusSquash(r) = squashPolyinterp(r,rMin,rMax;e=squashE);
+#include("../../src/squash/squashPolyinterp.jl");
+BayesianShape.radiusSquash(r) = squashPolyinterp(r,rMin,rMax;e=squashE);
 squashMethod="squashPolyinterp, e=$(squashE)";
 println("Squashing with: $(squashMethod)");
 

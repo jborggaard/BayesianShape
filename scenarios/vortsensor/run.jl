@@ -1,5 +1,5 @@
-using Pkg;
-pkg"activate .";
+#using Pkg;
+#pkg"activate .";
 #PKG_ROOT=ENV["PKG_ROOT"];
 #pkg"activate $PKG_ROOT";
 using HDF5

@@ -9,22 +9,22 @@ using Plots.Measures
 #GKS: can't connect to GKS socket application
 ENV["GKSwstype"] = "100"
 
-include("../../src/plotSave.jl");
-include("../../src/getMap.jl");
-include("../../src/radiusSquash.jl");
-include("../../src/fourierBasis.jl");
-include("../../src/computeRadii.jl");
-include("../../src/plotRadiiQuantiles.jl");
-include("../../src/plotSamplesLpdfs.jl");
-include("../../src/plotQuantiles.jl");
-include("../../src/drum/plotMap.jl");
-include("../../src/drum/plotSampleShapes.jl");
+#include("../../src/plotSave.jl");
+#include("../../src/getMap.jl");
+#include("../../src/radiusSquash.jl");
+#include("../../src/fourierBasis.jl");
+#include("../../src/computeRadii.jl");
+#include("../../src/plotRadiiQuantiles.jl");
+#include("../../src/plotSamplesLpdfs.jl");
+#include("../../src/plotQuantiles.jl");
+#include("../../src/drum/plotDrumMap.jl");
+#include("../../src/drum/plotSampleShapes.jl");
 plotRadiiQuantiles(outFile, margin=10mm);
 plotQuantiles(outFile, margin=10mm);
 plotSampleShapes(outFile);
 plotSamplesLpdfs(outFile, margin=10mm);
-plotMap(outFile;lpdfIdx=3);
-plotMap(outFile;lpdfIdx=2);
+plotDrumMap(outFile;lpdfIdx=3);
+plotDrumMap(outFile;lpdfIdx=2);
 
 #include("../../src/plotMapIBs.jl");
 #include("../../src/plotRadiiCorr.jl");

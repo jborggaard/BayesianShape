@@ -1,7 +1,7 @@
 #computeRadii() Computes radii from Fourier coefficients
 
 #this version assumes we are given a Fourier basis
-function computeRadii(samples::Array{Float64,2},fb::Array{Float64,2})
+function computeRadii(samples::Array{Float64,2},fb::Array{Float64,2},a0=0.0)
     
     #compute unsquashed
     if isodd(size(samples,2))
@@ -15,7 +15,7 @@ function computeRadii(samples::Array{Float64,2},fb::Array{Float64,2})
 
     return r;
 end
-function computeRadii(ab::Array{Float64,1},fb::Array{Float64,2})
+function computeRadii(ab::Array{Float64,1},fb::Array{Float64,2},a0=0.0)
     
     #compute unsquashed
     if isodd(length(ab))
@@ -39,15 +39,15 @@ end
 #  fb = fourierBasis(size(samples,2)÷2,th);
 #  return computeRadii(samples,fb;rMin=rMin,rMax=rMax, α=α);
 #end
-function computeRadii(samples::Array{Float64,2},th::Union{Array{Float64,1},AbstractRange})
+function computeRadii(samples::Array{Float64,2},th::Union{Array{Float64,1},AbstractRange},a0=0.0)
   n = size(samples,2);
   nf = isodd(n) ? (n-1)÷2 : n÷2;
   fb = fourierBasis(nf,th);
-  return computeRadii(samples,fb);
+  return computeRadii(samples,fb,a0);
 end
-function computeRadii(ab::Array{Float64,1},th::Union{Array{Float64,1},AbstractRange})
+function computeRadii(ab::Array{Float64,1},th::Union{Array{Float64,1},AbstractRange},a0=0.0)
   n = length(ab);
   nf = isodd(n) ? (n-1)÷2 : n÷2;
   fb = fourierBasis(nf,th);
-  return computeRadii(ab,fb);
+  return computeRadii(ab,fb,a0);
 end

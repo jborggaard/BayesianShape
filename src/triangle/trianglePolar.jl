@@ -1,4 +1,4 @@
-function polarTriangle(vert::Array{Float64,2}, pts::AbstractArray)
+function trianglePolar(vert::Array{Float64,2}, pts::AbstractArray)
   #slopes
   delv = vert[[2;3;1], :] - vert;
   m = delv[:,2] ./ delv[:,1];

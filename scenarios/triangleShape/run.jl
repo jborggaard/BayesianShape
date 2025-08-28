@@ -1,5 +1,5 @@
-using Pkg;
-pkg"activate .";
+#using Pkg;
+#pkg"activate .";
 #PKG_ROOT=ENV["PKG_ROOT"];
 #pkg"activate $PKG_ROOT";
 using HDF5
@@ -138,7 +138,7 @@ if (@isdefined init)
       @warn("init=true but a0 is also specified ($(a0)). The latter will be ignored...");
     end
 
-    include("../../src/drum/triangleCoefficients.jl");
+    #include("../../src/drum/triangleCoefficients.jl");
     sTrue = triangleCoefficients();
     a0 = sTrue[1];
   end
