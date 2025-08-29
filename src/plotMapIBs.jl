@@ -1,8 +1,8 @@
-using Plots
-using HDF5
-using LinearAlgebra
+#using Plots
+#using HDF5
+#using LinearAlgebra
 
-function plotMapIBs(mapSamples::AbstractArray; trueSamp = nothing, kwargs...)
+function plotMapIBs(mapSamples::AbstractArray; trueSamp = nothing, a0=0.0, kwargs...)
   labels=["MPR","MLE","MAP"];
   
   #gr();
@@ -21,7 +21,7 @@ function plotMapIBs(mapSamples::AbstractArray; trueSamp = nothing, kwargs...)
       ab = mapSamples[i,:];
   
       #compute radii
-      r = computeRadii(ab,th);
+      r = computeRadii(ab,th,a0);
   
       #plot
       plot!(p[i], th, r, c=:black);
@@ -42,6 +42,7 @@ end
 
 function plotMapIBs(inFile::String; kwargs...)
   mapSamples = getMap(inFile,0); 
+  a0 = h5read(inFile,"a0");
   outFile = replace(inFile,".h5"=>"_map_ibs");
-  plotMapIBs(mapSamples,outFile; kwargs...);
+  plotMapIBs(mapSamples,outFile,a0=a0; kwargs...);
 end

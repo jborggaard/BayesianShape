@@ -1,26 +1,28 @@
 
-using Gmsh:gmsh
-using LinearAlgebra
-#using Makie
-using CairoMakie
-#using AbstractPlotting
-using SparseArrays
-using SpecialMatrices
-using Plots
-using Polynomials
-using Printf
-using Random
-using WriteVTK
-using HDF5
-
-include("makeMesh.jl")
-include("fitBSpline2Fourier.jl")
-#include("sampleInnerGeometry.jl")
-include("twodStokesRotatingOuter.jl")
-include("twodAdvectionDiffusion.jl")
-include("computeC.jl")
-include("computeVorticity.jl")
-include("computeFourier.jl")
+# using Gmsh:gmsh
+# using LinearAlgebra
+# #using Makie
+# using CairoMakie
+# #using AbstractPlotting
+# using SparseArrays
+# using SpecialMatrices
+# using Plots
+# using Polynomials
+# using Printf
+# using Random
+# using WriteVTK
+# using HDF5
+# 
+# using FEMfunctions
+#
+# include("makeMesh.jl")
+# include("fitBSpline2Fourier.jl")
+# #include("sampleInnerGeometry.jl")
+# include("twodStokesRotatingOuter.jl")
+# include("twodAdvectionDiffusion.jl")
+# include("computeC.jl")
+# include("computeVorticity.jl")
+# include("computeFourier.jl")
 
 function plotSample(ab,outFile; nBsplines = length(ab), a0 = 1.0, ω = -10.0, κ = 1.0, sourceXY=[1.5;1.0], circleCenters=[], quivNpts = 1000, quivScale = 0.05, figsize=800, verbose=true)
 

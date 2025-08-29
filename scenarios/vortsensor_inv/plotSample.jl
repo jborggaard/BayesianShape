@@ -1,26 +1,27 @@
+# using BayesianShape
 
-using Gmsh:gmsh
-using LinearAlgebra
-#using Makie
-using CairoMakie
-#using AbstractPlotting
-using SparseArrays
-using SpecialMatrices
-using Plots
-using Polynomials
-using Printf
-using Random
-using WriteVTK
-using HDF5
-
-include("../../src/makeMesh.jl")
-include("../../src/fitBSpline2Fourier.jl")
-#include("sampleInnerGeometry.jl")
-include("../../src/twodStokesRotatingOuter.jl")
-include("../../src/twodAdvectionDiffusion.jl")
-include("../../src/computeC.jl")
-include("../../src/computeVorticity.jl")
-include("../../src/computeFourier.jl")
+# using Gmsh:gmsh
+# using LinearAlgebra
+# #using Makie
+# using CairoMakie
+# #using AbstractPlotting
+# using SparseArrays
+# using SpecialMatrices
+# using Plots
+# using Polynomials
+# using Printf
+# using Random
+# using WriteVTK
+# using HDF5
+# 
+# include("../../src/makeMesh.jl")
+# include("../../src/fitBSpline2Fourier.jl")
+# #include("sampleInnerGeometry.jl")
+# include("../../src/twodStokesRotatingOuter.jl")
+# include("../../src/twodAdvectionDiffusion.jl")
+# include("../../src/computeC.jl")
+# include("../../src/computeVorticity.jl")
+# include("../../src/computeFourier.jl")
 
 function plotSample(ab,outFile; nBsplines = length(ab), a0 = 1.0, ω = -10.0, circleCenters=[], circleRadius = 0.1, quivNpts = 1000, quivScale = 0.05, figsize=800, verbose=true)
 

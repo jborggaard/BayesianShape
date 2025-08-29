@@ -1,7 +1,7 @@
-using Plots
-using Plots.Measures
-using HDF5
-using LinearAlgebra
+#using Plots
+#using Plots.Measures
+#using HDF5
+#using LinearAlgebra
 
 function plotSamplesVsTruth(samples,obs,trueSamp,trueObs; 
   idx=round.(Int,range(size(samples,1)/2, size(samples,1), length=4)), 

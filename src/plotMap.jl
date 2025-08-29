@@ -1,5 +1,5 @@
-include("getMap.jl");
-include("plotSample.jl");
+# include("getMap.jl");
+# include("plotSample.jl");
 
 #plotMap() find a map/mle point from an output file and plot it
 # inFile    input file

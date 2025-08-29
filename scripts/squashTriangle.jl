@@ -1,13 +1,14 @@
-using Plots, SpecialFunctions
+#using Plots, SpecialFunctions
 
-include("squashArctan.jl");
-include("squashSigmoid.jl");
-include("squashErf.jl");
-include("squashSmoothstep.jl");
-include("squashPolyinterp.jl");
+#include("squashArctan.jl");
+#include("squashSigmoid.jl");
+#include("squashErf.jl");
+#include("squashSmoothstep.jl");
+#include("squashPolyinterp.jl");
 
-include("../triangle/triangleRecenter.jl");
-include("../triangle/polarTriangle.jl");
+#include("../triangle/triangleRecenter.jl");
+#include("../triangle/trianglePolar.jl");
+using BayesianShape
 
 
 rMin = 0.2; rMax = 8.0;
@@ -21,7 +22,7 @@ vert0 = triangleRecenter(vert);
 
 #polar coordinates of sides
 x = 0:0.001:1.0;
-th, r = polarTriangle(vert0,x);
+th, r = trianglePolar(vert0,x);
 r = r[:]; th = th[:];
 
 #squash

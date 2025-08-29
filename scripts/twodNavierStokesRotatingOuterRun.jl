@@ -19,18 +19,20 @@ using FEMfunctions
 using Plots
 using CairoMakie
 
-include("makeMesh.jl")
-include("fitBSpline2Fourier.jl")
-include("twodStokesRotatingOuter.jl")
-include("twodAdvectionDiffusion.jl")
-include("computeC.jl")
-include("computeVorticity.jl")
-include("solutionArray.jl");
-include("twodStokesAD.jl");
-include("twodNavierStokesRotatingOuterNewton.jl")
-include("twodNavierStokesRotatingOuter.jl")
-include("twodNavierStokesAD.jl")
-include("twodNavierStokesOnly.jl")
+using BayesianShape
+
+#include("makeMesh.jl")
+#include("fitBSpline2Fourier.jl")
+#include("twodStokesRotatingOuter.jl")
+#include("twodAdvectionDiffusion.jl")
+#include("computeC.jl")
+#include("computeVorticity.jl")
+#include("solutionArray.jl");
+#include("twodStokesAD.jl");
+#include("twodNavierStokesRotatingOuterNewton.jl")
+#include("twodNavierStokesRotatingOuter.jl")
+#include("twodNavierStokesAD.jl")
+#include("twodNavierStokesOnly.jl")
 
 
 
@@ -40,8 +42,8 @@ def_rmax   = 1.5;
 rMin    = (@isdefined rmin   ) ? rmin   : def_rmin;
 rMax    = (@isdefined rmax   ) ? rmax   : def_rmax;
 squashE = 0.1;
-include("../../BayesianShape/src/squash/squashPolyinterp.jl");
-radiusSquash(r) = squashPolyinterp(r,rMin,rMax;e=squashE);
+#include("../../BayesianShape/src/squash/squashPolyinterp.jl");
+BayesianShape.radiusSquash(r) = squashPolyinterp(r,rMin,rMax;e=squashE);
 squashMethod="squashPolyinterp, e=$(squashE)";
 println("Squashing with: $(squashMethod)");
 

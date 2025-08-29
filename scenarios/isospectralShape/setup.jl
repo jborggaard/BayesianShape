@@ -8,15 +8,16 @@ using Distributions
 using HDF5
 
 using FEMfunctions
-
-include("../../src/fitBSpline2Fourier.jl")
-include("../../src/drum/computeFEMmatrices.jl")
-include("../../src/drum/makeDrumMesh.jl")
-#include("../../src/radiusSquash.jl")
-include("../../src/drum/inputOutput.jl")
-include("../../src/drum/isoEVs.jl")
-
 using InfDimMCMC
+using BayesianShape
+
+#include("../../src/fitBSpline2Fourier.jl")
+#include("../../src/drum/computeFEMmatrices.jl")
+#include("../../src/drum/makeDrumMesh.jl")
+##include("../../src/radiusSquash.jl")
+#include("../../src/drum/inputOutput.jl")
+#include("../../src/drum/isoEVs.jl")
+
 
 #defaults (typically overwritten by arguments to run.jl)
 def_datafile  ="dummy";#ADR_ROOT*"/data/point_twohump_012.h5";
@@ -69,8 +70,8 @@ nBsplines = 160;
 
 #define squash methodology
 squashE = 0.1;
-include("../../src/squash/squashPolyinterp.jl");
-radiusSquash(r) = squashPolyinterp(r,rMin,rMax;e=squashE);
+#include("../../src/squash/squashPolyinterp.jl");
+BayesianShape.radiusSquash(r) = squashPolyinterp(r,rMin,rMax;e=squashE);
 squashMethod="squashPolyinterp, e=$(squashE)";
 println("Squashing with: $(squashMethod)");
 

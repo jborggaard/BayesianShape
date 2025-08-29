@@ -1,5 +1,9 @@
+name = "BayesianShape"
+uuid = "cde9a47f-0b2d-4d77-bf6b-ba677cf2c549"
+authors = ["Jeff Borggaard <jborggaard@vt.edu>, Justin Krometis <jkrometis@vt.edu>, Hamza Adjerid <hamzaadjerid@vt.edu>"]
+version = "0.1.0"
+
 [deps]
-AbstractPlotting = "537997a7-5e4e-5d89-9595-2241ea00577e"
 ArgParse = "c7e460c6-2fb9-53a9-8c5b-16f535851c63"
 Arpack = "7d9fca2a-8960-54d3-9f78-7d1dccf2cb97"
 CairoMakie = "13f3f980-e62b-5c42-98c6-ff1f3baf88f0"
@@ -20,4 +24,8 @@ Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
 SpecialFunctions = "276daf66-3868-5448-9aa4-cd146d93841b"
 SpecialMatrices = "928aab9d-ef52-54ac-8ca1-acd7ca42c160"
+Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
 WriteVTK = "64499a7a-5c06-52f2-abe2-ccb03c286192"
+
+[compat]
+Statistics = "1.11.0"

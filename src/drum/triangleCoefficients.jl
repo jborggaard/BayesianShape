@@ -1,8 +1,8 @@
-using FastGaussQuadrature
+#using FastGaussQuadrature
 
-include("../triangle/triangleRecenter.jl");
-include("../triangle/trianglePolar.jl");
-include("../triangle/triangleProject.jl");
+#include("../triangle/triangleRecenter.jl");
+#include("../triangle/trianglePolar.jl");
+#include("../triangle/triangleProject.jl");
 
 function triangleCoefficients(vert = 5.0.*[ 0 0; 1 0; 0.635 0.275 ])
   #quadrature points

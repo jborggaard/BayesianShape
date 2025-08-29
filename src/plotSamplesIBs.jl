@@ -1,8 +1,8 @@
-using Plots
-using HDF5
-using LinearAlgebra
+#using Plots
+#using HDF5
+#using LinearAlgebra
 
-function plotSamplesIBs(samples::AbstractArray, svs::AbstractArray; idx=round.(Int,range(1, size(samples,1), length=9)), kwargs...)
+function plotSamplesIBs(samples::AbstractArray, svs::AbstractArray; a0=0.0, idx=round.(Int,range(1, size(samples,1), length=9)), kwargs...)
   
   #truncate indices if we don't have enough samples
   idx = idx[idx .<= size(samples,1)];
@@ -20,7 +20,7 @@ function plotSamplesIBs(samples::AbstractArray, svs::AbstractArray; idx=round.(I
   
       #compute fourier representation
       #r = computeFourier(ab,th);
-      r = computeRadii(ab,th);
+      r = computeRadii(ab,th,a0);
   
       #plot
       plot!(p[i], th, r, c=:black);
@@ -31,17 +31,18 @@ function plotSamplesIBs(samples::AbstractArray, svs::AbstractArray; idx=round.(I
   return p;
 end
 
-function plotSamplesIBs(samples::AbstractArray,svs::AbstractArray,outFile::String; exts=["png"], kwargs...)
-  p = plotSamplesIBs(samples,svs; kwargs...);
+function plotSamplesIBs(samples::AbstractArray,svs::AbstractArray,a0,outFile::String; exts=["png"], kwargs...)
+  p = plotSamplesIBs(samples,svs,a0=a0; kwargs...);
   plotSave(p,outFile,exts); 
 end
 
 function plotSamplesIBs(inFile::String; kwargs...)
   f = h5open(inFile,"r");
   samples = read(f,"samples");
+  a0 = read(f,"a0");
   svs = read(f,"obs")[:,1];
   close(f);
   outFile = replace(inFile,".h5"=>"_sample_ibs");
-  plotSamplesIBs(samples,svs,outFile; kwargs...);
+  plotSamplesIBs(samples,svs,a0,outFile; kwargs...);
 end
 

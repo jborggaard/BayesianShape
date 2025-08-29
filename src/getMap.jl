@@ -2,7 +2,7 @@
 # inFile    input file
 # lpdfIdx   3 (default) for map, 2 for mle, 1 for max prior, 0 for array of the three
 #
-function getMap(samples,lpdfs,lpdfIdx=3)
+function getMap(samples::AbstractArray,lpdfs::AbstractArray,lpdfIdx=3)
   #find map/mle point
   #idx = argmax(lpdfs,dims=1)[lpdfIdx][1];
   if lpdfIdx == 0
@@ -14,7 +14,7 @@ function getMap(samples,lpdfs,lpdfIdx=3)
   return samples[idx,:];
 end
 
-function getMap(inFile,lpdfIdx=3)
+function getMap(inFile::AbstractString,lpdfIdx=3)
   f = h5open(inFile);
   lpdfs   = read(f,"lpdfs");
   samples = read(f,"samples");

@@ -1,7 +1,5 @@
-using Pkg;
-pkg"activate .";
-#PKG_ROOT=ENV["PKG_ROOT"];
-#pkg"activate $PKG_ROOT";
+using BayesianShape
+
 using HDF5
 
 #Parse command line arguments
@@ -11,7 +9,7 @@ apSettings = ArgParseSettings();
   "--scen"
     help = "scenario to run"
     required = false
-    default = "vortsensor"
+    default = "vortsensor_inv"
   "--restartfile"
     help = "file to restart from"
     required = false

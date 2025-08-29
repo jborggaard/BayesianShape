@@ -8,15 +8,16 @@ using Distributions
 using HDF5
 
 using FEMfunctions
-
-include("../../src/fitBSpline2Fourier.jl")
-include("../../src/drum/computeFEMmatrices.jl")
-include("../../src/drum/makeDrumMesh.jl")
-#include("../../src/radiusSquash.jl")
-include("../../src/drum/inputOutput.jl")
-include("../../src/drum/triangleEVs.jl")
-
 using InfDimMCMC
+using BayesianShape
+
+#include("../../src/fitBSpline2Fourier.jl")
+#include("../../src/drum/computeFEMmatrices.jl")
+#include("../../src/drum/makeDrumMesh.jl")
+##include("../../src/radiusSquash.jl")
+#include("../../src/drum/inputOutput.jl")
+#include("../../src/drum/triangleEVs.jl")
+
 
 #defaults (typically overwritten by arguments to run.jl)
 def_datafile  ="dummy";#ADR_ROOT*"/data/point_twohump_012.h5";
@@ -32,6 +33,8 @@ def_rmin   = 0.2;
 def_rmax   = 5.0;#9.0;
 def_a0     = 1.5;
 def_lc     = 7e-3;
+
+def_init   = "rand";
     
 regularity = (@isdefined regularity) ? regularity : def_regularity;
 nEigVals   = (@isdefined nev    )    ? nev        : def_nev;
@@ -40,6 +43,7 @@ rMin       = (@isdefined rmin   )    ? rmin       : def_rmin;
 rMax       = (@isdefined rmax   )    ? rmax       : def_rmax;
 a0         = (@isdefined a0     )    ? a0         : def_a0;
 lc         = (@isdefined lc     )    ? lc         : def_lc;
+init       = (@isdefined init   )    ? init       : def_init;
 
 #def_obsmean = triangleEVs(def_nev); #inputOutput(1.0,zeros(2),zeros(2);nev=def_nev,κ=def_kappa); #zeros(def_nev);
 #def_obsstd  = sqrt.(sqrt.(def_obsmean));
@@ -70,8 +74,8 @@ nBsplines = 160;
 
 #define squash methodology
 squashE = 0.1;
-include("../../src/squash/squashPolyinterp.jl");
-radiusSquash(r) = squashPolyinterp(r,rMin,rMax;e=squashE);
+#include("../../src/squash/squashPolyinterp.jl");
+BayesianShape.radiusSquash(r) = squashPolyinterp(r,rMin,rMax;e=squashE);
 squashMethod="squashPolyinterp, e=$(squashE)";
 println("Squashing with: $(squashMethod)");
 

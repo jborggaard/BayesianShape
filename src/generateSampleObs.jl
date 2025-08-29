@@ -3,8 +3,8 @@
 #   include("scenarios/svsector/setup.jl");
 #   samples, obs = generateSampleObs(mcmcP);
 
-using Printf
-using InfDimMCMC
+#using Printf
+#using InfDimMCMC
 
 function generateSampleObs(mcmcP::mcmcProb; nSamples=10, printObs=true, outFile="none")
 

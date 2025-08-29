@@ -1,10 +1,11 @@
-using Plots, SpecialFunctions
-
-include("squashArctan.jl");
-include("squashSigmoid.jl");
-include("squashErf.jl");
-include("squashSmoothstep.jl");
-include("squashPolyinterp.jl");
+#using Plots, SpecialFunctions
+#
+#include("squashArctan.jl");
+#include("squashSigmoid.jl");
+#include("squashErf.jl");
+#include("squashSmoothstep.jl");
+#include("squashPolyinterp.jl");
+using BayesianShape
 
 figsize=600;
 

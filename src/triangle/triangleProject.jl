@@ -2,7 +2,7 @@
 #note: here the first (constant) fourier component is assumed to be r=1/sqrt(2)
 function triangleProject( vert, nodes, weights; nUnk=160)
   #build triangle (quadrature points used on each face)
-  th, r = polarTriangle(vert,nodes);
+  th, r = trianglePolar(vert,nodes);
   
   #rescale weights
   w = weights * ( th[end,:] - th[1,:] )' ./ ( nodes[end] - nodes[1] );

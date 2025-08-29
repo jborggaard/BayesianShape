@@ -14,17 +14,18 @@ using Distributions
 using HDF5
 
 using FEMfunctions
-
-include("../../src/makeMesh.jl")
-include("../../src/fitBSpline2Fourier.jl")
-include("../../src/twodStokesRotatingOuter.jl")
-include("../../src/twodAdvectionDiffusion.jl")
-include("../../src/computeC.jl")
-include("../../src/computeVorticity.jl")
-include("../../src/solutionArray.jl");
-include("../../src/twodStokesOnly.jl");
-
 using InfDimMCMC
+using BayesianShape
+#
+#include("../../src/makeMesh.jl")
+#include("../../src/fitBSpline2Fourier.jl")
+#include("../../src/twodStokesRotatingOuter.jl")
+#include("../../src/twodAdvectionDiffusion.jl")
+#include("../../src/computeC.jl")
+#include("../../src/computeVorticity.jl")
+#include("../../src/solutionArray.jl");
+#include("../../src/twodStokesOnly.jl");
+#
 
 #ADR_ROOT=ENV["ADR_ROOT"];
 
@@ -79,8 +80,8 @@ circleCenters = rInterp .* [ cos.(aInterp) sin.(aInterp) ];
 
 #define squash methodology
 squashE = 0.1;
-include("../../src/squash/squashPolyinterp.jl");
-radiusSquash(r) = squashPolyinterp(r,rMin,rMax;e=squashE);
+#include("../../src/squash/squashPolyinterp.jl");
+BayesianShape.radiusSquash(r) = squashPolyinterp(r,rMin,rMax;e=squashE);
 squashMethod="squashPolyinterp, e=$(squashE)";
 println("Squashing with: $(squashMethod)");
 
