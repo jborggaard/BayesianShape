@@ -1,51 +1,34 @@
 #using HDF5, Plots
 import Plots: _cycle
 
-#Define recipe for 2d histogram (without NANs for zero values)
-#@recipe function f(::Type{Val{:bins2d}}, x, y, z)
-#    edge_x, edge_y, weights = x, y, z.surf
+# NOTE: This section used to not be commented, but it was causing precompilation errors like so:
+#   WARNING: Method definition apply_recipe(Base.AbstractDict{Symbol, Any}, Type{Base.Val{:bins2d}}, Any, Any, Any) in module Plots at /home/jkrometi/.julia/packages/RecipesBase/BRe07/src/RecipesBase.jl:296 overwritten in module BayesianShape on the same line (check for duplicate calls to `include`).
+#   ERROR: Method overwriting is not permitted during Module precompilation. Use `__precompile__(false)` to opt-out of precompilation.
+# I believe this is because I was attempting to overwrite the meaning of bins2d (it's been a while since I wrote this).
+# If we want to reenable it, I think we need to define a custom type and call that. See https://docs.juliaplots.org/dev/recipes/
 #
-#    float_weights = float(weights)
-#    if is(float_weights, weights)
-#        float_weights = deepcopy(float_weights)
-#    end
-#    #for (i, c) in enumerate(float_weights)
-#    #    if c == 0
-#    #        float_weights[i] = NaN
-#    #    end
-#    #end
-#
-#    x := Plots._bin_centers(edge_x)
-#    y := Plots._bin_centers(edge_y)
-#    z := Surface(float_weights)
-#
-#    match_dimensions := true
-#    seriestype := :heatmap
-#    ()
-#end
-#Plots.@deps bins2d heatmap
-@recipe function f(::Type{Val{:bins2d}}, x, y, z)
-    edge_x, edge_y, weights = x, y, z.surf
-
-    float_weights = float(weights)
-    if float_weights === weights
-        float_weights = deepcopy(float_weights)
-    end
-    #for (i, c) in enumerate(float_weights)
-    #    if c == 0
-    #        float_weights[i] = NaN
-    #    end
-    #end
-
-    x := Plots._bin_centers(edge_x)
-    y := Plots._bin_centers(edge_y)
-    z := Surface(float_weights)
-
-    match_dimensions := true
-    seriestype := :heatmap
-    ()
-end
-Plots.@deps bins2d heatmap
+# @recipe function f(::Type{Val{:bins2d}}, x, y, z)
+#     edge_x, edge_y, weights = x, y, z.surf
+# 
+#     float_weights = float(weights)
+#     if float_weights === weights
+#         float_weights = deepcopy(float_weights)
+#     end
+#     #for (i, c) in enumerate(float_weights)
+#     #    if c == 0
+#     #        float_weights[i] = NaN
+#     #    end
+#     #end
+# 
+#     x := Plots._bin_centers(edge_x)
+#     y := Plots._bin_centers(edge_y)
+#     z := Surface(float_weights)
+# 
+#     match_dimensions := true
+#     seriestype := :heatmap
+#     ()
+# end
+# Plots.@deps bins2d heatmap
 
 
 
