@@ -21,13 +21,13 @@ using WriteVTK
 
 using FEMfunctions
 
-include("makeMesh.jl")
-include("fitBSpline2Fourier.jl")
-include("sampleInnerGeometry.jl")
-include("twodStokesRotatingOuter.jl")
-include("twodAdvectionDiffusion.jl")
-include("computeC.jl")
-include("computeVorticity.jl")
+#include("makeMesh.jl")
+#include("fitBSpline2Fourier.jl")
+#include("sampleInnerGeometry.jl")
+#include("twodStokesRotatingOuter.jl")
+#include("twodAdvectionDiffusion.jl")
+#include("computeC.jl")
+#include("computeVorticity.jl")
 
 ω = -10.0    # rotational velocity for outer wall
 
