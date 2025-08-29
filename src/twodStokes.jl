@@ -1,16 +1,18 @@
 function twodStokes(N::Int)
 #  Solves Stokes equation in 2D with Dirichlet boundary conditions
 #     - ∇⋅(∇z+∇z') + ∇p = f,  Ω = (0,1)×(0,1),  homogeneous Dirichlet b.c.
+#
+#  Requires elements from the FEMfunctions package
 #---------------------------------------------------------------------------78--
 
-  include("twodMesh.jl")
-  include("twodQuadratureRule.jl")
+#  include("twodMesh.jl")
+#  include("twodQuadratureRule.jl")
 #  @everywhere include("twodShape.jl")
 #  @everywhere include("twodBilinear.jl")
 #  @everywhere include("twodLinForm.jl")
-  include("twodShape.jl")
-  include("twodBilinear.jl")
-  include("twodLinForm.jl")
+#  include("twodShape.jl")
+#  include("twodBilinear.jl")
+#  include("twodLinForm.jl")
 
   #  Define problem parameters
 #  @everywhere μ = 0.001;
