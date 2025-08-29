@@ -36,7 +36,6 @@ export fourierBasis;
 export generateSampleObs;
 export getMap;
 export makeMesh;
-export saveFEMasVTK;
 export solutionArray;
 include("computeC.jl");
 include("computeFourier.jl");
@@ -47,7 +46,6 @@ include("fourierBasis.jl");
 include("generateSampleObs.jl");
 include("getMap.jl");
 include("makeMesh.jl");
-include("saveFEMasVTK.jl");
 include("solutionArray.jl");
 
 #solvers
@@ -146,6 +144,7 @@ include("drum/plotSampleShapes.jl");
 #export twodBilinear;
 #export twodLinForm;
 #export twodMassMatrix;
+#export twodProjectDerivatives;
 #export twodQuadratureRule;
 #export twodShape;
 #
@@ -155,11 +154,9 @@ include("drum/plotSampleShapes.jl");
 #include("twodBilinear.jl");
 #include("twodLinForm.jl");
 #include("twodMassMatrix.jl");
+#include("twodProjectDerivatives.jl");
 #include("twodQuadratureRule.jl");
 #include("twodShape.jl");
 
-#This is not in FEMfunctions but seems like it should be? Or replaced with TriMesh_ProjectDerivatives.jl?
-export twodProjectDerivatives;
-include("twodProjectDerivatives.jl");
 
 end # module
