@@ -21,10 +21,8 @@ using CairoMakie
 
 include("makeMesh.jl")
 include("fitBSpline2Fourier.jl")
-include("saveFEMasVTK.jl")
 include("twodStokesRotatingOuter.jl")
 include("twodAdvectionDiffusion.jl")
-include("twodProjectDerivatives.jl")
 include("computeC.jl")
 include("computeVorticity.jl")
 include("solutionArray.jl");

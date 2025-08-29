@@ -19,17 +19,13 @@ using Printf
 using Random
 using WriteVTK
 
+using FEMfunctions
+
 include("makeMesh.jl")
 include("fitBSpline2Fourier.jl")
-include("saveFEMasVTK.jl")
-include("twodQuadratureRule.jl")
 include("sampleInnerGeometry.jl")
-include("twodShape.jl")
-include("twodBilinear.jl")
-include("twodLinForm.jl")
 include("twodStokesRotatingOuter.jl")
 include("twodAdvectionDiffusion.jl")
-include("twodProjectDerivatives.jl")
 include("computeC.jl")
 include("computeVorticity.jl")
 

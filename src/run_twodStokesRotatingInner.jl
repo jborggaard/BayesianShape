@@ -22,15 +22,9 @@ using WriteVTK
 
 include("makeMesh.jl")
 include("fitBSpline2Fourier.jl")
-include("saveFEMasVTK.jl")
 include("sampleInnerGeometry.jl")
-include("twodQuadratureRule.jl")
-include("twodShape.jl")
-include("twodBilinear.jl")
-include("twodLinForm.jl")
 include("twodStokesRotatingInner.jl")
 include("twodAdvectionDiffusion.jl")
-include("twodProjectDerivatives.jl")
 include("computeC.jl")
 include("computeVorticity.jl")
 

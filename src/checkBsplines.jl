@@ -22,7 +22,6 @@ include("fitBSpline2Fourier.jl")
 #include("twodLinForm.jl")
 #include("twodStokesRotating.jl")
 #include("twodAdvectionDiffusion.jl")
-#include("twodProjectDerivatives.jl")
 #include("computeC.jl")
 #include("computeVorticity.jl")
 

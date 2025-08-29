@@ -17,10 +17,8 @@ using FEMfunctions
 
 include("../../src/makeMesh.jl")
 include("../../src/fitBSpline2Fourier.jl")
-include("../../src/saveFEMasVTK.jl")
 include("../../src/twodStokesRotatingOuter.jl")
 include("../../src/twodAdvectionDiffusion.jl")
-include("../../src/twodProjectDerivatives.jl")
 include("../../src/computeC.jl")
 include("../../src/computeVorticity.jl")
 include("../../src/solutionArray.jl");

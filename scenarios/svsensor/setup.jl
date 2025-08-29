@@ -17,17 +17,10 @@ using FEMfunctions
 
 include("../../src/makeMesh.jl")
 include("../../src/fitBSpline2Fourier.jl")
-include("../../src/saveFEMasVTK.jl")
 include("../../src/sampleInnerGeometry.jl")
-#include("../../src/twodQuadratureRule.jl")
-#include("../../src/twodShape.jl")
-#include("../../src/twodMassMatrix.jl")
-#include("../../src/twodBilinear.jl")
-#include("../../src/twodLinForm.jl")
 include("../../src/twodStokesRotatingOuter.jl")
 include("../../src/twodNavierStokesRotatingOuter.jl")
 include("../../src/twodAdvectionDiffusion.jl")
-include("../../src/twodProjectDerivatives.jl")
 include("../../src/computeC.jl")
 include("../../src/computeVorticity.jl")
 include("../../src/solutionArray.jl");
